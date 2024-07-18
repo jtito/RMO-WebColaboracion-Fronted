@@ -1,4 +1,4 @@
-'use client' 
+'use client'
 
 // React Imports
 import { useState, useEffect } from 'react'
@@ -18,6 +18,8 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 
 import { IconButton } from '@mui/material'
+
+import { toast } from 'react-toastify'
 
 import OptionMenu from '@core/components/option-menu'
 
@@ -65,12 +67,12 @@ const UserListTable = () => {
     if (id != null) {
       try {
         await EliminarUsuario(id)
-        setIsLoading(true)
+        toast.success('Usuario eliminado exitosamente')
 
-        Error(`Usuario con ID ${id} eliminado correctamente`)
+        // setIsLoading(true)
       } catch (err) {
         console.log(err.message)
-        Error('No se pudo eliminar el usuario')
+        toast.error('No se pudo eliminar el usuario')
       }
     }
   }
@@ -103,7 +105,7 @@ const UserListTable = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>ID</TableCell>
+                  {/* <TableCell>ID</TableCell> */}
                   <TableCell>Nombre</TableCell>
                   <TableCell>Apellido Paterno</TableCell>
                   <TableCell>Apellido Materno</TableCell>
@@ -112,7 +114,6 @@ const UserListTable = () => {
                   <TableCell>Estado</TableCell>
                   <TableCell>Numero de Documento</TableCell>
                   <TableCell>Pais</TableCell>
-                  <TableCell>Email</TableCell>
                   <TableCell>Fecha de Creación</TableCell>
                   <TableCell>Última Actualización</TableCell>
                   <TableCell>Acciones</TableCell>
@@ -128,15 +129,15 @@ const UserListTable = () => {
                 ) : usuarios.length > 0 ? (
                   usuarios.map(usuario => (
                     <TableRow key={usuario.id}>
-                      <TableCell>{usuario.id}</TableCell>
+                      {/* <TableCell>{usuario.id}</TableCell> */}
                       <TableCell>{usuario.name}</TableCell>
                       <TableCell>{usuario.last_nameF}</TableCell>
                       <TableCell>{usuario.last_nameS}</TableCell>
-                      <TableCell>{usuario.role}</TableCell>
+                      <TableCell>{usuario.email}</TableCell>
+                      <TableCell>{usuario.role_display}</TableCell>
                       <TableCell>{usuario.is_active ? 'Activo' : 'Inactivo'}</TableCell>
                       <TableCell>{usuario.doc_num}</TableCell>
-                      <TableCell>{usuario.country}</TableCell>
-                      <TableCell>{usuario.email}</TableCell>
+                      <TableCell>{usuario.country_display}</TableCell>
 
                       <TableCell>{new Date(usuario.create_at).toLocaleString()}</TableCell>
                       <TableCell>{new Date(usuario.updated_at).toLocaleString()}</TableCell>
@@ -179,6 +180,7 @@ const UserListTable = () => {
 
       <AddUserDrawer
         open={addUserOpen}
+        setOpen={setAddUserOpen}
         handleClose={() => setAddUserOpen(!addUserOpen)}
         handleUserAdded={handleUserAdded}
       />
