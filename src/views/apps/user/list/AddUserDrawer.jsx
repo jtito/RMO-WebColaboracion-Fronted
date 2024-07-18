@@ -1,31 +1,44 @@
 import { useEffect, useState } from 'react'
 
-import { Button, Drawer, IconButton, MenuItem, Typography, Divider } from '@mui/material'
+import Grid from '@mui/material/Grid'
+import Dialog from '@mui/material/Dialog'
+import Button from '@mui/material/Button'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import Chip from '@mui/material/Chip'
+import MenuItem from '@mui/material/MenuItem'
+import Typography from '@mui/material/Typography'
+import Switch from '@mui/material/Switch'
+import { FormControlLabel } from '@mui/material'
+
+import { toast } from 'react-toastify'
 
 import CustomTextField from '@core/components/mui/TextField'
-import { AgregarUsuario, obtenerPaises, obtenerRoles } from '../../../../Service/axios.services'
+import { obtnerTipoDocIdentidad, AgregarUsuario, obtenerPaises, obtenerRoles } from '../../../../Service/axios.services'
 
-const AddUserDrawer = ({ open, handleClose, onUserAdded }) => {
+import DialogCloseButton from '@components/dialogs/DialogCloseButton'
+
+const initialData = {
+  last_nameF: '',
+  last_nameS: '',
+  name: '',
+  email: '',
+  role: '',
+  type_doc: '',
+  doc_num: '',
+  country: ''
+}
+
+const AddUserDrawer = ({ open, setOpen, handleClose, data }) => {
   const [error, setError] = useState(null)
   const [roles, setRoles] = useState([])
 
   const [paises, setPaises] = useState([])
-
-  const initialData = {
-    id: null,
-    role: '',
-    name: '',
-    last_nameF: '',
-    last_nameS: '',
-    tipo_doc: '',
-    num_doc: '',
-    Country: '',
-    email: '',
-    password: '',
-    is_active: ''
-  }
+  const [Doc, setDoc] = useState([])
 
   const [formData, setFormData] = useState(initialData)
+
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -33,13 +46,20 @@ const AddUserDrawer = ({ open, handleClose, onUserAdded }) => {
     try {
       const response = await AgregarUsuario(formData)
 
+      console.log('Data enviada:', formData)
+
       if (response.status === 201) {
-        onUserAdded(response.data)
+      
+        toast.success('Usuario Registrado')
         handleClose()
-        setFormData(initialData)
-        setError(null)
       } else {
-        setError(`Error al agregar el usuario: ${response.status} ${response.data}`)
+        if (response.data && response.data.doc_num) {
+          setError('El Numero de Documento ya Existe', response.data.doc_num)
+        } else if (response.data && response.data.email) {
+          setError('Email ya se enceuntra Registrado', response.data.email)
+        } else {
+          setError('No se pudo Registrar')
+        }
       }
     } catch (error) {
       if (error.response) {
@@ -54,6 +74,24 @@ const AddUserDrawer = ({ open, handleClose, onUserAdded }) => {
     handleClose()
     setFormData(initialData)
     setError(null)
+  }
+
+  const Doctype = async () => {
+    try {
+      const response = await obtnerTipoDocIdentidad()
+
+      console.log(response, 'respuesta')
+
+      if (response.status === 200) {
+        setDoc(response.data)
+
+        console.log('obtenido')
+      } else {
+        console.error('Error al obtener los paises:', response.status)
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error)
+    }
   }
 
   const ObtenerCuntries = async () => {
@@ -95,126 +133,135 @@ const AddUserDrawer = ({ open, handleClose, onUserAdded }) => {
   useEffect(() => {
     ObtenerRoles()
     ObtenerCuntries()
+    Doctype()
   }, [])
 
   return (
-    <Drawer
+    <Dialog
+      fullWidth
       open={open}
-      anchor='right'
-      variant='temporary'
       onClose={handleReset}
-      ModalProps={{ keepMounted: true }}
-      sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
+      maxWidth='md'
+      scroll='body'
+      sx={{ '& .MuiDialog-paper': { overflow: 'visible' } }}
     >
-      <div className='flex items-center justify-between plb-5 pli-6'>
-        <Typography variant='h5'>Agregar Usuario</Typography>
-        <IconButton onClick={handleReset}>
-          <i className='tabler-x text-textPrimary' />
-        </IconButton>
-      </div>
-      <Divider />
-      <div>
-        <form onSubmit={handleSubmit} className='flex flex-col gap-6 p-6'>
-          <CustomTextField
-            label='Primer Apellido'
-            fullWidth
-            placeholder='John'
-            value={formData.last_nameF}
-            onChange={e => setFormData({ ...formData, last_nameF: e.target.value })}
-          />
-          <CustomTextField
-            label='Segundo Apellido'
-            fullWidth
-            placeholder='Doe'
-            value={formData.last_nameS}
-            onChange={e => setFormData({ ...formData, last_nameS: e.target.value })}
-          />
-          <CustomTextField
-            label='Nombre Completo'
-            fullWidth
-            placeholder='John Doe'
-            value={formData.name}
-            onChange={e => setFormData({ ...formData, name: e.target.value })}
-          />
-          <CustomTextField
-            label='Email'
-            fullWidth
-            placeholder='johndoe@gmail.com'
-            value={formData.email}
-            onChange={e => setFormData({ ...formData, email: e.target.value })}
-          />
-          <CustomTextField
-            select
-            fullWidth
-            id='TipoDoc'
-            value={formData.tipo_doc}
-            onChange={e => setFormData({ ...formData, tipo_doc: e.target.value })}
-            label='Seleccionar Identidad'
-            options={[
-              { id: 1, value: 'DNI', display_name: 'DNI' },
-              { id: 2, value: 'Carnet', display_name: 'Carnet de Estranjeria' }
-            ]}
-          />
-          <CustomTextField
-            label='Número de Documento'
-            type='text'
-            fullWidth
-            placeholder='57456487'
-            value={formData.num_doc}
-            onChange={e => setFormData({ ...formData, num_doc: e.target.value })}
-          />
-          <CustomTextField
-            select
-            fullWidth
-            id='select-pais'
-            value={formData.Country}
-            onChange={e => setFormData({ ...formData, Country: e.target.value })}
-            label='Seleccionar Paises'
-          >
-            {paises.map(Country => (
-              <MenuItem key={Country.value} value={Country.value}>
-                {Country.display_name}
-              </MenuItem>
-            ))}
-          </CustomTextField>
-          <CustomTextField
-            select
-            fullWidth
-            id='select-role'
-            value={formData.role}
-            onChange={e => setFormData({ ...formData, rol: e.target.value })}
-            label='Seleccionar roles'
-          >
-            {roles.map(role => (
-              <MenuItem key={role.value} value={role.value}>
-                {role.display_name}
-              </MenuItem>
-            ))}
-          </CustomTextField>
-          <CustomTextField
-            select
-            fullWidth
-            id='select-status'
-            value={formData.is_active}
-            onChange={e => setFormData({ ...formData, is_active: e.target.value })}
-            label='Seleccionar Estado'
-            options={[
-              { id: 1, value: 'active', display_name: 'Active' },
-              { id: 2, value: 'inactive', display_name: 'Inactive' }
-            ]}
-          />
-          {error && <Typography color='error'>{error}</Typography>}
-          <div className='flex items-center gap-4'>
-            <Button variant='contained' type='submit'>
-              Guardar
-            </Button>
-            <Button variant='tonal' color='error' type='reset' onClick={handleReset}>
-              Cancelar
-            </Button>
-          </div>
-        </form>
-      </div>
-    </Drawer>
+      <DialogCloseButton onClick={() => setOpen(false)} disableRipple>
+        <i className='tabler-x' />
+      </DialogCloseButton>
+      <DialogTitle variant='h4' className='flex gap-2 flex-col text-center sm:pbs-16 sm:pbe-6 sm:pli-16'>
+        Agregar Usuario
+      </DialogTitle>
+      <form onSubmit={handleSubmit}>
+        <DialogContent className='overflow-visible pbs-0 sm:pli-16'>
+          <Grid container spacing={5}>
+            <Grid item xs={12} sm={6}>
+              <CustomTextField
+                fullWidth
+                label='Primer Apellido'
+                placeholder='Diaz'
+                value={formData.last_nameF}
+                onChange={e => setFormData({ ...formData, last_nameF: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTextField
+                label='Segundo Apellido'
+                fullWidth
+                placeholder='Doe'
+                value={formData.last_nameS}
+                onChange={e => setFormData({ ...formData, last_nameS: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <CustomTextField
+                label='Nombre Completo'
+                fullWidth
+                placeholder='John Doe'
+                value={formData.name}
+                onChange={e => setFormData({ ...formData, name: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <CustomTextField
+                label='Email'
+                fullWidth
+                placeholder='johndoe@gmail.com'
+                value={formData.email}
+                onChange={e => setFormData({ ...formData, email: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTextField
+                select
+                fullWidth
+                id='select-role'
+                value={formData.role}
+                onChange={e => setFormData({ ...formData, role: e.target.value })}
+                label='Seleccionar rol'
+              >
+                {roles.map(role => (
+                  <MenuItem key={role.value} value={role.value}>
+                    {role.display_name}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTextField
+                select
+                fullWidth
+                id='select-Doc'
+                value={formData.type_doc}
+                onChange={e => setFormData({ ...formData, type_doc: e.target.value })}
+                label='Seleccionar Tipo de Documento'
+              >
+                {Doc.map(Doc => (
+                  <MenuItem key={Doc.value} value={Doc.value}>
+                    {Doc.display_name}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTextField
+                label='Número de Documento'
+                type='text'
+                fullWidth
+                placeholder='57456487'
+                value={formData.doc_num}
+                onChange={e => setFormData({ ...formData, doc_num: e.target.value })}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTextField
+                select
+                fullWidth
+                id='select-pais'
+                value={formData.country}
+                onChange={e => setFormData({ ...formData, country: e.target.value })}
+                label='Seleccionar Pais'
+              >
+                {paises.map(country => (
+                  <MenuItem key={country.value} value={country.value}>
+                    {country.display_name}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
+            </Grid>
+            {error && <Typography color='error'>{error}</Typography>}
+          </Grid>
+        </DialogContent>
+
+        <DialogActions className='justify-center pbs-0 sm:pbe-16 sm:pli-16'>
+          <Button variant='contained' type='submit'>
+            Guardar
+          </Button>
+          <Button variant='tonal' color='error' type='reset' onClick={handleReset}>
+            Cancelar
+          </Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   )
 }
 

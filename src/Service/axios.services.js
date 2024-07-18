@@ -40,7 +40,7 @@ export const obtenerUsuarioPorId = async id => {
 }
 
 export const AgregarUsuario = body => {
-  return API.post(`/usuarios`, body, {
+  return API.post(`/usuarios/`, body, {
     validateStatus: function (status) {
       return status < 500
     }
