@@ -119,16 +119,17 @@ const Login = ({ mode }) => {
 
   const onSubmit = async data => {
     console.log("hola", data);
-    const res = await IniciarSesion('credentials', {
+    const res = await IniciarSesion( {
       email: data.email,
       password: data.password,
       redirect: false
     })
-
-    console.log("respuesta", res);
-    if (res && res.ok && res.error === null) {
+    console.log(res)
+    console.log(res.ok);
+    console.log(res.data.status)
+    if (res) {
       // Vars
-      
+      console.log('entra');
       const redirectURL = searchParams.get('redirectTo') ?? '/'
 
       router.push(getLocalizedUrl(redirectURL, locale))
