@@ -14,7 +14,7 @@ import CustomTabList from '@core/components/mui/TabList'
 
 const UserRight = ({ tabContentList }) => {
   // States
-  const [activeTab, setActiveTab] = useState('overview')
+  const [activeTab, setActiveTab] = useState('notifications')
 
   const handleChange = (event, value) => {
     setActiveTab(value)
@@ -23,24 +23,24 @@ const UserRight = ({ tabContentList }) => {
   return (
     <>
       <TabContext value={activeTab}>
-        {/* <Grid container spacing={6}>
+        { <Grid container spacing={6}>
           <Grid item xs={12}>
             <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
-              <Tab icon={<i className='tabler-users' />} value='overview' label='Overview' iconPosition='start' />
+              {/* <Tab icon={<i className='tabler-users' />} value='overview' label='Overview' iconPosition='start' />
               <Tab icon={<i className='tabler-lock' />} value='security' label='Security' iconPosition='start' />
               <Tab
                 icon={<i className='tabler-bookmark' />}
                 value='billing-plans'
                 label='Billing & Plans'
                 iconPosition='start'
-              />
+              /> */}
               <Tab
-                icon={<i className='tabler-bell' />}
+                icon={<i  className='tabler-lock'  />}
                 value='notifications'
-                label='Notifications'
+                label='Permisos'
                 iconPosition='start'
               />
-              <Tab icon={<i className='tabler-link' />} value='connections' label='Connections' iconPosition='start' />
+              {/* <Tab icon={<i className='tabler-link' />} value='connections' label='Connections' iconPosition='start' /> */}
             </CustomTabList>
           </Grid>
           <Grid item xs={12}>
@@ -48,7 +48,7 @@ const UserRight = ({ tabContentList }) => {
               {tabContentList[activeTab]}
             </TabPanel>
           </Grid>
-        </Grid> */}
+        </Grid> }
       </TabContext>
     </>
   )
