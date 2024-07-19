@@ -35,6 +35,7 @@ const UserListTable = () => {
   const [usuarios, setUsuarios] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [addUserOpen, setAddUserOpen] = useState(false)
+
   const { lang: locale } = useParams()
 
   const obtenerUsuarios = async () => {
@@ -68,8 +69,7 @@ const UserListTable = () => {
       try {
         await EliminarUsuario(id)
         toast.success('Usuario eliminado exitosamente')
-
-        // setIsLoading(true)
+        setIsLoading(true)
       } catch (err) {
         console.log(err.message)
         toast.error('No se pudo eliminar el usuario')
@@ -93,7 +93,11 @@ const UserListTable = () => {
           <Button
             variant='contained'
             startIcon={<i className='tabler-plus' />}
-            onClick={() => setAddUserOpen(!addUserOpen)}
+            // onClick={() => setAddUserOpen(!addUserOpen)
+
+            onClick={() => {
+              setAddUserOpen(true)
+            }}
             color='primary'
             className='is-full sm:is-auto'
           >
