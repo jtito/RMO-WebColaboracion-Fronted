@@ -63,3 +63,11 @@ export const obtnerTipoDocIdentidad = () => {
     }
   })
 }
+
+export const EditarUsuario = async id => {
+  return API.put(`/usuarios/${id}/`, {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
