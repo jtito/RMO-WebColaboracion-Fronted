@@ -130,8 +130,11 @@ const Login = ({ mode }) => {
     if (res) {
       // Vars
       console.log('entra');
+      localStorage.setItem('access_token', res.data.access_token);
+      localStorage.setItem('refresh_token', res.data.refresh_token);
       const redirectURL = searchParams.get('redirectTo') ?? '/'
 
+      console.log(redirectURL);
       router.push(getLocalizedUrl(redirectURL, locale))
     } else {
       if (res?.error) {
