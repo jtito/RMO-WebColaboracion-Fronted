@@ -1,6 +1,7 @@
 import API from './axios.config'
 
 export const IniciarSesion = body => {
+  console.log("cuerpo", body);
   return API.post('/login/', body, {
     validateStatus: function (status) {
       return status < 500

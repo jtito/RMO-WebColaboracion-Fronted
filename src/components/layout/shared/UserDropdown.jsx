@@ -152,8 +152,8 @@ const UserDropdown = () => {
                       size='small'
                       endIcon={<i className='tabler-logout' />}
 
-                      // onClick={handleUserLogout}
-                      // sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
+                       onClick={handleUserLogout}
+                       sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
                     >
                       Cerrar sesion
                     </Button>

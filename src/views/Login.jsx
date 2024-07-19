@@ -39,6 +39,7 @@ import { useSettings } from '@core/hooks/useSettings'
 
 // Util Imports
 import { getLocalizedUrl } from '@/utils/i18n'
+import { IniciarSesion } from '@/Service/axios.services'
 
 // Styled Custom Components
 const LoginIllustration = styled('img')(({ theme }) => ({
@@ -117,14 +118,17 @@ const Login = ({ mode }) => {
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const onSubmit = async data => {
-    const res = await signIn('credentials', {
+    console.log("hola", data);
+    const res = await IniciarSesion('credentials', {
       email: data.email,
       password: data.password,
       redirect: false
     })
 
+    console.log("respuesta", res);
     if (res && res.ok && res.error === null) {
       // Vars
+      
       const redirectURL = searchParams.get('redirectTo') ?? '/'
 
       router.push(getLocalizedUrl(redirectURL, locale))

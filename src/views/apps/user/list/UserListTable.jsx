@@ -147,7 +147,7 @@ const UserListTable = () => {
                           </IconButton>
                           <IconButton>
                             <Link href={getLocalizedUrl('apps/user/view', locale)} className='flex'>
-                              <i className='tabler-eye text-[22px] text-textSecondary' />
+                              <i className='tabler-settings text-[22px] text-textSecondary' />
                             </Link>
                           </IconButton>
                           <OptionMenu

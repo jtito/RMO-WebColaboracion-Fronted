@@ -4,11 +4,10 @@ import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
 import Divider from '@mui/material/Divider'
 import Button from '@mui/material/Button'
-
 import CustomAvatar from '@core/components/mui/Avatar'
 
-// Vars
-const userData = {
+// Props defaults for the component
+const defaultUserData = {
   firstName: 'Seth',
   lastName: 'Hallam',
   userName: '@shallamb',
@@ -22,7 +21,7 @@ const userData = {
   useAsBillingAddress: true
 }
 
-const UserDetails = ({ userData }) => {
+const UserDetails = ({ userData = defaultUserData }) => {
   // Vars
   const buttonProps = (children, color, variant) => ({
     children,
@@ -32,13 +31,12 @@ const UserDetails = ({ userData }) => {
 
   return (
     <Card>
-      <h1>este es para Franco</h1>
-      {/* <CardContent className='flex flex-col pbs-12 gap-6'>
+      <CardContent className='flex flex-col pbs-12 gap-6'>
         <div className='flex flex-col gap-6'>
           <div className='flex items-center justify-center flex-col gap-4'>
             <div className='flex flex-col items-center gap-4'>
               <CustomAvatar alt='user-profile' src='/images/avatars/1.png' variant='rounded' size={120} />
-              <Typography variant='h5'>{`${userData.name} ${userData.last_nameF} ${userData.last_nameS}`}</Typography>
+              <Typography variant='h5'>{`${userData.firstName} ${userData.lastName}`}</Typography>
             </div>
             <Chip label='Author' color='secondary' size='small' variant='tonal' />
           </div>
@@ -51,49 +49,44 @@ const UserDetails = ({ userData }) => {
               <Typography className='font-medium' color='text.primary'>
                 Nombre:
               </Typography>
-              <Typography>{userData.name}</Typography>
+              <Typography>{userData.firstName}</Typography>
             </div>
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
-                Apellido Paterno:
+                Apellido:
               </Typography>
-              <Typography>{userData.last_nameF}</Typography>
-            </div>
-            <div className='flex items-center flex-wrap gap-x-1.5'>
-              <Typography className='font-medium' color='text.primary'>
-                Apellido Materno:
-              </Typography>
-              <Typography>{userData.last_nameS}</Typography>
+              <Typography>{userData.lastName}</Typography>
             </div>
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
                 Email:
               </Typography>
-              <Typography>{userData.email}</Typography>
+              <Typography>{userData.billingEmail}</Typography>
             </div>
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
                 Rol:
               </Typography>
-              <Typography>{userData.rol}</Typography>
+              <Typography>{userData.role}</Typography>
             </div>
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
                 Estado:
               </Typography>
-              <Typography>{userData.is_active ? 'Activo' : 'Inactivo'}</Typography>
+              <Typography>{userData.status === 'active' ? 'Activo' : 'Inactivo'}</Typography>
             </div>
+            {/* Placeholder for dates, update with actual properties if available */}
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
                 Fecha de Creación:
               </Typography>
-              <Typography>{new Date(userData.create_at).toLocaleString()}</Typography>
+              <Typography>{/* Format date if available */}</Typography>
             </div>
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
                 Última Actualización:
               </Typography>
-              <Typography>{new Date(userData.updated_at).toLocaleString()}</Typography>
+              <Typography>{/* Format date if available */}</Typography>
             </div>
           </div>
         </div>
@@ -101,7 +94,7 @@ const UserDetails = ({ userData }) => {
           <Button {...buttonProps('Editar', 'primary', 'contained')} />
           <Button {...buttonProps('Suspender', 'error', 'tonal')} />
         </div>
-      </CardContent> */}
+      </CardContent>
     </Card>
   )
 }
