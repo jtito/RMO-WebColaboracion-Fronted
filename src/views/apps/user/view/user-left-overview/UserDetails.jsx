@@ -10,8 +10,9 @@ import CustomAvatar from '@core/components/mui/Avatar'
 // Vars
 const userData = {
   firstName: 'Seth',
-  lastName: 'Hallam',
-  userName: '@shallamb',
+
+  //lastName: 'Hallam',
+  //userName: '@shallamb',
   billingEmail: 'shallamb@gmail.com',
   status: 'active',
   role: 'Subscriber',
@@ -32,13 +33,12 @@ const UserDetails = ({ userData }) => {
 
   return (
     <Card>
-      <h1>este es para Franco</h1>
-      {/* <CardContent className='flex flex-col pbs-12 gap-6'>
+      { <CardContent className='flex flex-col pbs-12 gap-6'>
         <div className='flex flex-col gap-6'>
           <div className='flex items-center justify-center flex-col gap-4'>
             <div className='flex flex-col items-center gap-4'>
-              <CustomAvatar alt='user-profile' src='/images/avatars/1.png' variant='rounded' size={120} />
-              <Typography variant='h5'>{`${userData.name} ${userData.last_nameF} ${userData.last_nameS}`}</Typography>
+              <CustomAvatar alt='user-profile' src='' variant='rounded' size={120} />
+              <Typography variant='h5'></Typography>
             </div>
             <Chip label='Author' color='secondary' size='small' variant='tonal' />
           </div>
@@ -51,49 +51,49 @@ const UserDetails = ({ userData }) => {
               <Typography className='font-medium' color='text.primary'>
                 Nombre:
               </Typography>
-              <Typography>{userData.name}</Typography>
+              <Typography></Typography>
             </div>
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
                 Apellido Paterno:
               </Typography>
-              <Typography>{userData.last_nameF}</Typography>
+              <Typography></Typography>
             </div>
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
                 Apellido Materno:
               </Typography>
-              <Typography>{userData.last_nameS}</Typography>
+              <Typography></Typography>
             </div>
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
                 Email:
               </Typography>
-              <Typography>{userData.email}</Typography>
+              <Typography></Typography>
             </div>
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
                 Rol:
               </Typography>
-              <Typography>{userData.rol}</Typography>
+              <Typography></Typography>
             </div>
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
                 Estado:
               </Typography>
-              <Typography>{userData.is_active ? 'Activo' : 'Inactivo'}</Typography>
+              <Typography></Typography>
             </div>
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
                 Fecha de Creación:
               </Typography>
-              <Typography>{new Date(userData.create_at).toLocaleString()}</Typography>
+              <Typography></Typography>
             </div>
             <div className='flex items-center flex-wrap gap-x-1.5'>
               <Typography className='font-medium' color='text.primary'>
                 Última Actualización:
               </Typography>
-              <Typography>{new Date(userData.updated_at).toLocaleString()}</Typography>
+              <Typography></Typography>
             </div>
           </div>
         </div>
@@ -101,7 +101,7 @@ const UserDetails = ({ userData }) => {
           <Button {...buttonProps('Editar', 'primary', 'contained')} />
           <Button {...buttonProps('Suspender', 'error', 'tonal')} />
         </div>
-      </CardContent> */}
+      </CardContent> }
     </Card>
   )
 }
