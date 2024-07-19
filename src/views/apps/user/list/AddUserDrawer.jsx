@@ -49,7 +49,7 @@ const AddUserDrawer = ({ open, setOpen, handleClose, data }) => {
 
       if (response.status === 201) {
         toast.success('Usuario Registrado')
-        handleClose()
+        handleClose(response.data)
       } else {
         if (response.data && response.data.doc_num) {
           setError('El Numero de Documento ya Existe', response.data.doc_num)
