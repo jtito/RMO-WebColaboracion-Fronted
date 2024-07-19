@@ -122,7 +122,7 @@ const Login = ({ mode }) => {
     const res = await IniciarSesion( {
       email: data.email,
       password: data.password,
-      redirect: false
+      redirect: true
     })
     console.log(res)
     console.log(res.ok);
