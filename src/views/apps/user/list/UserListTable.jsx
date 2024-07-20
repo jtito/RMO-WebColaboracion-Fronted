@@ -35,7 +35,7 @@ const UserListTable = () => {
   const [usuarios, setUsuarios] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [addUserOpen, setAddUserOpen] = useState(false)
-
+  const [editUserData, setEditUserData] = useState(null)
   const { lang: locale } = useParams()
 
   const obtenerUsuarios = async () => {
@@ -161,7 +161,14 @@ const UserListTable = () => {
                               {
                                 text: 'Editar',
                                 icon: 'tabler-edit text-[22px]',
-                                menuItemProps: { className: 'flex items-center gap-2 text-textSecondary' }
+                                menuItemProps: {
+                                  className: 'flex items-center gap-2 text-textSecondary',
+                                  onClick: () => {
+                                    // Logic to open AddUserDrawer in edit mode with user data
+                                    setEditUserData(usuario)
+                                    setAddUserOpen(true)
+                                  }
+                                }
                               }
                             ]}
                           />
@@ -187,6 +194,7 @@ const UserListTable = () => {
         setOpen={setAddUserOpen}
         handleClose={() => setAddUserOpen(!addUserOpen)}
         handleUserAdded={handleUserAdded}
+        editUserData={editUserData}
       />
     </>
   )
