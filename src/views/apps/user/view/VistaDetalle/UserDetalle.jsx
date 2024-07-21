@@ -12,7 +12,6 @@ import { obtenerUsuarioPorId } from '../../../../../Service/axios.services'
 import AddUserDrawer from '../../list/AddUserDrawer'
 
 export function UserDetalle({ id }) {
-
   const [usuario, setUsuario] = useState()
   const [addUserOpen, setAddUserOpen] = useState(false)
 
@@ -43,9 +42,9 @@ export function UserDetalle({ id }) {
     obtenerUsuarioid(id)
   }, [id])
 
-  // if (!usuario) {
-  //   return <div>Cargando...</div>
-  // }
+  if (!usuario) {
+    return <div>Cargando...</div>
+  }
 
   const buttonProps = (children, color, variant) => ({
     children,
@@ -64,7 +63,7 @@ export function UserDetalle({ id }) {
                   <CustomAvatar alt='user-profile' src='' variant='rounded' size={120} />
                   <Typography variant='h5'></Typography>
                 </div>
-                <Chip label='Author' color='secondary' size='small' variant='tonal' />
+                <Chip label={usuario?.role?.description} color='secondary' size='small' variant='tonal' />
               </div>
             </div>
             <div>
@@ -95,12 +94,12 @@ export function UserDetalle({ id }) {
                   </Typography>
                   <Typography>{usuario?.email}</Typography>
                 </div>
-                <div className='flex items-center flex-wrap gap-x-1.5'>
+                {/* <div className='flex items-center flex-wrap gap-x-1.5'>
                   <Typography className='font-medium' color='text.primary'>
                     Rol:
                   </Typography>
-                  <Typography>{usuario?.role_display}</Typography>
-                </div>
+                  <Typography>{usuario?.role?.description}</Typography>
+                </div> */}
                 <div className='flex items-center flex-wrap gap-x-1.5'>
                   <Typography className='font-medium' color='text.primary'>
                     Estado:
@@ -121,15 +120,17 @@ export function UserDetalle({ id }) {
                   <Typography className='font-medium' color='text.primary'>
                     Última Actualización:
                   </Typography>
-                  <Typography> {usuario?.updated_at ? format(new Date(usuario?.updated_at), 'dd/MM/yyyy', { locale: es }) : 'Fecha no disponible'}</Typography>
+                  <Typography>
+                    {' '}
+                    {usuario?.updated_at
+                      ? format(new Date(usuario?.updated_at), 'dd/MM/yyyy', { locale: es })
+                      : 'Fecha no disponible'}
+                  </Typography>
                 </div>
               </div>
             </div>
             <div className='flex gap-4 justify-center'>
-              <Button
-              
-                {...buttonProps('Editar', 'primary', 'contained')}
-              />
+              <Button {...buttonProps('Editar', 'primary', 'contained')} />
               <Button {...buttonProps('Suspender', 'error', 'tonal')} />
             </div>
           </CardContent>

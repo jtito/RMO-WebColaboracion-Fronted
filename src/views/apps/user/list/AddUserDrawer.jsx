@@ -198,8 +198,8 @@ const AddUserDrawer = ({ open, setOpen, handleClose, data }) => {
                 label='Seleccionar rol'
               >
                 {roles.map(role => (
-                  <MenuItem key={role.value} value={role.value}>
-                    {role.display_name}
+                  <MenuItem key={role.id} value={role.id}>
+                    {role.description}
                   </MenuItem>
                 ))}
               </CustomTextField>

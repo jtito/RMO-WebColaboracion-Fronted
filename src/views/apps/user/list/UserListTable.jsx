@@ -93,8 +93,6 @@ const UserListTable = () => {
           <Button
             variant='contained'
             startIcon={<i className='tabler-plus' />}
-
-            
             // onClick={() => setAddUserOpen(!addUserOpen)
 
             onClick={() => {
@@ -140,7 +138,7 @@ const UserListTable = () => {
                       <TableCell>{usuario.last_nameF}</TableCell>
                       <TableCell>{usuario.last_nameS}</TableCell>
                       <TableCell>{usuario.email}</TableCell>
-                      <TableCell>{usuario.role_display}</TableCell>
+                      <TableCell>{usuario.role?.description}</TableCell>
                       <TableCell>{usuario.is_active ? 'Activo' : 'Inactivo'}</TableCell>
                       <TableCell>{usuario.doc_num}</TableCell>
                       <TableCell>{usuario.country_display}</TableCell>

@@ -10,7 +10,7 @@ import API from './axios.config'
 
 export const IniciarSesion = async body => {
   try {
-    const response = await API.post('/login/', body, {
+    const response = await API.post('user/login/', body, {
       validateStatus: function (status) {
         return status < 500 // Acepta cualquier estado menor a 500
       }
@@ -24,7 +24,7 @@ export const IniciarSesion = async body => {
 }
 
 export const obtnerUsuarios = () => {
-  return API.get('/usuarios/', {
+  return API.get('user/usuarios/', {
     validateStatus: function (status) {
       return status < 500
     }
@@ -32,7 +32,7 @@ export const obtnerUsuarios = () => {
 }
 
 export const obtenerUsuarioPorId = async id => {
-  return API.get(`/usuarios/${id}`, {
+  return API.get(`user/usuarios/${id}`, {
     validateStatus: function (status) {
       return status < 500
     }
@@ -40,7 +40,7 @@ export const obtenerUsuarioPorId = async id => {
 }
 
 export const AgregarUsuario = body => {
-  return API.post(`/usuarios/`, body, {
+  return API.post(`user/usuarios/`, body, {
     validateStatus: function (status) {
       return status < 500
     }
@@ -48,7 +48,7 @@ export const AgregarUsuario = body => {
 }
 
 export const EliminarUsuario = async id => {
-  return await API.delete(`/usuarios/${id}`, {
+  return await API.delete(`user/usuarios/${id}`, {
     validateStatus: function (status) {
       return status < 500
     }
@@ -56,7 +56,7 @@ export const EliminarUsuario = async id => {
 }
 
 export const obtenerRoles = () => {
-  return API.get(`/role/`, {
+  return API.get(`roles/simple/`, {
     validateStatus: function (status) {
       return status < 500
     }
@@ -64,7 +64,7 @@ export const obtenerRoles = () => {
 }
 
 export const obtenerPaises = () => {
-  return API.get(`/countries/`, {
+  return API.get(`user/countries/`, {
     validateStatus: function (status) {
       return status < 500
     }
@@ -72,7 +72,7 @@ export const obtenerPaises = () => {
 }
 
 export const obtnerTipoDocIdentidad = () => {
-  return API.get(`/typedocs/`, {
+  return API.get(`user/typedocs/`, {
     validateStatus: function (status) {
       return status < 500
     }
@@ -80,7 +80,7 @@ export const obtnerTipoDocIdentidad = () => {
 }
 
 export const EditarUsuario = async id => {
-  return API.put(`/usuarios/${id}/`, {
+  return API.put(`user/usuarios/${id}/`, {
     validateStatus: function (status) {
       return status < 500
     }
