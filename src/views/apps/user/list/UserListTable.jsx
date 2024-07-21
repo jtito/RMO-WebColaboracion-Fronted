@@ -93,6 +93,7 @@ const UserListTable = () => {
           <Button
             variant='contained'
             startIcon={<i className='tabler-plus' />}
+
             
             // onClick={() => setAddUserOpen(!addUserOpen)
 
@@ -152,20 +153,10 @@ const UserListTable = () => {
                             <i className='tabler-trash text-[22px] text-textSecondary' />
                           </IconButton>
                           <IconButton>
-                            <Link href={getLocalizedUrl('apps/user/view', locale)} className='flex'>
+                            <Link href={getLocalizedUrl(`apps/user/view/${usuario.id}`, locale)} className='flex'>
                               <i className='tabler-eye text-[22px] text-textSecondary' />
                             </Link>
                           </IconButton>
-                          <OptionMenu
-                            iconClassName='text-[22px] text-textSecondary'
-                            options={[
-                              {
-                                text: 'Editar',
-                                icon: 'tabler-edit text-[22px]',
-                                menuItemProps: { className: 'flex items-center gap-2 text-textSecondary' }
-                              }
-                            ]}
-                          />
                         </div>
                       </TableCell>
                     </TableRow>

@@ -6,13 +6,17 @@ import Grid from '@mui/material/Grid'
 
 import VistaDetalle from '@views/apps/user/view/VistaDetalle'
 
-const verpage = async () => {
+
+const verpage = async ({ params }) => {
   // Vars
+  const { id } = params
+
+  console.log('id', id)
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12} lg={4} md={5}>
-        <VistaDetalle></VistaDetalle>
+        <VistaDetalle id={id} ></VistaDetalle>
       </Grid>
     </Grid>
   )
