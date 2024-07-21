@@ -7,8 +7,6 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export const authOptions = {
-  // adapter: PrismaAdapter(prisma),
-
   // ** Configure one or more authentication providers
   // ** Please refer to https://next-auth.js.org/configuration/options#providers for more `providers` options
   providers: [

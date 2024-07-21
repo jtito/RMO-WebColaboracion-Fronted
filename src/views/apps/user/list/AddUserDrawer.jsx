@@ -15,13 +15,7 @@ import { FormControlLabel } from '@mui/material'
 import { toast } from 'react-toastify'
 
 import CustomTextField from '@core/components/mui/TextField'
-import {
-  obtnerTipoDocIdentidad,
-  AgregarUsuario,
-  obtenerPaises,
-  obtenerRoles,
-  EditarUsuario
-} from '../../../../Service/axios.services'
+import { obtnerTipoDocIdentidad, AgregarUsuario, obtenerPaises, obtenerRoles } from '../../../../Service/axios.services'
 
 import DialogCloseButton from '@components/dialogs/DialogCloseButton'
 
@@ -36,7 +30,7 @@ const initialData = {
   country: ''
 }
 
-const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, editUserData }) => {
+const AddUserDrawer = ({ open, setOpen, handleClose, data }) => {
   const [error, setError] = useState(null)
   const [roles, setRoles] = useState([])
 
@@ -45,84 +39,34 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, editUserDa
 
   const [formData, setFormData] = useState(initialData)
 
-  useEffect(() => {
-    if (editUserData) {
-      setFormData({
-        last_nameF: editUserData.last_nameF,
-        last_nameS: editUserData.last_nameS,
-        name: editUserData.name,
-        email: editUserData.email,
-        role: editUserData.role,
-        type_doc: editUserData.type_doc,
-        doc_num: editUserData.doc_num,
-        country: editUserData.country
-      })
-    } else {
-      setFormData(initialData)
-    }
-  }, [editUserData])
-
   const handleSubmit = async e => {
     e.preventDefault()
 
     try {
-      let response
+      const response = await AgregarUsuario(formData)
 
-      if (modo === 'Agregar') {
-        response = await AgregarUsuario(formData)
-        console.log('agregar', formData)
+      console.log('Data enviada:', formData)
 
-        if (response.status === 201) {
-          toast.success('Usuario agregado exitosamente')
-          handleUserAdded(response.data)
-        }
-      } else if (modo === 'Editar') {
-        response = await EditarUsuario(selectedUser.id, formData)
-        console.log('editoid', selectedUser.id, formData)
-
-        if (response.status === 200) {
-          toast.success('Usuario editado exitosamente')
-          editUserData(response.data)
-
-          console.log('edito', response.data)
+      if (response.status === 201) {
+        toast.success('Usuario Registrado')
+        handleClose()
+      } else {
+        if (response.data && response.data.doc_num) {
+          setError('El Numero de Documento ya Existe', response.data.doc_num)
+        } else if (response.data && response.data.email) {
+          setError('Email ya se enceuntra Registrado', response.data.email)
+        } else {
+          setError('No se pudo Registrar')
         }
       }
-
-      handleClose()
     } catch (error) {
-      console.error('Error al agregar/editar el usuario:', error)
-      toast.error('Error al agregar/editar el usuario')
+      if (error.response) {
+        setError(`Error en la solicitud: ${error.response.data}`)
+      } else {
+        setError(`Error en la solicitud: ${error.message}`)
+      }
     }
   }
-
-  // const handleSubmit = async e => {
-  //   e.preventDefault()
-
-  //   try {
-  //     const response = await AgregarUsuario(formData)
-
-  //     console.log('Data enviada:', formData)
-
-  //     if (response.status === 201) {
-  //       toast.success('Usuario Registrado')
-  //       handleClose()
-  //     } else {
-  //       if (response.data && response.data.doc_num) {
-  //         setError('El Numero de Documento ya Existe', response.data.doc_num)
-  //       } else if (response.data && response.data.email) {
-  //         setError('Email ya se enceuntra Registrado', response.data.email)
-  //       } else {
-  //         setError('No se pudo Registrar')
-  //       }
-  //     }
-  //   } catch (error) {
-  //     if (error.response) {
-  //       setError(`Error en la solicitud: ${error.response.data}`)
-  //     } else {
-  //       setError(`Error en la solicitud: ${error.message}`)
-  //     }
-  //   }
-  // }
 
   const handleReset = () => {
     handleClose()
@@ -308,7 +252,7 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, editUserDa
 
         <DialogActions className='justify-center pbs-0 sm:pbe-16 sm:pli-16'>
           <Button variant='contained' type='submit'>
-            {editUserData ? 'Actualizar' : 'Guardar'}
+            Guardar
           </Button>
           <Button variant='tonal' color='error' type='reset' onClick={handleReset}>
             Cancelar
