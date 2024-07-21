@@ -1,14 +1,52 @@
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
-import Divider from '@mui/material/Divider'
-import Button from '@mui/material/Button'
+'use client'
+import { useEffect, useState } from 'react'
 
-import CustomAvatar from '@core/components/mui/Avatar'
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
 
-export function UserDetalle() {
-  // Vars
+import { Button, Card, CardContent, Chip, Divider, Typography } from '@mui/material'
+
+import CustomAvatar from '@/@core/components/mui/Avatar'
+
+import { obtenerUsuarioPorId } from '../../../../../Service/axios.services'
+import AddUserDrawer from '../../list/AddUserDrawer'
+
+export function UserDetalle({ id }) {
+
+  const [usuario, setUsuario] = useState()
+  const [addUserOpen, setAddUserOpen] = useState(false)
+
+  console.log('useridx', id)
+
+  const obtenerUsuarioid = async id => {
+    console.log('userid', id)
+
+    try {
+      const response = await obtenerUsuarioPorId(id)
+
+      console.log('userid', id)
+
+      if (response.status === 200) {
+        setUsuario(response.data)
+
+        console.log('dat', response.data)
+      } else {
+        console.error('Error al obtener los usuarios:', response.status)
+        setIsLoading(false)
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error)
+    }
+  }
+
+  useEffect(() => {
+    obtenerUsuarioid(id)
+  }, [id])
+
+  // if (!usuario) {
+  //   return <div>Cargando...</div>
+  // }
+
   const buttonProps = (children, color, variant) => ({
     children,
     color,
@@ -16,79 +54,90 @@ export function UserDetalle() {
   })
 
   return (
-    <Card>
-      {
-        <CardContent className='flex flex-col pbs-12 gap-6'>
-          <div className='flex flex-col gap-6'>
-            <div className='flex items-center justify-center flex-col gap-4'>
-              <div className='flex flex-col items-center gap-4'>
-                <CustomAvatar alt='user-profile' src='' variant='rounded' size={120} />
-                <Typography variant='h5'></Typography>
-              </div>
-              <Chip label='Author' color='secondary' size='small' variant='tonal' />
-            </div>
-          </div>
-          <div>
-            <Typography variant='h5'>Detalle</Typography>
-            <Divider className='mlb-4' />
-            <div className='flex flex-col gap-2'>
-              <div className='flex items-center flex-wrap gap-x-1.5'>
-                <Typography className='font-medium' color='text.primary'>
-                  Nombre:
-                </Typography>
-                <Typography></Typography>
-              </div>
-              <div className='flex items-center flex-wrap gap-x-1.5'>
-                <Typography className='font-medium' color='text.primary'>
-                  Apellido Paterno:
-                </Typography>
-                <Typography></Typography>
-              </div>
-              <div className='flex items-center flex-wrap gap-x-1.5'>
-                <Typography className='font-medium' color='text.primary'>
-                  Apellido Materno:
-                </Typography>
-                <Typography></Typography>
-              </div>
-              <div className='flex items-center flex-wrap gap-x-1.5'>
-                <Typography className='font-medium' color='text.primary'>
-                  Email:
-                </Typography>
-                <Typography></Typography>
-              </div>
-              <div className='flex items-center flex-wrap gap-x-1.5'>
-                <Typography className='font-medium' color='text.primary'>
-                  Rol:
-                </Typography>
-                <Typography></Typography>
-              </div>
-              <div className='flex items-center flex-wrap gap-x-1.5'>
-                <Typography className='font-medium' color='text.primary'>
-                  Estado:
-                </Typography>
-                <Typography></Typography>
-              </div>
-              <div className='flex items-center flex-wrap gap-x-1.5'>
-                <Typography className='font-medium' color='text.primary'>
-                  Fecha de Creación:
-                </Typography>
-                <Typography></Typography>
-              </div>
-              <div className='flex items-center flex-wrap gap-x-1.5'>
-                <Typography className='font-medium' color='text.primary'>
-                  Última Actualización:
-                </Typography>
-                <Typography></Typography>
+    <>
+      <Card>
+        {
+          <CardContent className='flex flex-col pbs-12 gap-6'>
+            <div className='flex flex-col gap-6'>
+              <div className='flex items-center justify-center flex-col gap-4'>
+                <div className='flex flex-col items-center gap-4'>
+                  <CustomAvatar alt='user-profile' src='' variant='rounded' size={120} />
+                  <Typography variant='h5'></Typography>
+                </div>
+                <Chip label='Author' color='secondary' size='small' variant='tonal' />
               </div>
             </div>
-          </div>
-          <div className='flex gap-4 justify-center'>
-            <Button {...buttonProps('Editar', 'primary', 'contained')} />
-            <Button {...buttonProps('Suspender', 'error', 'tonal')} />
-          </div>
-        </CardContent>
-      }
-    </Card>
+            <div>
+              <Typography variant='h5'>Detalle</Typography>
+              <Divider className='mlb-4' />
+              <div className='flex flex-col gap-2'>
+                <div className='flex items-center flex-wrap gap-x-1.5'>
+                  <Typography className='font-medium' color='text.primary'>
+                    Nombre:
+                  </Typography>
+                  <Typography>{usuario?.name}</Typography>
+                </div>
+                <div className='flex items-center flex-wrap gap-x-1.5'>
+                  <Typography className='font-medium' color='text.primary'>
+                    Apellido Paterno:
+                  </Typography>
+                  <Typography>{usuario?.last_nameF}</Typography>
+                </div>
+                <div className='flex items-center flex-wrap gap-x-1.5'>
+                  <Typography className='font-medium' color='text.primary'>
+                    Apellido Materno:
+                  </Typography>
+                  <Typography>{usuario?.last_nameS}</Typography>
+                </div>
+                <div className='flex items-center flex-wrap gap-x-1.5'>
+                  <Typography className='font-medium' color='text.primary'>
+                    Email:
+                  </Typography>
+                  <Typography>{usuario?.email}</Typography>
+                </div>
+                <div className='flex items-center flex-wrap gap-x-1.5'>
+                  <Typography className='font-medium' color='text.primary'>
+                    Rol:
+                  </Typography>
+                  <Typography>{usuario?.role_display}</Typography>
+                </div>
+                <div className='flex items-center flex-wrap gap-x-1.5'>
+                  <Typography className='font-medium' color='text.primary'>
+                    Estado:
+                  </Typography>
+                  <Typography>{usuario?.is_active ? 'Activo' : 'Inactivo'}</Typography>
+                </div>
+                <div className='flex items-center flex-wrap gap-x-1.5'>
+                  <Typography className='font-medium' color='text.primary'>
+                    Fecha de Creación:
+                  </Typography>
+                  <Typography>
+                    {usuario?.create_at
+                      ? format(new Date(usuario?.create_at), 'dd/MM/yyyy', { locale: es })
+                      : 'Fecha no disponible'}
+                  </Typography>
+                </div>
+                <div className='flex items-center flex-wrap gap-x-1.5'>
+                  <Typography className='font-medium' color='text.primary'>
+                    Última Actualización:
+                  </Typography>
+                  <Typography> {usuario?.updated_at ? format(new Date(usuario?.updated_at), 'dd/MM/yyyy', { locale: es }) : 'Fecha no disponible'}</Typography>
+                </div>
+              </div>
+            </div>
+            <div className='flex gap-4 justify-center'>
+              <Button
+              
+                {...buttonProps('Editar', 'primary', 'contained')}
+              />
+              <Button {...buttonProps('Suspender', 'error', 'tonal')} />
+            </div>
+          </CardContent>
+        }
+      </Card>
+
+      <AddUserDrawer open={addUserOpen} setOpen={setAddUserOpen} />
+    </>
   )
 }
 

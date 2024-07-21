@@ -1,14 +1,21 @@
+
+
 import { Grid } from "@mui/material"
 
 import UserDetalle from './UserDetalle'
 
 
 
-const VistaDetalle = () => {
+
+
+const VistaDetalle =({ id }) => {
+
+
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <UserDetalle />
+        <UserDetalle  id={id}  />
       </Grid>
 
     </Grid>
