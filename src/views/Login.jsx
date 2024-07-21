@@ -103,8 +103,8 @@ const Login = ({ mode }) => {
   } = useForm({
     resolver: valibotResolver(schema),
     defaultValues: {
-      email: 'admin@vuexy.com',
-      password: 'admin'
+      email: '',
+      password: ''
     }
   })
 
@@ -119,6 +119,8 @@ const Login = ({ mode }) => {
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const onSubmit = async data => {
+    console.log('Datos enviados para iniciar sesión:', data);
+
     const res = await signIn('credentials', {
       email: data.email,
       password: data.password,
@@ -139,6 +141,37 @@ const Login = ({ mode }) => {
     }
   }
   
+    /*const onSubmit = async data => {
+      console.log('Datos enviados para iniciar sesión:', data);
+
+      try {
+        const res = await IniciarSesion({
+          email: data.email,
+          password: data.password
+        });
+
+        console.log('Respuesta de IniciarSesion:', res);
+
+        if (res && res.status === 200 && !res.data.error) {
+          const redirectURL = '/dashboards/crm' //searchParams.get('redirectTo') ?? '/';
+
+          console.log('redirectURL:', redirectURL);
+          router.push(getLocalizedUrl(redirctURL, locale));
+        } else {
+          if (res?.data?.error) {
+            const error = res.data.error;
+
+            setErrorState(error);
+          } else {
+            setErrorState('Ha ocurrido un error desconocido. Por favor, inténtelo de nuevo.');
+          }
+        }
+      } catch (error) {
+        console.error('Error durante el inicio de sesión:', error);
+        alert('Error inesperado: ' + error.message); // Manejo de errores inesperados
+      }
+    }*/
+
     /*const onSubmit = async data => {
       console.log('Datos enviados para iniciar sesión:', data);
 

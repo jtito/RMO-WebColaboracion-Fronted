@@ -80,11 +80,11 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           <MenuItem href={`/${locale}/dashboards/crm`} icon={<i className='tabler-file-description' />}>
             {dictionary['navigation'].Publicacion}
           </MenuItem>
-          <MenuItem href={`/${locale}/apps/user/list`} icon={<i className='tabler-user' />}>
-            {dictionary['navigation'].Usuarios}
-          </MenuItem>
           <MenuItem href={`/${locale}/apps/invoice/list`} icon={<i className='tabler-checkup-list' />}>
             {dictionary['navigation'].GestionPublicacion}
+          </MenuItem>
+          <MenuItem href={`/${locale}/apps/user/list`} icon={<i className='tabler-user' />}>
+            {dictionary['navigation'].GestionUsuario}
           </MenuItem>
           {/* <MenuItem href={`/${locale}/apps/calendar`} icon={<i className='tabler-calendar' />}>
             {dictionary['navigation'].calendar}

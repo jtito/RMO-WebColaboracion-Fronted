@@ -39,7 +39,7 @@ const UserProfile = ({ tabContentList, data }) => {
                 }
                 value='profile'
               />
-              <Tab
+              {/* <Tab
                 label={
                   <div className='flex items-center gap-1.5'>
                     <i className='tabler-users text-lg' />
@@ -47,8 +47,8 @@ const UserProfile = ({ tabContentList, data }) => {
                   </div>
                 }
                 value='teams'
-              />
-              <Tab
+              /> */}
+              {/* <Tab
                 label={
                   <div className='flex items-center gap-1.5'>
                     <i className='tabler-layout-grid text-lg' />
@@ -56,8 +56,8 @@ const UserProfile = ({ tabContentList, data }) => {
                   </div>
                 }
                 value='projects'
-              />
-              <Tab
+              /> */}
+              {/* <Tab
                 label={
                   <div className='flex items-center gap-1.5'>
                     <i className='tabler-link text-lg' />
@@ -65,7 +65,7 @@ const UserProfile = ({ tabContentList, data }) => {
                   </div>
                 }
                 value='connections'
-              />
+              /> */}
             </CustomTabList>
 
             <TabPanel value={activeTab} className='p-0'>

@@ -29,7 +29,8 @@ const DashboardCRM = () => {
   }
 
   return (
-    <Grid container spacing={6}>
+    
+    /*<Grid container spacing={6}>
       <div>
         <button onClick={handleImprime}>Imprime</button>
         <ul>
@@ -38,7 +39,8 @@ const DashboardCRM = () => {
           ))}
         </ul>
       </div>
-    </Grid>
+    </Grid>*/
+    <></>
   )
 }
 

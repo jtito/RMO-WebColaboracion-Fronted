@@ -68,14 +68,14 @@ const AboutOverview = ({ data }) => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <CardContent className='flex flex-col gap-6'>
+          {/* <CardContent className='flex flex-col gap-6'>
             <div className='flex flex-col gap-4'>
               <Typography className='uppercase' variant='body2' color='text.disabled'>
                 Overview
               </Typography>
               {data?.overview && renderList(data?.overview)}
             </div>
-          </CardContent>
+          </CardContent> */}
         </Card>
       </Grid>
     </Grid>
