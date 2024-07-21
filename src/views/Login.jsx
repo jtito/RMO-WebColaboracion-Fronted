@@ -103,8 +103,8 @@ const Login = ({ mode }) => {
   } = useForm({
     resolver: valibotResolver(schema),
     defaultValues: {
-      email: 'admin@vuexy.com',
-      password: 'admin'
+      email: '',
+      password: ''
     }
   })
 
@@ -119,6 +119,8 @@ const Login = ({ mode }) => {
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const onSubmit = async data => {
+    console.log('Datos enviados para iniciar sesión:', data);
+
     const res = await signIn('credentials', {
       email: data.email,
       password: data.password,
@@ -138,7 +140,7 @@ const Login = ({ mode }) => {
       }
     }
   }
-  
+
     /*const onSubmit = async data => {
       console.log('Datos enviados para iniciar sesión:', data);
 

@@ -15,13 +15,13 @@ const ProfileTab = ({ data }) => {
       </Grid>
       <Grid item lg={8} md={7} xs={12}>
         <Grid container spacing={6}>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <ActivityTimeline />
-          </Grid>
-          <ConnectionsTeams connections={data?.connections} teamsTech={data?.teamsTech} />
-          <Grid item xs={12}>
+          </Grid> */}
+          {/* <ConnectionsTeams connections={data?.connections} teamsTech={data?.teamsTech} /> */}
+          {/* <Grid item xs={12}>
             <ProjectsTable projectTable={data?.projectTable} />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
     </Grid>

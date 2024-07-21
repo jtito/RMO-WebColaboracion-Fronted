@@ -7,14 +7,16 @@ import InvoiceCard from './InvoiceCard'
 
 const InvoiceList = ({ invoiceData }) => {
   return (
-    <Grid container spacing={6}>
+    
+    /*<Grid container spacing={6}>
       <Grid item xs={12}>
         <InvoiceCard />
       </Grid>
       <Grid item xs={12}>
         <InvoiceListTable invoiceData={invoiceData} />
       </Grid>
-    </Grid>
+    </Grid>*/
+    <></>
   )
 }
 
