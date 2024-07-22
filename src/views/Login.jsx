@@ -7,6 +7,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
+import { toast } from 'react-toastify'
+
 // MUI Imports
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
@@ -119,7 +121,7 @@ const Login = ({ mode }) => {
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const onSubmit = async data => {
-    console.log('Datos enviados para iniciar sesión:', data);
+    console.log('Datos enviados para iniciar sesión:', data)
 
     const res = await signIn('credentials', {
       email: data.email,
@@ -127,11 +129,15 @@ const Login = ({ mode }) => {
       redirect: false
     })
 
+    console.log('Respuesta de IniciarSesion:', res)
+
     if (res && res.ok && res.error === null) {
       // Vars
       const redirectURL = searchParams.get('redirectTo') ?? '/'
 
       router.push(getLocalizedUrl(redirectURL, locale))
+    } else if (res.status === 401) {
+      toast.error('Cuenta o Password incorrecto')
     } else {
       if (res?.error) {
         const error = JSON.parse(res.error)
@@ -140,8 +146,8 @@ const Login = ({ mode }) => {
       }
     }
   }
-  
-    /*const onSubmit = async data => {
+
+  /*const onSubmit = async data => {
       console.log('Datos enviados para iniciar sesión:', data);
 
       try {
@@ -172,7 +178,7 @@ const Login = ({ mode }) => {
       }
     }*/
 
-    /*const onSubmit = async data => {
+  /*const onSubmit = async data => {
       console.log('Datos enviados para iniciar sesión:', data);
 
       try {
