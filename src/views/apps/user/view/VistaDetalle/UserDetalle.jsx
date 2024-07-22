@@ -16,6 +16,11 @@ export function UserDetalle({ id }) {
   const [usuario, setUsuario] = useState()
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [editUserOpen, setEditUserOpen] = useState(false)
+  const actualizaUsuario = async () => {
+    if (id) {
+      await obtenerUsuarioid(id);
+    }
+  }
 
   console.log('useridx', id)
 
@@ -139,8 +144,19 @@ export function UserDetalle({ id }) {
         }
       </Card>
 
-      <AddUserDrawer open={addUserOpen} setOpen={setAddUserOpen} />
-      <EditUserDrawer open={editUserOpen} setOpen={setEditUserOpen} handleClose={() => setEditUserOpen(false)} userData={usuario} />
+      <AddUserDrawer 
+        open={addUserOpen} 
+        setOpen={setAddUserOpen} 
+      />
+      <EditUserDrawer 
+        open={editUserOpen} 
+        setOpen={setEditUserOpen} 
+        handleClose={() => {
+          setEditUserOpen(false);
+          actualizaUsuario();
+        }}
+        userData={usuario}
+      />
     </>
   )
 }
