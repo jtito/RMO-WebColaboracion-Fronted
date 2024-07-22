@@ -86,3 +86,11 @@ export const EditarUsuario = async id => {
     }
   })
 }
+
+export const ObteneridRol = async idRol => {
+  return API.get(`roles/role/${idRol}/`, {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}

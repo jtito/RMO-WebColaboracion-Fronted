@@ -1,4 +1,8 @@
+'use client'
+
 // MUI Imports
+import { useEffect, useState } from 'react'
+
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardActions from '@mui/material/CardActions'
@@ -8,6 +12,7 @@ import Button from '@mui/material/Button'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
+import { ObteneridRol, obtenerUsuarioPorId } from '@/Service/axios.services'
 
 // Vars
 const tableData = [
@@ -30,12 +35,47 @@ const tableData = [
     Comite: false,
     Pais: true,
     Permiso: 'Archivar'
-  },
- 
+  }
 ]
 
-const PermisoUsuario = ({ id }) => {
+const PermisoUsuario = ({ id, usuario }) => {
   console.log('hol id', id)
+
+  console.log('dataUsuarios', usuario)
+
+  const [permisos, setPermisos] = useState([])
+
+  // Obtener el ID del rol del usuario
+  const idRol = usuario?.role?.id
+
+  console.log(idRol)
+
+  const obtenerRolId = async idRol => {
+    console.log('userid', idRol)
+
+    try {
+      const response = await ObteneridRol(idRol)
+
+      console.log('userid', idRol)
+
+      if (response.status === 200) {
+        setPermisos(response.data)
+
+        console.log('datRol', response.data)
+      } else {
+        console.error('Error al obtener los usuarios:', response.status)
+        setIsLoading(false)
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error)
+    }
+  }
+
+  useEffect(() => {
+    obtenerRolId(idRol)
+  }, [idRol])
+
+  console.log('usuario', permisos?.description)
 
   return (
     <Card>

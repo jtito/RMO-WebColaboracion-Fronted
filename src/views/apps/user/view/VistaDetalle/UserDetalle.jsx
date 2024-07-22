@@ -11,36 +11,10 @@ import CustomAvatar from '@/@core/components/mui/Avatar'
 import { obtenerUsuarioPorId } from '../../../../../Service/axios.services'
 import AddUserDrawer from '../../list/AddUserDrawer'
 
-export function UserDetalle({ id }) {
-  const [usuario, setUsuario] = useState()
+export function UserDetalle({ id, usuario }) {
   const [addUserOpen, setAddUserOpen] = useState(false)
 
   console.log('useridx', id)
-
-  const obtenerUsuarioid = async id => {
-    console.log('userid', id)
-
-    try {
-      const response = await obtenerUsuarioPorId(id)
-
-      console.log('userid', id)
-
-      if (response.status === 200) {
-        setUsuario(response.data)
-
-        console.log('dat', response.data)
-      } else {
-        console.error('Error al obtener los usuarios:', response.status)
-        setIsLoading(false)
-      }
-    } catch (error) {
-      console.error('Error en la solicitud:', error)
-    }
-  }
-
-  useEffect(() => {
-    obtenerUsuarioid(id)
-  }, [id])
 
   if (!usuario) {
     return <div>Cargando...</div>

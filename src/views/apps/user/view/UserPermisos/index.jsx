@@ -13,7 +13,10 @@ import Grid from '@mui/material/Grid'
 import CustomTabList from '@core/components/mui/TabList'
 import { obtenerUsuarioPorId } from '@/Service/axios.services'
 
-const UserPermisos = ({ id, tabContentList }) => {
+const UserPermisos = ({ id, tabContentList, usuario }) => {
+  
+  console.log('logid', id)
+
   const [activeTab, setActiveTab] = useState('permisosRol')
 
   const [permisos, setPermisos] = useState([])
@@ -22,30 +25,6 @@ const UserPermisos = ({ id, tabContentList }) => {
     setActiveTab(value)
   }
 
-  const cargarUsuario = async () => {
-    try {
-      const usuarioData = await obtenerUsuarioPorId(id)
-
-      if (usuarioData && usuarioData.role && usuarioData.role.detail_permisos) {
-        setPermisos(usuarioData.role.detail_permisos)
-        console.log('data', usuarioData.role.detail_permisos)
-      } else {
-        console.warn('El usuario no tiene roles o permisos definidos.')
-        setPermisos([])
-      }
-    } catch (error) {
-      console.error('Error al cargar usuario:', error)
-    }
-  }
-
-  const handleCheckboxChange = (permiso, event) => {
-    // Manejar el cambio de estado del checkbox aquí
-    console.log(`Permiso cambiado: ${permiso.permission_id.description}, Checked: ${event.target.checked}`)
-  }
-
-  useEffect(() => {
-    cargarUsuario()
-  }, [id])
 
   return (
     <>
