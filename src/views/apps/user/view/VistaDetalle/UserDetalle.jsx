@@ -10,9 +10,16 @@ import CustomAvatar from '@/@core/components/mui/Avatar'
 
 import { obtenerUsuarioPorId } from '../../../../../Service/axios.services'
 import AddUserDrawer from '../../list/AddUserDrawer'
+import EditUserDrawer from '../../list/EditUserDrawer'
 
 export function UserDetalle({ id, usuario }) {
   const [addUserOpen, setAddUserOpen] = useState(false)
+  const [editUserOpen, setEditUserOpen] = useState(false)
+  const actualizaUsuario = async () => {
+    if (id) {
+      await obtenerUsuarioid(id);
+    }
+  }
 
   console.log('useridx', id)
 
@@ -104,14 +111,26 @@ export function UserDetalle({ id, usuario }) {
               </div>
             </div>
             <div className='flex gap-4 justify-center'>
-              <Button {...buttonProps('Editar', 'primary', 'contained')} />
+              <Button {...buttonProps('Editar', 'primary', 'contained')} onClick={() => setEditUserOpen(true)} />
               <Button {...buttonProps('Suspender', 'error', 'tonal')} />
             </div>
           </CardContent>
         }
       </Card>
 
-      <AddUserDrawer open={addUserOpen} setOpen={setAddUserOpen} />
+      <AddUserDrawer 
+        open={addUserOpen} 
+        setOpen={setAddUserOpen} 
+      />
+      <EditUserDrawer 
+        open={editUserOpen} 
+        setOpen={setEditUserOpen} 
+        handleClose={() => {
+          setEditUserOpen(false);
+          actualizaUsuario();
+        }}
+        userData={usuario}
+      />
     </>
   )
 }
