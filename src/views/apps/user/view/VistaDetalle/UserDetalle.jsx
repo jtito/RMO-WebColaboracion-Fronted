@@ -10,10 +10,12 @@ import CustomAvatar from '@/@core/components/mui/Avatar'
 
 import { obtenerUsuarioPorId } from '../../../../../Service/axios.services'
 import AddUserDrawer from '../../list/AddUserDrawer'
+import EditUserDrawer from '../../list/EditUserDrawer'
 
 export function UserDetalle({ id }) {
   const [usuario, setUsuario] = useState()
   const [addUserOpen, setAddUserOpen] = useState(false)
+  const [editUserOpen, setEditUserOpen] = useState(false)
 
   console.log('useridx', id)
 
@@ -130,7 +132,7 @@ export function UserDetalle({ id }) {
               </div>
             </div>
             <div className='flex gap-4 justify-center'>
-              <Button {...buttonProps('Editar', 'primary', 'contained')} />
+              <Button {...buttonProps('Editar', 'primary', 'contained')} onClick={() => setEditUserOpen(true)} />
               <Button {...buttonProps('Suspender', 'error', 'tonal')} />
             </div>
           </CardContent>
@@ -138,6 +140,7 @@ export function UserDetalle({ id }) {
       </Card>
 
       <AddUserDrawer open={addUserOpen} setOpen={setAddUserOpen} />
+      <EditUserDrawer open={editUserOpen} setOpen={setEditUserOpen} handleClose={() => setEditUserOpen(false)} userData={usuario} />
     </>
   )
 }
