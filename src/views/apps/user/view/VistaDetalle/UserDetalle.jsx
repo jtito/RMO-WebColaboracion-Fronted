@@ -15,6 +15,11 @@ import EditUserDrawer from '../../list/EditUserDrawer'
 export function UserDetalle({ id, usuario }) {
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [editUserOpen, setEditUserOpen] = useState(false)
+  const actualizaUsuario = async () => {
+    if (id) {
+      await obtenerUsuarioid(id);
+    }
+  }
 
   console.log('useridx', id)
 
@@ -113,8 +118,19 @@ export function UserDetalle({ id, usuario }) {
         }
       </Card>
 
-      <AddUserDrawer open={addUserOpen} setOpen={setAddUserOpen} />
-      <EditUserDrawer open={editUserOpen} setOpen={setEditUserOpen} handleClose={() => setEditUserOpen(false)} userData={usuario} />
+      <AddUserDrawer 
+        open={addUserOpen} 
+        setOpen={setAddUserOpen} 
+      />
+      <EditUserDrawer 
+        open={editUserOpen} 
+        setOpen={setEditUserOpen} 
+        handleClose={() => {
+          setEditUserOpen(false);
+          actualizaUsuario();
+        }}
+        userData={usuario}
+      />
     </>
   )
 }

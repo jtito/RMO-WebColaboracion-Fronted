@@ -183,8 +183,8 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
                 select
                 fullWidth
                 id='select-role'
-                value={formData.role || ''}
-                onChange={e => setFormData({ ...formData, role: e.target.value })}
+                value={formData.role.id || ''}
+                onChange={e => setFormData({ ...formData, role: { id: e.target.value } })}
                 label='Seleccionar rol'
               >
                 {roles.map(role => (
