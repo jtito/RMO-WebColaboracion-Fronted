@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // MUI Imports
 import Tab from '@mui/material/Tab'
@@ -11,13 +11,41 @@ import Grid from '@mui/material/Grid'
 
 // Component Imports
 import CustomTabList from '@core/components/mui/TabList'
+import { obtenerUsuarioPorId } from '@/Service/axios.services'
 
 const UserPermisos = ({ id, tabContentList }) => {
   const [activeTab, setActiveTab] = useState('permisosRol')
 
+  const [permisos, setPermisos] = useState([])
+
   const handleChange = (event, value) => {
     setActiveTab(value)
   }
+
+  const cargarUsuario = async () => {
+    try {
+      const usuarioData = await obtenerUsuarioPorId(id)
+
+      if (usuarioData && usuarioData.role && usuarioData.role.detail_permisos) {
+        setPermisos(usuarioData.role.detail_permisos)
+        console.log('data', usuarioData.role.detail_permisos)
+      } else {
+        console.warn('El usuario no tiene roles o permisos definidos.')
+        setPermisos([])
+      }
+    } catch (error) {
+      console.error('Error al cargar usuario:', error)
+    }
+  }
+
+  const handleCheckboxChange = (permiso, event) => {
+    // Manejar el cambio de estado del checkbox aquí
+    console.log(`Permiso cambiado: ${permiso.permission_id.description}, Checked: ${event.target.checked}`)
+  }
+
+  useEffect(() => {
+    cargarUsuario()
+  }, [id])
 
   return (
     <>
@@ -26,7 +54,12 @@ const UserPermisos = ({ id, tabContentList }) => {
           <Grid item xs={12}>
             <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
               <Tab icon={<i className='tabler-lock' />} value='permisosRol' label='Permisos' iconPosition='start' />
-              <Tab icon={<i className='tabler-lock' />} value='notifications' label='Notificaciones' iconPosition='start' />
+              <Tab
+                icon={<i className='tabler-bell' />}
+                value='notifications'
+                label='Notificaciones'
+                iconPosition='start'
+              />
             </CustomTabList>
           </Grid>
 
