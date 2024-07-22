@@ -93,4 +93,22 @@ export const ObteneridRol = async idRol => {
       return status < 500
     }
   })
+
 }
+
+
+export const ActualizarUsuario = async (id, body) => {
+  try {
+    const response = await API.put(`user/usuarios/${id}/`, body, {
+      validateStatus: function (status) {
+        return status < 500
+      }
+    });
+
+    return response;
+  } catch (error) {
+    console.error('Error en ActualizarUsuario:', error);
+    throw error;
+  }
+}
+
