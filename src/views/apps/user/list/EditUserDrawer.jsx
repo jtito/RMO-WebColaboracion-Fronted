@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import { toast } from 'react-toastify'
 
 import Grid from '@mui/material/Grid'
@@ -11,7 +12,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 
 import CustomTextField from '@core/components/mui/TextField'
-import { obtenerTipoDocIdentidad, ActualizarUsuario, obtenerPaises, obtenerRoles } from '../../../../Service/axios.services'
+import { obtnerTipoDocIdentidad, ActualizarUsuario, obtenerPaises, obtenerRoles } from '../../../../Service/axios.services'
 
 import DialogCloseButton from '@components/dialogs/DialogCloseButton'
 
@@ -20,27 +21,28 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
   const [roles, setRoles] = useState([])
   const [paises, setPaises] = useState([])
   const [Doc, setDoc] = useState([])
-
+ 
   const [formData, setFormData] = useState(userData)
 
   const handleSubmit = async e => {
     e.preventDefault()
     setError(null)
-  
+
     const updatedData = {
       ...formData,
       role: formData.role.id,
     }
-  
+
     console.log('Datos enviados:', updatedData)
-  
+
     try {
       const response = await ActualizarUsuario(formData.id, updatedData)
-  
+
       console.log('Respuesta del servidor:', response)
-  
+
       if (response.status === 200) {
         toast.success('Usuario Actualizado')
+       
         handleClose()
       } else {
         if (response.data && response.data.doc_num) {
@@ -57,6 +59,7 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
       } else {
         setError(`Error en la solicitud: ${error.message}`)
       }
+
       toast.error(`Error en la solicitud: ${error.message}`);
     }
   }
@@ -69,7 +72,7 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
 
   const Doctype = async () => {
     try {
-      const response = await obtenerTipoDocIdentidad()
+      const response = await obtnerTipoDocIdentidad()
 
       console.log(response, 'respuesta')
 
