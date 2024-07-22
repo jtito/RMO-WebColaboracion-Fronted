@@ -11,15 +11,7 @@ import Grid from '@mui/material/Grid'
 import { obtnerUsuarios } from '../../../../../Service/axios.services'
 
 const Publicacionepage = () => {
-
-
-
-
-  return (
-
-
-    <></>
-  )
+  return <></>
 }
 
-export default  Publicacionepage
+export default Publicacionepage
