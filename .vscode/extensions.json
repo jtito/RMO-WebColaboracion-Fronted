@@ -21,6 +21,7 @@
     "yoavbls.pretty-ts-errors",
     "jasonnutter.search-node-modules",
     "stylelint.vscode-stylelint",
-    "styled-components.vscode-styled-components"
+    "styled-components.vscode-styled-components",
+    "loczek.next-js-ts-snippets"
   ]
 }

@@ -84,7 +84,7 @@ const PermisoUsuario = ({ id, usuario }) => {
         <table className={tableStyles.table}>
           <thead>
             <tr>
-              <th>Permiso</th>
+              <th>Permisos</th>
               <th>Comité</th>
               <th>Pais</th>
             </tr>
