@@ -72,7 +72,7 @@ const Logo = () => {
   // return <Img src='/next.svg' width={100} height={25} alt='logo' /> // for example
   return (
     <Link href={getLocalizedUrl('/', locale)} className='flex items-center'>
-      <Image src={logo} width={170} height={100} alt='logo' />
+      <Image src={logo} width={160} height={110} alt='logo' />
       {/* <VuexyLogo className='text-2xl text-primary' /> */}
       <LogoText
         ref={logoTextRef}
