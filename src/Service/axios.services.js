@@ -97,6 +97,8 @@ export const ObteneridRol = async idRol => {
 }
 
 
+
+
 export const ActualizarUsuario = async (id, body) => {
   try {
     const response = await API.put(`user/usuarios/${id}/`, body, {
