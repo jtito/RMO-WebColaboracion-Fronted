@@ -14,6 +14,8 @@ import UserProfileHeader from './UserProfileHeader'
 import CustomTabList from '@core/components/mui/TabList'
 
 const UserProfile = ({ tabContentList, data }) => {
+  console.log('nuevaData', data)
+
   // States
   const [activeTab, setActiveTab] = useState('profile')
 

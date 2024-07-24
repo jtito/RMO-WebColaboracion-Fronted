@@ -97,6 +97,7 @@ const Login = ({ mode }) => {
   const theme = useTheme()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
   const authBackground = useImageVariant(mode, lightImg, darkImg)
+  const [usuario, setUsuario] = useState([])
 
   const {
     control,
@@ -136,6 +137,7 @@ const Login = ({ mode }) => {
       const redirectURL = searchParams.get('redirectTo') ?? '/'
 
       router.push(getLocalizedUrl(redirectURL, locale))
+
     } else if (res.status === 401) {
       toast.error('Cuenta o Password incorrecto')
     } else {
