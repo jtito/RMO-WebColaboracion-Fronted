@@ -14,7 +14,7 @@ import CustomTabList from '@core/components/mui/TabList'
 import { obtenerUsuarioPorId } from '@/Service/axios.services'
 
 const UserPermisos = ({ id, tabContentList, usuario }) => {
-  
+
   console.log('logid', id)
 
   const [activeTab, setActiveTab] = useState('permisosRol')
@@ -33,12 +33,12 @@ const UserPermisos = ({ id, tabContentList, usuario }) => {
           <Grid item xs={12}>
             <CustomTabList onChange={handleChange} variant='scrollable' pill='true'>
               <Tab icon={<i className='tabler-lock' />} value='permisosRol' label='Permisos' iconPosition='start' />
-              <Tab
+              {/* <Tab
                 icon={<i className='tabler-bell' />}
                 value='notifications'
                 label='Notificaciones'
                 iconPosition='start'
-              />
+              /> */}
             </CustomTabList>
           </Grid>
 

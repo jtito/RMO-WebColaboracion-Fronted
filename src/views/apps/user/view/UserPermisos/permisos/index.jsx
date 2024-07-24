@@ -112,14 +112,14 @@ const PermisoUsuario = ({ id, usuario }) => {
           </tbody>
         </table>
       </div>
-      <CardActions className='flex items-center gap-2'>
+      {/* <CardActions className='flex items-center gap-2'>
         <Button variant='contained' type='submit'>
           Guardar permisos
         </Button>
         <Button variant='tonal' color='secondary' type='reset'>
           Cancelar
         </Button>
-      </CardActions>
+      </CardActions> */}
     </Card>
   )
 }

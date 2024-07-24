@@ -115,7 +115,7 @@ export function UserDetalle({ id, usuario }) {
             </div>
             <div className='flex gap-4 justify-center'>
               <Button {...buttonProps('Editar', 'primary', 'contained')} onClick={() => setEditUserOpen(true)} />
-              <Button {...buttonProps('Suspender', 'error', 'tonal')} />
+              {/* <Button {...buttonProps('Suspender', 'error', 'tonal')} /> */}
             </div>
           </CardContent>
         }
