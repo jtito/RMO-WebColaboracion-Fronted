@@ -93,7 +93,11 @@ export const ObteneridRol = async idRol => {
       return status < 500
     }
   })
+
 }
+
+
+
 
 export const ActualizarUsuario = async (id, body) => {
   try {

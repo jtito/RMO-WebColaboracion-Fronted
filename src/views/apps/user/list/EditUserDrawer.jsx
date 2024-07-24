@@ -21,7 +21,6 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
   const [roles, setRoles] = useState([])
   const [paises, setPaises] = useState([])
   const [Doc, setDoc] = useState([])
- 
   const [formData, setFormData] = useState(userData)
 
   const handleSubmit = async e => {
@@ -42,7 +41,6 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
 
       if (response.status === 200) {
         toast.success('Usuario Actualizado')
-       
         handleClose()
       } else {
         if (response.data && response.data.doc_num) {
