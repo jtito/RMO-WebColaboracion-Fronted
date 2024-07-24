@@ -84,8 +84,11 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           <MenuItem href={`/${locale}/apps/invoice/list`} icon={<i className='tabler-checkup-list' />}>
             {dictionary['navigation'].GestionPublicacion}
           </MenuItem>
+<<<<<<< HEAD
           </>
           )}
+=======
+>>>>>>> 0f48330 (Diferenciando los roles para el inicio de sesion)
           {isAdmin && (
         <MenuItem href={`/${locale}/apps/user/list`} icon={<i className='tabler-user' />}>
           {dictionary['navigation'].GestionUsuario}
