@@ -12,59 +12,55 @@ import Button from '@mui/material/Button'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { ObteneridRol, obtenerUsuarioPorId } from '@/Service/axios.services'
+import { obtenerEscenarios, ObteneridRol, obtenerTodosLosPermisos, obtenerUsuarioPorId } from '@/Service/axios.services'
 
 // Vars
-const tableData = [
-  {
-    Comite: false,
-    Pais: true,
-    Permiso: 'Editar'
-  },
-  {
-    Comite: false,
-    Pais: true,
-    Permiso: 'Crear'
-  },
-  {
-    Comite: false,
-    Pais: true,
-    Permiso: 'Aprobar'
-  },
-  {
-    Comite: false,
-    Pais: true,
-    Permiso: 'Archivar'
-  }
-]
-
 const PermisoUsuario = ({ id, usuario }) => {
-  console.log('hol id', id)
-
-  console.log('dataUsuarios', usuario)
-
   const [permisos, setPermisos] = useState([])
+  const [todosPermisos, setTodosPermisos] = useState([])
+  const [escenarios, setEscenarios] = useState([])
 
   // Obtener el ID del rol del usuario
   const idRol = usuario?.role?.id
 
-  console.log(idRol)
-
   const obtenerRolId = async idRol => {
-    console.log('userid', idRol)
-
     try {
       const response = await ObteneridRol(idRol)
 
-      console.log('userid', idRol)
+      if (response.status === 200) {
+        const { detail_permisos } = response.data
+
+        setPermisos(Array.isArray(detail_permisos) ? detail_permisos : [])
+      } else {
+        console.error('Error al obtener los permisos:', response.status)
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error)
+    }
+  }
+
+  const obtenerPermisos = async () => {
+    try {
+      const response = await obtenerTodosLosPermisos()
 
       if (response.status === 200) {
-        setPermisos(response.data)
-
-        console.log('datRol', response.data)
+        setTodosPermisos(response.data)
       } else {
-        console.error('Error al obtener los usuarios:', response.status)
-        setIsLoading(false)
+        console.error('Error al obtener los permisos', response.status)
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error)
+    }
+  }
+
+  const obtenerTodosEscenarios = async () => {
+    try {
+      const response = await obtenerEscenarios()
+
+      if (response.status === 200) {
+        setEscenarios(response.data)
+      } else {
+        console.error('Error al obtener los escenarios', response.status)
       }
     } catch (error) {
       console.error('Error en la solicitud:', error)
@@ -72,35 +68,45 @@ const PermisoUsuario = ({ id, usuario }) => {
   }
 
   useEffect(() => {
-    obtenerRolId(idRol)
+    if (idRol) {
+      obtenerRolId(idRol)
+    }
+
+    obtenerPermisos()
+
+    obtenerTodosEscenarios()
   }, [idRol])
 
-  console.log('usuario', permisos?.description)
+  const isPermissionActive = (permissionId, scenarioId) => {
+    return permisos.some(
+      rolePerm => rolePerm.permission_id.id === permissionId && rolePerm.escenario_id.id === scenarioId
+    )
+  }
 
   return (
     <Card>
-      <CardHeader title='Asignar permiso' subheader='Asigna permisos específicos a los usuarios' />
+      <CardHeader title='Permisos Asignados' subheader='' />
       <div className='overflow-x-auto'>
         <table className={tableStyles.table}>
           <thead>
             <tr>
               <th>Permisos</th>
-              <th>Comité</th>
-              <th>Pais</th>
+              {escenarios.map(scenario => (
+                <th key={scenario.id}>{scenario.description}</th>
+              ))}
             </tr>
           </thead>
           <tbody className='border-be'>
-            {tableData.map((data, index) => (
+            {todosPermisos.map((permiso, index) => (
               <tr key={index}>
                 <td>
-                  <Typography color='text.primary'>{data.Permiso}</Typography>
+                  <Typography color='text.primary'>{permiso.description}</Typography>
                 </td>
-                <td>
-                  <Checkbox defaultChecked={data.Pais} />
-                </td>
-                <td>
-                  <Checkbox defaultChecked={data.Comite} />
-                </td>
+                {escenarios.map(scenario => (
+                  <td key={scenario.id}>
+                    <Checkbox checked={isPermissionActive(permiso.id, scenario.id)} readOnly />
+                  </td>
+                ))}
               </tr>
             ))}
           </tbody>

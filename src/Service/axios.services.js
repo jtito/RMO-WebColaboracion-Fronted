@@ -105,12 +105,61 @@ export const ActualizarUsuario = async (id, body) => {
       validateStatus: function (status) {
         return status < 500
       }
-    });
+    })
 
-    return response;
+    return response
   } catch (error) {
-    console.error('Error en ActualizarUsuario:', error);
-    throw error;
+    console.error('Error en ActualizarUsuario:', error)
+    throw error
   }
 }
 
+export const ActualizarUsuarioEstados = async (id, datosActualizados) => {
+  try {
+    const response = await API.put(`user/usuarios/${id}/`, datosActualizados, {
+      validateStatus: function (status) {
+        return status < 500; // Aceptar códigos de estado < 500
+      }
+    });
+
+    if (response.status >= 200 && response.status < 300) {
+      // La actualización fue exitosa
+      return response.data;
+    } else {
+      // Manejar errores específicos del servidor
+      console.error('Error al actualizar el estado:', response.status, response.statusText);
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+  } catch (error) {
+    // Manejar errores de la solicitud
+    console.error('Error en la solicitud:', error);
+    throw error;
+  }
+};
+
+
+
+
+export const obtenerTodosLosPermisos = () => {
+  return API.get('permisos/permiso/', {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
+export const obtenerEcenariosporid = async idEcenario => {
+  return API.get(`user/usuarios/${idEcenario}/`, {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
+export const obtenerEscenarios = () => {
+  return API.get('escenario/escenario/', {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
