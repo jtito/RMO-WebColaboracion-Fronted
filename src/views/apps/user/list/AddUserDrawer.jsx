@@ -27,7 +27,8 @@ const initialData = {
   role: '',
   type_doc: '',
   doc_num: '',
-  country: ''
+  country: '',
+  password:'12345678'
 }
 
 const AddUserDrawer = ({ open, setOpen, handleClose, data }) => {
