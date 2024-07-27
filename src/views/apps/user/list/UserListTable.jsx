@@ -79,11 +79,18 @@ const UserListTable = () => {
     }
   }, [selectedRole, usuarios])
 
-  const handleUserAdded = newUser => {
-    setUsuarios(prevUsuarios => [...prevUsuarios, newUser])
+  const handleUserAdded = async newUser => {
+    try {
+      const response = await obtnerUsuarios()
 
-    if (selectedRole === newUser.role?.description) {
-      setFilteredUsuarios(prevUsuarios => [...prevUsuarios, newUser])
+      if (response.status === 200) {
+        const updatedUsers = response.data
+        const addedUser = updatedUsers.find(user => user.id === newUser.id)
+
+        setUsuarios(prevUsuarios => [...prevUsuarios, addedUser])
+      }
+    } catch (error) {
+      console.error('Error fetching updated user data:', error)
     }
   }
 
@@ -93,6 +100,7 @@ const UserListTable = () => {
         await EliminarUsuario(id)
         toast.success('Usuario eliminado exitosamente')
         setIsLoading(true)
+        await obtenerUsuarios()
       } catch (err) {
         console.log(err.message)
         toast.error('No se pudo eliminar el usuario')
