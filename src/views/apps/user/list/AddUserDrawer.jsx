@@ -86,10 +86,8 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
       console.log('Data enviada: ', formData);
 
       if (response.status === 201) {
-        mostrarAlertaUsuarioCreado()
-        handleUserAdded(response.data)
+        toast.success('Usuario Registrado')
         handleClose(response.data)
-        handleReset()
       } else {
         if (response.data && response.data.doc_num) {
           setError('El Numero de Documento ya Existe', response.data.doc_num)
