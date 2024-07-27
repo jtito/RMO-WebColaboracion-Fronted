@@ -14,7 +14,7 @@ import { getLocalizedUrl, isUrlMissingLocale } from '@/utils/i18n'
 import { ensurePrefix, withoutSuffix } from '@/utils/string'
 
 // Constants
-const HOME_PAGE_URL = '/dashboards/publicaciones'
+const HOME_PAGE_URL = '/Colaboraciones/publicaciones'
 
 const getLocale = request => {
   // Try to get locale from URL
