@@ -31,7 +31,7 @@ const initialData = {
   password:'12345678'
 }
 
-const AddUserDrawer = ({ open, setOpen, handleClose, data }) => {
+const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) => {
   const [error, setError] = useState(null)
   const [roles, setRoles] = useState([])
 
@@ -49,8 +49,10 @@ const AddUserDrawer = ({ open, setOpen, handleClose, data }) => {
       console.log('Data enviada:', formData)
 
       if (response.status === 201) {
-        toast.success('Usuario Registrado')
+        toast.success('Usuario Registrado');
+        handleUserAdded(response.data);
         handleClose(response.data)
+        handleReset();
       } else {
         if (response.data && response.data.doc_num) {
           setError('El Numero de Documento ya Existe', response.data.doc_num)

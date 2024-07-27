@@ -7,6 +7,10 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
+// Importaciones de fechas
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
+
 // Material-UI Imports
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
@@ -32,6 +36,7 @@ import AddUserDrawer from './AddUserDrawer'
 import { EliminarUsuario, obtnerUsuarios } from '../../../../Service/axios.services'
 
 import { getLocalizedUrl } from '@/utils/i18n'
+
 
 const UserListTable = () => {
   const [usuarios, setUsuarios] = useState([])
