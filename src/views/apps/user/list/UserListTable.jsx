@@ -42,6 +42,7 @@ import { EliminarUsuario, obtnerUsuarios } from '../../../../Service/axios.servi
 
 import { getLocalizedUrl } from '@/utils/i18n'
 
+
 const UserListTable = () => {
   const [usuarios, setUsuarios] = useState([])
   const [filteredUsuarios, setFilteredUsuarios] = useState([])
