@@ -7,6 +7,10 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
+// Importaciones de fechas
+import { format } from 'date-fns'
+import { es } from 'date-fns/locale'
+
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Table from '@mui/material/Table'
@@ -30,6 +34,7 @@ import AddUserDrawer from './AddUserDrawer'
 import { EliminarUsuario, obtnerUsuarios } from '../../../../Service/axios.services'
 
 import { getLocalizedUrl } from '@/utils/i18n'
+
 
 const UserListTable = () => {
   const [usuarios, setUsuarios] = useState([])
@@ -143,9 +148,12 @@ const UserListTable = () => {
                       <TableCell>{usuario.is_active ? 'Activo' : 'Inactivo'}</TableCell>
                       <TableCell>{usuario.doc_num}</TableCell>
                       <TableCell>{usuario.country_display}</TableCell>
-
-                      <TableCell>{new Date(usuario.create_at).toLocaleString()}</TableCell>
-                      <TableCell>{new Date(usuario.updated_at).toLocaleString()}</TableCell>
+                      <TableCell>
+                        {usuario?.create_at? format(new Date(usuario?.create_at), 'dd/MM/yyyy', { locale: es }): 'Fecha no disponible'}
+                      </TableCell>
+                      <TableCell>
+                        {usuario?.updated_at? format(new Date(usuario?.updated_at), 'dd/MM/yyyy', { locale: es }): 'Fecha no disponible'}
+                      </TableCell>
                       <TableCell>
                         <div className='flex items-center'>
                           <IconButton onClick={() => deleteProduct(usuario.id)}>

@@ -19,7 +19,7 @@ export function UserDetalle({ id, usuario }) {
 
   const actualizaUsuario = async () => {
     if (id) {
-      await obtenerUsuarioPorId(id);
+      await obtenerUsuarioPorId(id)
       setLoading(true)
     }
   }
@@ -95,9 +95,7 @@ export function UserDetalle({ id, usuario }) {
                     Fecha de Creación:
                   </Typography>
                   <Typography>
-                    {usuario?.create_at
-                      ? format(new Date(usuario?.create_at), 'dd/MM/yyyy', { locale: es })
-                      : 'Fecha no disponible'}
+                    {usuario?.create_at? format(new Date(usuario?.create_at), 'dd/MM/yyyy', { locale: es }): 'Fecha no disponible'}
                   </Typography>
                 </div>
                 <div className='flex items-center flex-wrap gap-x-1.5'>
@@ -121,16 +119,13 @@ export function UserDetalle({ id, usuario }) {
         }
       </Card>
 
-      <AddUserDrawer
-        open={addUserOpen}
-        setOpen={setAddUserOpen}
-      />
+      <AddUserDrawer open={addUserOpen} setOpen={setAddUserOpen} />
       <EditUserDrawer
         open={editUserOpen}
         setOpen={setEditUserOpen}
         handleClose={() => {
-          setEditUserOpen(false);
-          actualizaUsuario();
+          setEditUserOpen(false)
+          actualizaUsuario()
         }}
         userData={usuario}
       />
