@@ -1,12 +1,17 @@
-function Documentos() {
+// MUI Imports
+import Grid from '@mui/material/Grid'
 
+
+
+
+
+
+const Documentos = () => {
   return (
-    <div>
 
-      <h1>Documentos</h1>
+    <h1>Documentos</h1>
 
-    </div>
-  );
+  )
 }
 
-export default Documentos;
+export default Documentos

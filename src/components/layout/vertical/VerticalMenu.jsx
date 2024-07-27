@@ -57,13 +57,13 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
-            className: 'bs-full overflow-y-auto overflow-x-hidden',
-            onScroll: container => scrollMenu(container, false)
-          }
+          className: 'bs-full overflow-y-auto overflow-x-hidden',
+          onScroll: container => scrollMenu(container, false)
+        }
         : {
-            options: { wheelPropagation: false, suppressScrollX: true },
-            onScrollY: container => scrollMenu(container, true)
-          })}
+          options: { wheelPropagation: false, suppressScrollX: true },
+          onScrollY: container => scrollMenu(container, true)
+        })}
     >
 
       <Menu
@@ -75,25 +75,33 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
       >
 
         <MenuSection label={dictionary['navigation'].Colaboracion}>
-        {!isAdmin && (
-          <>
-          <MenuItem href={`/${locale}/dashboards/publicaciones`} icon={<i className='tabler-file-description' />}>
-            {dictionary['navigation'].Publicacion}
-          </MenuItem>
+          {!isAdmin && (
+            <>
+              <MenuItem href={`/${locale}/Colaboraciones/publicaciones`} icon={<i className='tabler-smart-home' />}>
+                {dictionary['navigation'].Publicacion}
+              </MenuItem>
 
-          <MenuItem href={`/${locale}/apps/invoice/list`} icon={<i className='tabler-checkup-list' />}>
-            {dictionary['navigation'].GestionPublicacion}
-          </MenuItem>
-<<<<<<< HEAD
-          </>
+              <SubMenu
+                label={dictionary['navigation'].GestiónPublicación}
+                icon={<i className='tabler-checkup-list' />}
+
+              // suffix={<CustomChip label='1' size='small' color='error' round='true' />}
+              >
+                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/Publicados`}>{dictionary['navigation'].Publicados}</MenuItem>
+                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/Borradores`}>{dictionary['navigation'].Borradores}</MenuItem>
+                
+              </SubMenu>
+
+              {/* <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones`} icon={<i className='tabler-checkup-list' />}>
+                {dictionary['navigation'].GestionPublicacion}
+              </MenuItem> */}
+            </>
           )}
-=======
->>>>>>> 0f48330 (Diferenciando los roles para el inicio de sesion)
           {isAdmin && (
-        <MenuItem href={`/${locale}/apps/user/list`} icon={<i className='tabler-user' />}>
-          {dictionary['navigation'].GestionUsuario}
-        </MenuItem>
-      )}
+            <MenuItem href={`/${locale}/apps/user/list`} icon={<i className='tabler-user' />}>
+              {dictionary['navigation'].GestionUsuario}
+            </MenuItem>
+          )}
 
         </MenuSection>
 
