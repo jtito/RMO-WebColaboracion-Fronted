@@ -60,7 +60,7 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
       showConfirmButton: true,
       confirmButtonText: 'Aceptar',
       confirmButtonColor: confirmButtonColor,
-      timer: 7000,
+      timer: 5000,
       background: backgroundColor
     })
   }
