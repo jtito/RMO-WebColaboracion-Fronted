@@ -42,7 +42,6 @@ import { EliminarUsuario, obtnerUsuarios } from '../../../../Service/axios.servi
 
 import { getLocalizedUrl } from '@/utils/i18n'
 
-
 const UserListTable = () => {
   const [usuarios, setUsuarios] = useState([])
   const [filteredUsuarios, setFilteredUsuarios] = useState([])
@@ -94,7 +93,6 @@ const UserListTable = () => {
         const userDate = parseISO(user.create_at)
 
         return userDate.toDateString() === selected.toDateString()
-
       })
     }
 
@@ -105,7 +103,6 @@ const UserListTable = () => {
         const userDate = parseISO(user.updated_at)
 
         return userDate.toDateString() === selected.toDateString()
-
       })
     }
 
@@ -216,24 +213,24 @@ const UserListTable = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <TextField
-            label="Fecha de Creación"
-            type="date"
+            label='Fecha de Creación'
+            type='date'
             value={selectedDateCreate}
             onChange={e => setSelectedDateCreate(e.target.value)}
             InputLabelProps={{
-              shrink: true,
+              shrink: true
             }}
             fullWidth
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <TextField
-            label="Fecha de Actualización"
-            type="date"
+            label='Fecha de Actualización'
+            type='date'
             value={selectedDateUpdate}
             onChange={e => setSelectedDateUpdate(e.target.value)}
             InputLabelProps={{
-              shrink: true,
+              shrink: true
             }}
             fullWidth
           />
@@ -248,7 +245,6 @@ const UserListTable = () => {
                   <TableCell>Apellido Materno</TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell>Rol</TableCell>
-                  {/* <TableCell>Estado</TableCell> */}
                   <TableCell>Numero de Documento</TableCell>
                   <TableCell>Pais</TableCell>
                   <TableCell>Estado</TableCell>
