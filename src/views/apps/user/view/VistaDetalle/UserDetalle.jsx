@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 
 import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -18,7 +18,7 @@ export function UserDetalle({ id, usuario }) {
   const [loading, setLoading] = useState(false)
   const [userData, setUserData] = useState(usuario)
 
-  const actualizaUsuario = async () => {
+  const actualizaUsuario = useCallback(async () => {
     if (id) {
       setLoading(true)
       const response = await obtenerUsuarioPorId(id)
@@ -26,13 +26,13 @@ export function UserDetalle({ id, usuario }) {
       setUserData(response.data)
       setLoading(false)
     }
-  }
+  }, [id])
 
   useEffect(() => {
     if (id) {
       actualizaUsuario()
     }
-  }, [id])
+  }, [id, actualizaUsuario])
 
   if (loading || !userData) {
     return <div>Cargando...</div>
