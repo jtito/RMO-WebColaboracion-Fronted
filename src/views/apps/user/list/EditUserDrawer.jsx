@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
 
 import Grid from '@mui/material/Grid'
 import Dialog from '@mui/material/Dialog'
@@ -10,6 +11,8 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
+
+import { useTheme } from '@emotion/react'
 
 import CustomTextField from '@core/components/mui/TextField'
 import { obtnerTipoDocIdentidad, ActualizarUsuario, obtenerPaises, obtenerRoles } from '../../../../Service/axios.services'
@@ -26,6 +29,24 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
   const [paises, setPaises] = useState([])
   const [Doc, setDoc] = useState([])
   const [formData, setFormData] = useState(userData)
+
+  const theme = useTheme()
+
+  const mostrarAlertaUsuarioEditado = () => {
+    const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
+    const backgroundColor = theme.palette.background.paper
+    const confirmButtonColor = theme.palette.primary.main
+
+    Swal.fire({
+      html: `<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">Usuario editado exitosamente</span>`,
+      icon: 'success',
+      showConfirmButton: true,
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: confirmButtonColor,
+      timer: 6000,
+      background: backgroundColor
+    })
+  }
 
   useEffect(() => {
     setFormData(userData)
@@ -51,7 +72,8 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
       console.log('Respuesta del servidor:', response)
 
       if (response.status === 200) {
-        toast.success('Usuario Actualizado')
+        //toast.success('Usuario Actualizado')
+        mostrarAlertaUsuarioEditado()
         handleClose()
       } else {
         if (response.data && response.data.doc_num && Array.isArray(response.data.doc_num) && response.data.doc_num.length > 0) {

@@ -40,7 +40,6 @@ import { EliminarUsuario, obtnerUsuarios } from '../../../../Service/axios.servi
 
 import { getLocalizedUrl } from '@/utils/i18n'
 
-
 const UserListTable = () => {
   const [usuarios, setUsuarios] = useState([])
   const [filteredUsuarios, setFilteredUsuarios] = useState([])
@@ -93,13 +92,25 @@ const UserListTable = () => {
         const addedUser = updatedUsers.find(user => user.id === newUser.id)
 
         setUsuarios(prevUsuarios => [...prevUsuarios, addedUser])
-        
+
         if (selectedRole === addedUser.role?.description) {
           setFilteredUsuarios(prevUsuarios => [...prevUsuarios, addedUser])
         }
       }
     } catch (error) {
       console.error('Error fetching updated user data:', error)
+    }
+  }
+
+  const deleteProduct = async id => {
+    if (id != null) {
+      try {
+        await EliminarUsuario(id)
+        setIsLoading(true)
+        await obtenerUsuarios()
+      } catch (err) {
+        console.log(err.message)
+      }
     }
   }
 
@@ -122,19 +133,7 @@ const UserListTable = () => {
     })
 
     if (result.isConfirmed) {
-      deleteProduct(id)
-    }
-  }
-
-  const deleteProduct = async id => {
-    if (id != null) {
-      try {
-        await EliminarUsuario(id)
-        setIsLoading(true)
-        await obtenerUsuarios()
-      } catch (err) {
-        console.log(err.message)
-      }
+      await deleteProduct(id)
     }
   }
 
@@ -175,7 +174,7 @@ const UserListTable = () => {
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Select
             value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
+            onChange={e => setSelectedRole(e.target.value)}
             displayEmpty
             inputProps={{ 'aria-label': 'Select Role' }}
             fullWidth
@@ -211,37 +210,39 @@ const UserListTable = () => {
                     </TableCell>
                   </TableRow>
                 ) : filteredUsuarios.length > 0 ? (
-                  filteredUsuarios
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map(usuario => (
-                      <TableRow key={usuario.id}>
-                        <TableCell>{usuario.name}</TableCell>
-                        <TableCell>{usuario.last_nameF}</TableCell>
-                        <TableCell>{usuario.last_nameS}</TableCell>
-                        <TableCell>{usuario.email}</TableCell>
-                        <TableCell>{usuario.role?.description}</TableCell>
-                        <TableCell>{usuario.doc_num}</TableCell>
-                        <TableCell>{usuario.country_display}</TableCell>
-                        <TableCell>
-                          {usuario?.create_at? format(new Date(usuario?.create_at), 'dd/MM/yyyy', { locale: es }): 'Fecha no disponible'}
-                        </TableCell>
-                        <TableCell>
-                          {usuario?.updated_at? format(new Date(usuario?.updated_at), 'dd/MM/yyyy', { locale: es }): 'Fecha no disponible'}
-                        </TableCell>
-                        <TableCell>
-                          <div className='flex items-center'>
-                            <IconButton onClick={() => mostrarAlertaConfirmacionInactivo(usuario.id)}>
-                              <i className='tabler-trash text-[22px] text-textSecondary' />
-                            </IconButton>
-                            <IconButton>
-                              <Link href={getLocalizedUrl(`apps/user/view/${usuario.id}`, locale)} className='flex'>
-                                <i className='tabler-eye text-[22px] text-textSecondary' />
-                              </Link>
-                            </IconButton>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
+                  filteredUsuarios.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(usuario => (
+                    <TableRow key={usuario.id}>
+                      <TableCell>{usuario.name}</TableCell>
+                      <TableCell>{usuario.last_nameF}</TableCell>
+                      <TableCell>{usuario.last_nameS}</TableCell>
+                      <TableCell>{usuario.email}</TableCell>
+                      <TableCell>{usuario.role?.description}</TableCell>
+                      <TableCell>{usuario.doc_num}</TableCell>
+                      <TableCell>{usuario.country_display}</TableCell>
+                      <TableCell>
+                        {usuario?.create_at
+                          ? format(new Date(usuario?.create_at), 'dd/MM/yyyy', { locale: es })
+                          : 'Fecha no disponible'}
+                      </TableCell>
+                      <TableCell>
+                        {usuario?.updated_at
+                          ? format(new Date(usuario?.updated_at), 'dd/MM/yyyy', { locale: es })
+                          : 'Fecha no disponible'}
+                      </TableCell>
+                      <TableCell>
+                        <div className='flex items-center'>
+                          <IconButton onClick={() => mostrarAlertaConfirmacionInactivo(usuario.id)}>
+                            <i className='tabler-trash text-[22px] text-textSecondary' />
+                          </IconButton>
+                          <IconButton>
+                            <Link href={getLocalizedUrl(`apps/user/view/${usuario.id}`, locale)} className='flex'>
+                              <i className='tabler-eye text-[22px] text-textSecondary' />
+                            </Link>
+                          </IconButton>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
                 ) : (
                   <TableRow>
                     <TableCell colSpan={10} align='center'>
@@ -253,7 +254,7 @@ const UserListTable = () => {
             </Table>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
-              component="div"
+              component='div'
               count={filteredUsuarios.length}
               rowsPerPage={rowsPerPage}
               page={page}
