@@ -16,8 +16,6 @@ import { useTheme } from '@emotion/react'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
 
-import { useTheme } from '@emotion/react'
-
 import CustomTextField from '@core/components/mui/TextField'
 import { obtnerTipoDocIdentidad, AgregarUsuario, obtenerPaises, obtenerRoles } from '../../../../Service/axios.services'
 import DialogCloseButton from '@components/dialogs/DialogCloseButton'
@@ -54,7 +52,6 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   const [maxDocLength, setMaxDocLength] = useState(Infinity)
 >>>>>>> 143f046 (interaccion numdoc DNI por pais)
 
-
   const theme = useTheme()
 
   const mostrarAlertaUsuarioCreado = () => {
@@ -89,8 +86,10 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
       console.log('Data enviada: ', formData);
 
       if (response.status === 201) {
-        toast.success('Usuario Registrado')
+        mostrarAlertaUsuarioCreado()
+        handleUserAdded(response.data)
         handleClose(response.data)
+        handleReset()
       } else {
         if (response.data && response.data.doc_num) {
           setError('El Numero de Documento ya Existe', response.data.doc_num)
