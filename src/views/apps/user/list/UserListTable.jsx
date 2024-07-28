@@ -26,6 +26,9 @@ import TablePagination from '@mui/material/TablePagination'
 import IconButton from '@mui/material/IconButton'
 
 import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
+
+import { useTheme } from '@emotion/react'
 
 import OptionMenu from '@core/components/option-menu'
 
@@ -46,6 +49,8 @@ const UserListTable = () => {
   const [selectedRole, setSelectedRole] = useState('') // Estado para el rol seleccionado
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
+
+  const theme = useTheme()
 
   const { lang: locale } = useParams()
 
@@ -98,16 +103,37 @@ const UserListTable = () => {
     }
   }
 
+  const mostrarAlertaConfirmacionInactivo = async id => {
+    const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
+    const backgroundColor = theme.palette.background.paper
+    const confirmButtonColor = theme.palette.primary.main
+    const cancelButtonColor = theme.palette.error.main
+
+    const result = await Swal.fire({
+      html: `<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">¿Estás seguro de que deseas desactivar este usuario?</span>`,
+      icon: 'warning',
+      showCancelButton: true,
+      showConfirmButton: true,
+      confirmButtonText: 'Sí, desactivar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: confirmButtonColor,
+      cancelButtonColor: cancelButtonColor,
+      background: backgroundColor
+    })
+
+    if (result.isConfirmed) {
+      deleteProduct(id)
+    }
+  }
+
   const deleteProduct = async id => {
     if (id != null) {
       try {
         await EliminarUsuario(id)
-        toast.success('Usuario eliminado exitosamente')
         setIsLoading(true)
         await obtenerUsuarios()
       } catch (err) {
         console.log(err.message)
-        toast.error('No se pudo eliminar el usuario')
       }
     }
   }
@@ -204,7 +230,7 @@ const UserListTable = () => {
                         </TableCell>
                         <TableCell>
                           <div className='flex items-center'>
-                            <IconButton onClick={() => deleteProduct(usuario.id)}>
+                            <IconButton onClick={() => mostrarAlertaConfirmacionInactivo(usuario.id)}>
                               <i className='tabler-trash text-[22px] text-textSecondary' />
                             </IconButton>
                             <IconButton>
