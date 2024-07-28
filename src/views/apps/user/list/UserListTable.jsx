@@ -11,7 +11,6 @@ import { useParams } from 'next/navigation'
 import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
 
-// Material-UI Imports
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Table from '@mui/material/Table'
