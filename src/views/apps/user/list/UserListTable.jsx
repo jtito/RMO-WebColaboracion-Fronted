@@ -171,7 +171,7 @@ const UserListTable = () => {
                       <TableCell>Apellido Materno</TableCell>
                       <TableCell>Email</TableCell>
                       <TableCell>Rol</TableCell>
-                      <TableCell>Estado</TableCell>
+                      {/* <TableCell>Estado</TableCell> */}
                       <TableCell>Numero de Documento</TableCell>
                       <TableCell>Pais</TableCell>
                       <TableCell>Fecha de Creación</TableCell>
@@ -196,7 +196,7 @@ const UserListTable = () => {
                             <TableCell>{usuario.last_nameS}</TableCell>
                             <TableCell>{usuario.email}</TableCell>
                             <TableCell>{usuario.role?.description}</TableCell>
-                            <TableCell>{usuario.is_active ? 'Activo' : 'Inactivo'}</TableCell>
+                            {/* <TableCell>{usuario.is_active ? 'Activo' : 'Inactivo'}</TableCell> */}
                             <TableCell>{usuario.doc_num}</TableCell>
                             <TableCell>{usuario.country_display}</TableCell>
                             <TableCell>{new Date(usuario.create_at).toLocaleString()}</TableCell>
