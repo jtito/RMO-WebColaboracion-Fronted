@@ -41,7 +41,6 @@ import { EliminarUsuario, obtnerUsuarios } from '../../../../Service/axios.servi
 
 import { getLocalizedUrl } from '@/utils/i18n'
 
-
 const UserListTable = () => {
   const [usuarios, setUsuarios] = useState([])
   const [filteredUsuarios, setFilteredUsuarios] = useState([])
@@ -104,6 +103,18 @@ const UserListTable = () => {
     }
   }
 
+  const deleteProduct = async id => {
+    if (id != null) {
+      try {
+        await EliminarUsuario(id)
+        setIsLoading(true)
+        await obtenerUsuarios()
+      } catch (err) {
+        console.log(err.message)
+      }
+    }
+  }
+
   const mostrarAlertaConfirmacionInactivo = async id => {
     const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
     const backgroundColor = theme.palette.background.paper
@@ -123,19 +134,7 @@ const UserListTable = () => {
     })
 
     if (result.isConfirmed) {
-      deleteProduct(id)
-    }
-  }
-
-  const deleteProduct = async id => {
-    if (id != null) {
-      try {
-        await EliminarUsuario(id)
-        setIsLoading(true)
-        await obtenerUsuarios()
-      } catch (err) {
-        console.log(err.message)
-      }
+      await deleteProduct(id)
     }
   }
 
@@ -176,7 +175,7 @@ const UserListTable = () => {
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Select
             value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
+            onChange={e => setSelectedRole(e.target.value)}
             displayEmpty
             inputProps={{ 'aria-label': 'Select Role' }}
             fullWidth
@@ -213,23 +212,25 @@ const UserListTable = () => {
                       Cargando usuarios...
                     </TableCell>
                   </TableRow>
-                ) : usuarios.length > 0 ? (
-                  usuarios.map(usuario => (
+                ) : filteredUsuarios.length > 0 ? (
+                  filteredUsuarios.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(usuario => (
                     <TableRow key={usuario.id}>
-                      {/* <TableCell>{usuario.id}</TableCell> */}
                       <TableCell>{usuario.name}</TableCell>
                       <TableCell>{usuario.last_nameF}</TableCell>
                       <TableCell>{usuario.last_nameS}</TableCell>
                       <TableCell>{usuario.email}</TableCell>
                       <TableCell>{usuario.role?.description}</TableCell>
-                      {/* <TableCell>{usuario.is_active ? 'Activo' : 'Inactivo'}</TableCell> */}
                       <TableCell>{usuario.doc_num}</TableCell>
                       <TableCell>{usuario.country_display}</TableCell>
                       <TableCell>
-                        {usuario?.create_at? format(new Date(usuario?.create_at), 'dd/MM/yyyy', { locale: es }): 'Fecha no disponible'}
+                        {usuario?.create_at
+                          ? format(new Date(usuario?.create_at), 'dd/MM/yyyy', { locale: es })
+                          : 'Fecha no disponible'}
                       </TableCell>
                       <TableCell>
-                        {usuario?.updated_at? format(new Date(usuario?.updated_at), 'dd/MM/yyyy', { locale: es }): 'Fecha no disponible'}
+                        {usuario?.updated_at
+                          ? format(new Date(usuario?.updated_at), 'dd/MM/yyyy', { locale: es })
+                          : 'Fecha no disponible'}
                       </TableCell>
                       <TableCell>
                         <div className='flex items-center'>
@@ -254,6 +255,15 @@ const UserListTable = () => {
                 )}
               </TableBody>
             </Table>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component='div'
+              count={filteredUsuarios.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
           </TableContainer>
         </Grid>
       </Grid>
