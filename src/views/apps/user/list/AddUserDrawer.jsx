@@ -30,6 +30,10 @@ const initialData = {
   country: ''
 }
 
+const PrimeraLetraMayus = string => {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
 const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) => {
   const [error, setError] = useState(null)
   const [roles, setRoles] = useState([])
@@ -40,10 +44,17 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   const [formData, setFormData] = useState(initialData)
 
   const handleSubmit = async e => {
-    e.preventDefault()
+    e.preventDefault();
+
+    const capitalizarData = {
+      ...formData,
+      last_nameF: PrimeraLetraMayus(formData.last_nameF),
+      last_nameS: PrimeraLetraMayus(formData.last_nameS),
+      name: PrimeraLetraMayus(formData.name)
+    };
 
     try {
-      const response = await AgregarUsuario(formData)
+      const response = await AgregarUsuario(capitalizarData)
 
       console.log('Data enviada:', formData)
 
