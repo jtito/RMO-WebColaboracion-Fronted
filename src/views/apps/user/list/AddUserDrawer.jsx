@@ -31,7 +31,7 @@ const initialData = {
   password:'12345678'
 }
 
-const PrimeraLetraMayus = string => {
+const PrimeraLetraMayusCrear = string => {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
@@ -49,9 +49,9 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
 
     const capitalizarData = {
       ...formData,
-      last_nameF: PrimeraLetraMayus(formData.last_nameF),
-      last_nameS: PrimeraLetraMayus(formData.last_nameS),
-      name: PrimeraLetraMayus(formData.name)
+      last_nameF: PrimeraLetraMayusCrear(formData.last_nameF),
+      last_nameS: PrimeraLetraMayusCrear(formData.last_nameS),
+      name: PrimeraLetraMayusCrear(formData.name)
     };
 
     try {
