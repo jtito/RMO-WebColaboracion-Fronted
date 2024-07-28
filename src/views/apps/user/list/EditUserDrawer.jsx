@@ -16,6 +16,10 @@ import { obtnerTipoDocIdentidad, ActualizarUsuario, obtenerPaises, obtenerRoles 
 
 import DialogCloseButton from '@components/dialogs/DialogCloseButton'
 
+const PrimeraLetraMayusEditar = string => {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
 const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
   const [error, setError] = useState(null)
   const [roles, setRoles] = useState([])
@@ -23,12 +27,19 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
   const [Doc, setDoc] = useState([])
   const [formData, setFormData] = useState(userData)
 
+  useEffect(() => {
+    setFormData(userData)
+  }, [userData])
+
   const handleSubmit = async e => {
     e.preventDefault()
     setError(null)
 
     const updatedData = {
       ...formData,
+      last_nameF: PrimeraLetraMayusEditar(formData.last_nameF),
+      last_nameS: PrimeraLetraMayusEditar(formData.last_nameS),
+      name: PrimeraLetraMayusEditar(formData.name),
       role: formData.role.id,
     }
 
@@ -43,22 +54,15 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
         toast.success('Usuario Actualizado')
         handleClose()
       } else {
-        if (response.data && response.data.doc_num) {
-          setError('El Número de Documento ya Existe')
-        } else if (response.data && response.data.email) {
-          setError('Email ya se encuentra Registrado')
+        if (response.data && response.data.doc_num && Array.isArray(response.data.doc_num) && response.data.doc_num.length > 0) {
+          setError(response.data.doc_num[0])
         } else {
-          setError('No se pudo Actualizar')
+          setError('Error al actualizar el usuario')
         }
       }
     } catch (error) {
-      if (error.response) {
-        setError(`Error en la solicitud: ${error.response.data}`)
-      } else {
-        setError(`Error en la solicitud: ${error.message}`)
-      }
-
-      toast.error(`Error en la solicitud: ${error.message}`);
+      console.error('Error al actualizar el usuario:', error)
+      setError('Error al actualizar el usuario')
     }
   }
 
@@ -68,18 +72,11 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
     setError(null)
   }
 
-  const Doctype = async () => {
+  const ObtenerRoles = async () => {
     try {
-      const response = await obtnerTipoDocIdentidad()
+      const response = await obtenerRoles()
 
-      console.log(response, 'respuesta')
-
-      if (response.status === 200) {
-        setDoc(response.data)
-        console.log('obtenido')
-      } else {
-        console.error('Error al obtener los tipos de documentos:', response.status)
-      }
+      setRoles(response.data)
     } catch (error) {
       console.error('Error en la solicitud:', error)
     }
@@ -89,31 +86,17 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
     try {
       const response = await obtenerPaises()
 
-      console.log(response, 'respuesta')
-
-      if (response.status === 200) {
-        setPaises(response.data)
-        console.log('obtenido')
-      } else {
-        console.error('Error al obtener los países:', response.status)
-      }
+      setPaises(response.data)
     } catch (error) {
       console.error('Error en la solicitud:', error)
     }
   }
 
-  const ObtenerRoles = async () => {
+  const Doctype = async () => {
     try {
-      const response = await obtenerRoles()
-
-      console.log(response, 'respuestaR')
-
-      if (response.status === 200) {
-        setRoles(response.data)
-        console.log('obtenidoR')
-      } else {
-        console.error('Error al obtener los roles:', response.status)
-      }
+      const response = await obtnerTipoDocIdentidad()
+      
+      setDoc(response.data)
     } catch (error) {
       console.error('Error en la solicitud:', error)
     }
