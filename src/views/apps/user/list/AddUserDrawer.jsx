@@ -13,6 +13,9 @@ import Switch from '@mui/material/Switch'
 import { FormControlLabel } from '@mui/material'
 
 import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
+
+import { useTheme } from '@emotion/react'
 
 import CustomTextField from '@core/components/mui/TextField'
 import { obtnerTipoDocIdentidad, AgregarUsuario, obtenerPaises, obtenerRoles } from '../../../../Service/axios.services'
@@ -31,7 +34,7 @@ const initialData = {
 }
 
 const PrimeraLetraMayusCrear = string => {
-  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
 }
 
 const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) => {
@@ -43,15 +46,33 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
 
   const [formData, setFormData] = useState(initialData)
 
+  const theme = useTheme()
+
+  const mostrarAlertaUsuarioCreado = () => {
+    const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
+    const backgroundColor = theme.palette.background.paper
+    const confirmButtonColor = theme.palette.primary.main
+
+    Swal.fire({
+      html: `<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">Usuario creado exitosamente</span>`,
+      icon: 'success',
+      showConfirmButton: true,
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: confirmButtonColor,
+      timer: 7000,
+      background: backgroundColor
+    })
+  }
+
   const handleSubmit = async e => {
-    e.preventDefault();
+    e.preventDefault()
 
     const capitalizarData = {
       ...formData,
       last_nameF: PrimeraLetraMayusCrear(formData.last_nameF),
       last_nameS: PrimeraLetraMayusCrear(formData.last_nameS),
       name: PrimeraLetraMayusCrear(formData.name)
-    };
+    }
 
     try {
       const response = await AgregarUsuario(capitalizarData)
@@ -59,10 +80,10 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
       console.log('Data enviada:', formData)
 
       if (response.status === 201) {
-        toast.success('Usuario Registrado');
-        handleUserAdded(response.data);
+        mostrarAlertaUsuarioCreado()
+        handleUserAdded(response.data)
         handleClose(response.data)
-        handleReset();
+        handleReset()
       } else {
         if (response.data && response.data.doc_num) {
           setError('El Numero de Documento ya Existe', response.data.doc_num)
