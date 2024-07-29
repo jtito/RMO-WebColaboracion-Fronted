@@ -179,7 +179,6 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   const handleDocNumChange = e => {
     const newValue = e.target.value
 
-    // Asegurarse de que el valor no exceda maxDocLength y solo sea numérico
     if (/^\d*$/.test(newValue) && newValue.length <= maxDocLength) {
       setFormData({ ...formData, doc_num: newValue })
     }
