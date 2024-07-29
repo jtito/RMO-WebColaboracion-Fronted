@@ -45,6 +45,7 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   const [Doc, setDoc] = useState([])
 
   const [formData, setFormData] = useState(initialData)
+  const [isDocNumEnabled, setIsDocNumEnabled] = useState(false)
 
   const theme = useTheme()
 
@@ -168,6 +169,10 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
     Doctype()
   }, [])
 
+  useEffect(() => {
+    setIsDocNumEnabled(formData.type_doc && formData.country)
+  }, [formData.type_doc, formData.country])
+
   return (
     <Dialog
       fullWidth
@@ -240,7 +245,7 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
                 type='text'
                 fullWidth
                 value={formData.doc_num}
-                disabled={!formData.type_doc}
+                disabled={!isDocNumEnabled}
                 onChange={e => {
                   const newValue = e.target.value
 
@@ -283,7 +288,6 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
                 ))}
               </CustomTextField>
             </Grid>
-            
             {error && <Typography color='error'>{error}</Typography>}
           </Grid>
         </DialogContent>
