@@ -251,6 +251,7 @@ const UserListTable = () => {
                   {/* <TableCell>Estado</TableCell> */}
                   <TableCell>Numero de Documento</TableCell>
                   <TableCell>Pais</TableCell>
+                  <TableCell>Estado</TableCell>
                   <TableCell>Fecha de Creación</TableCell>
                   <TableCell>Última Actualización</TableCell>
                   <TableCell>Acciones</TableCell>
@@ -273,6 +274,7 @@ const UserListTable = () => {
                       <TableCell>{usuario.role?.description}</TableCell>
                       <TableCell>{usuario.doc_num}</TableCell>
                       <TableCell>{usuario.country_display}</TableCell>
+                      <TableCell>{usuario.is_active ? 'Activo' : 'Inactivo'}</TableCell>
                       <TableCell>
                         {usuario?.create_at
                           ? format(new Date(usuario?.create_at), 'dd/MM/yyyy', { locale: es })
