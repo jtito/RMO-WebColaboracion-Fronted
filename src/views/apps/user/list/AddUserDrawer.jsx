@@ -42,7 +42,11 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   const [paises, setPaises] = useState([])
   const [Doc, setDoc] = useState([])
   const [formData, setFormData] = useState(initialData)
+<<<<<<< HEAD
   const [maxDocLength, setMaxDocLength] = useState(Infinity)
+=======
+  const [isDocNumEnabled, setIsDocNumEnabled] = useState(false)
+>>>>>>> 35e163d (cambios 1)
 
   const theme = useTheme()
 
@@ -158,6 +162,7 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   }, [])
 
   useEffect(() => {
+<<<<<<< HEAD
     if (formData.country) {
       switch (formData.country) {
         case 1: // Bolivia
@@ -183,6 +188,10 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
       setFormData({ ...formData, doc_num: newValue })
     }
   }
+=======
+    setIsDocNumEnabled(formData.type_doc && formData.country)
+  }, [formData.type_doc, formData.country])
+>>>>>>> 35e163d (cambios 1)
 
   return (
     <Dialog
@@ -256,6 +265,26 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
+<<<<<<< HEAD
+=======
+                label='Número de Documento'
+                type='text'
+                fullWidth
+                value={formData.doc_num}
+                disabled={!isDocNumEnabled}
+                onChange={e => {
+                  const newValue = e.target.value
+
+                  if (/^\d*$/.test(newValue)) {
+                    setFormData({ ...formData, doc_num: newValue })
+                  }
+                }}
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} // Permite valores numericos en dispositivos moviles
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTextField
+>>>>>>> 35e163d (cambios 1)
                 select
                 fullWidth
                 id='select-pais'
