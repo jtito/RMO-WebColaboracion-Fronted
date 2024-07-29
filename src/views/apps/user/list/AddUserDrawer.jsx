@@ -190,7 +190,6 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
               <CustomTextField
                 fullWidth
                 label='Primer Apellido'
-                placeholder='Diaz'
                 value={formData.last_nameF}
                 onChange={e => setFormData({ ...formData, last_nameF: e.target.value })}
               />
@@ -199,7 +198,6 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
               <CustomTextField
                 label='Segundo Apellido'
                 fullWidth
-                placeholder='Doe'
                 value={formData.last_nameS}
                 onChange={e => setFormData({ ...formData, last_nameS: e.target.value })}
               />
@@ -208,7 +206,6 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
               <CustomTextField
                 label='Nombre Completo'
                 fullWidth
-                placeholder='John Doe'
                 value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
               />
@@ -217,26 +214,9 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
               <CustomTextField
                 label='Email'
                 fullWidth
-                placeholder='johndoe@gmail.com'
                 value={formData.email}
                 onChange={e => setFormData({ ...formData, email: e.target.value })}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <CustomTextField
-                select
-                fullWidth
-                id='select-role'
-                value={formData.role}
-                onChange={e => setFormData({ ...formData, role: e.target.value })}
-                label='Seleccionar rol'
-              >
-                {roles.map(role => (
-                  <MenuItem key={role.id} value={role.id}>
-                    {role.description}
-                  </MenuItem>
-                ))}
-              </CustomTextField>
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
@@ -259,9 +239,16 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
                 label='Número de Documento'
                 type='text'
                 fullWidth
-                placeholder='57456487'
                 value={formData.doc_num}
-                onChange={e => setFormData({ ...formData, doc_num: e.target.value })}
+                disabled={!formData.type_doc}
+                onChange={e => {
+                  const newValue = e.target.value
+
+                  if (/^\d*$/.test(newValue)) {
+                    setFormData({ ...formData, doc_num: newValue })
+                  }
+                }}
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} // Permite valores numericos en dispositivos moviles
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -280,6 +267,23 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
                 ))}
               </CustomTextField>
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTextField
+                select
+                fullWidth
+                id='select-role'
+                value={formData.role}
+                onChange={e => setFormData({ ...formData, role: e.target.value })}
+                label='Seleccionar rol'
+              >
+                {roles.map(role => (
+                  <MenuItem key={role.id} value={role.id}>
+                    {role.description}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
+            </Grid>
+            
             {error && <Typography color='error'>{error}</Typography>}
           </Grid>
         </DialogContent>
