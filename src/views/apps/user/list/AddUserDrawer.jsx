@@ -47,7 +47,7 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   const theme = useTheme()
 
   const mostrarAlertaUsuarioCreado = () => {
-    const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
+    const titleColor = theme.palztte.mode === 'dark' ? '#FFFFFF' : '#000000'
     const backgroundColor = theme.palette.background.paper
     const confirmButtonColor = theme.palette.primary.main
 
