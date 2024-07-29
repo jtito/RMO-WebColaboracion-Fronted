@@ -192,9 +192,12 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
     const newValue = e.target.value
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     // Asegurarse de que el valor no exceda maxDocLength y solo sea numérico
 >>>>>>> 143f046 (interaccion numdoc DNI por pais)
+=======
+>>>>>>> c2dfb90 (cambios borrar un comentario)
     if (/^\d*$/.test(newValue) && newValue.length <= maxDocLength) {
       setFormData({ ...formData, doc_num: newValue })
     }
