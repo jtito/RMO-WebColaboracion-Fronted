@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 // Importaciones de fechas
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
 
 import Grid from '@mui/material/Grid'
@@ -24,6 +24,7 @@ import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import TablePagination from '@mui/material/TablePagination'
 import IconButton from '@mui/material/IconButton'
+import { TextField } from '@mui/material'
 
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
@@ -46,6 +47,8 @@ const UserListTable = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [selectedRole, setSelectedRole] = useState('') // Estado para el rol seleccionado
+  const [selectedDateCreate, setSelectedDateCreate] = useState('') // Estado para filtrar por fecha de creacion del usuario
+  const [selectedDateUpdate, setSelectedDateUpdate] = useState('') // Estado para filtrar por fecha de actualizacion del usuario
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
 
@@ -76,12 +79,36 @@ const UserListTable = () => {
   }, [])
 
   useEffect(() => {
+    let filtered = usuarios
+
     if (selectedRole) {
       setFilteredUsuarios(usuarios.filter(user => user.role?.description === selectedRole))
     } else {
       setFilteredUsuarios(usuarios)
     }
-  }, [selectedRole, usuarios])
+
+    if (selectedDateCreate) {
+      const selected = parseISO(selectedDateCreate)
+
+      filtered = filtered.filter(user => {
+        const userDate = parseISO(user.create_at)
+
+        return userDate.toDateString() === selected.toDateString()
+      })
+    }
+
+    if (selectedDateUpdate) {
+      const selected = parseISO(selectedDateUpdate)
+
+      filtered = filtered.filter(user => {
+        const userDate = parseISO(user.updated_at)
+
+        return userDate.toDateString() === selected.toDateString()
+      })
+    }
+
+    setFilteredUsuarios(filtered)
+  }, [selectedRole, selectedDateCreate, selectedDateUpdate, usuarios])
 
   const handleUserAdded = async newUser => {
     try {
@@ -156,7 +183,7 @@ const UserListTable = () => {
             startIcon={<i className='tabler-upload' />}
             className='is-full sm:is-auto'
           >
-            Export
+            Exportar
           </Button>
           &nbsp;&nbsp;&nbsp;
           <Button
@@ -184,6 +211,30 @@ const UserListTable = () => {
             <MenuItem value='Administrador del sistema'>Administrador del sistema</MenuItem>
             <MenuItem value='Secretaria Técnica (SGCAN)'>Secretaria Técnica (SGCAN)</MenuItem>
           </Select>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <TextField
+            label="Fecha de Creación"
+            type="date"
+            value={selectedDateCreate}
+            onChange={e => setSelectedDateCreate(e.target.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <TextField
+            label="Fecha de Actualización"
+            type="date"
+            value={selectedDateUpdate}
+            onChange={e => setSelectedDateUpdate(e.target.value)}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            fullWidth
+          />
         </Grid>
         <Grid item xs={12}>
           <TableContainer component={Paper} sx={{ marginTop: 2 }}>
