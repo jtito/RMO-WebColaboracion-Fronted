@@ -43,10 +43,14 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   const [Doc, setDoc] = useState([])
   const [formData, setFormData] = useState(initialData)
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [maxDocLength, setMaxDocLength] = useState(Infinity)
 =======
   const [isDocNumEnabled, setIsDocNumEnabled] = useState(false)
 >>>>>>> 35e163d (cambios 1)
+=======
+  const [maxDocLength, setMaxDocLength] = useState(Infinity)
+>>>>>>> 143f046 (interaccion numdoc DNI por pais)
 
   const theme = useTheme()
 
@@ -163,6 +167,9 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
 
   useEffect(() => {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 143f046 (interaccion numdoc DNI por pais)
     if (formData.country) {
       switch (formData.country) {
         case 1: // Bolivia
@@ -184,14 +191,21 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   const handleDocNumChange = e => {
     const newValue = e.target.value
 
+<<<<<<< HEAD
+=======
+    // Asegurarse de que el valor no exceda maxDocLength y solo sea numérico
+>>>>>>> 143f046 (interaccion numdoc DNI por pais)
     if (/^\d*$/.test(newValue) && newValue.length <= maxDocLength) {
       setFormData({ ...formData, doc_num: newValue })
     }
   }
+<<<<<<< HEAD
 =======
     setIsDocNumEnabled(formData.type_doc && formData.country)
   }, [formData.type_doc, formData.country])
 >>>>>>> 35e163d (cambios 1)
+=======
+>>>>>>> 143f046 (interaccion numdoc DNI por pais)
 
   return (
     <Dialog
@@ -266,6 +280,7 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
             <Grid item xs={12} sm={6}>
               <CustomTextField
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                 label='Número de Documento'
                 type='text'
@@ -285,6 +300,8 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
             <Grid item xs={12} sm={6}>
               <CustomTextField
 >>>>>>> 35e163d (cambios 1)
+=======
+>>>>>>> 143f046 (interaccion numdoc DNI por pais)
                 select
                 fullWidth
                 id='select-pais'
