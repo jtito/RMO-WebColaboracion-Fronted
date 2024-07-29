@@ -11,15 +11,13 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import Switch from '@mui/material/Switch'
 import { FormControlLabel } from '@mui/material'
+import { useTheme } from '@emotion/react'
 
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
 
-import { useTheme } from '@emotion/react'
-
 import CustomTextField from '@core/components/mui/TextField'
 import { obtnerTipoDocIdentidad, AgregarUsuario, obtenerPaises, obtenerRoles } from '../../../../Service/axios.services'
-
 import DialogCloseButton from '@components/dialogs/DialogCloseButton'
 
 const initialData = {
@@ -40,12 +38,10 @@ const PrimeraLetraMayusCrear = string => {
 const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) => {
   const [error, setError] = useState(null)
   const [roles, setRoles] = useState([])
-
   const [paises, setPaises] = useState([])
   const [Doc, setDoc] = useState([])
-
   const [formData, setFormData] = useState(initialData)
-  const [isDocNumEnabled, setIsDocNumEnabled] = useState(false)
+  const [maxDocLength, setMaxDocLength] = useState(Infinity)
 
   const theme = useTheme()
 
@@ -78,7 +74,7 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
     try {
       const response = await AgregarUsuario(capitalizarData)
 
-      console.log('Data enviada:', formData)
+      console.log('Data enviada: ', formData);
 
       if (response.status === 201) {
         mostrarAlertaUsuarioCreado()
@@ -117,10 +113,9 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
 
       if (response.status === 200) {
         setDoc(response.data)
-
-        console.log('obtenido')
+        console.log('obtenido');
       } else {
-        console.error('Error al obtener los paises:', response.status)
+        console.error('Error al obtener los tipos de documento:', response.status)
       }
     } catch (error) {
       console.error('Error en la solicitud:', error)
@@ -131,12 +126,8 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
     try {
       const response = await obtenerPaises()
 
-      console.log(response, 'respuesta')
-
       if (response.status === 200) {
         setPaises(response.data)
-
-        console.log('obtenido')
       } else {
         console.error('Error al obtener los paises:', response.status)
       }
@@ -149,12 +140,8 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
     try {
       const response = await obtenerRoles()
 
-      console.log(response, 'respuestaR')
-
       if (response.status === 200) {
         setRoles(response.data)
-
-        console.log('obtenidoR')
       } else {
         console.error('Error al obtener los roles:', response.status)
       }
@@ -170,8 +157,32 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   }, [])
 
   useEffect(() => {
-    setIsDocNumEnabled(formData.type_doc && formData.country)
-  }, [formData.type_doc, formData.country])
+    if (formData.country) {
+      switch (formData.country) {
+        case 1: // Bolivia
+          setMaxDocLength(11)
+          break
+        case 2: // Colombia
+        case 3: // Ecuador
+          setMaxDocLength(10)
+          break
+        case 4: // Perú
+          setMaxDocLength(8)
+          break
+        default:
+          setMaxDocLength(Infinity)
+      }
+    }
+  }, [formData.country])
+
+  const handleDocNumChange = e => {
+    const newValue = e.target.value
+
+    // Asegurarse de que el valor no exceda maxDocLength y solo sea numérico
+    if (/^\d*$/.test(newValue) && newValue.length <= maxDocLength) {
+      setFormData({ ...formData, doc_num: newValue })
+    }
+  }
 
   return (
     <Dialog
@@ -229,7 +240,11 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
                 fullWidth
                 id='select-Doc'
                 value={formData.type_doc}
-                onChange={e => setFormData({ ...formData, type_doc: e.target.value })}
+                onChange={e => {
+                  const selectedDoc = e.target.value
+
+                  setFormData({ ...formData, type_doc: selectedDoc })
+                }}
                 label='Seleccionar Tipo de Documento'
               >
                 {Doc.map(Doc => (
@@ -241,29 +256,16 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
-                label='Número de Documento'
-                type='text'
-                fullWidth
-                value={formData.doc_num}
-                disabled={!isDocNumEnabled}
-                onChange={e => {
-                  const newValue = e.target.value
-
-                  if (/^\d*$/.test(newValue)) {
-                    setFormData({ ...formData, doc_num: newValue })
-                  }
-                }}
-                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} // Permite valores numericos en dispositivos moviles
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <CustomTextField
                 select
                 fullWidth
                 id='select-pais'
                 value={formData.country}
-                onChange={e => setFormData({ ...formData, country: e.target.value })}
-                label='Seleccionar Pais'
+                onChange={e => {
+                  const selectedCountry = e.target.value
+
+                  setFormData({ ...formData, country: selectedCountry })
+                }}
+                label='Seleccionar País'
               >
                 {paises.map(country => (
                   <MenuItem key={country.value} value={country.value}>
@@ -271,6 +273,17 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
                   </MenuItem>
                 ))}
               </CustomTextField>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTextField
+                label='Número de Documento'
+                type='text'
+                fullWidth
+                value={formData.doc_num}
+                disabled={!formData.type_doc || !formData.country}
+                onChange={handleDocNumChange}
+                inputProps={{ inputMode: 'numeric' }}
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
