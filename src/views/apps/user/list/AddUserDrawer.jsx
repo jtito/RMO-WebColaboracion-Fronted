@@ -29,7 +29,7 @@ const initialData = {
   type_doc: '',
   doc_num: '',
   country: '',
-  password:'12345678'
+  password: '12345678'
 }
 
 const PrimeraLetraMayusCrear = string => {
@@ -42,15 +42,7 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   const [paises, setPaises] = useState([])
   const [Doc, setDoc] = useState([])
   const [formData, setFormData] = useState(initialData)
-<<<<<<< HEAD
-<<<<<<< HEAD
   const [maxDocLength, setMaxDocLength] = useState(Infinity)
-=======
-  const [isDocNumEnabled, setIsDocNumEnabled] = useState(false)
->>>>>>> 35e163d (cambios 1)
-=======
-  const [maxDocLength, setMaxDocLength] = useState(Infinity)
->>>>>>> 143f046 (interaccion numdoc DNI por pais)
 
   const theme = useTheme()
 
@@ -83,7 +75,7 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
     try {
       const response = await AgregarUsuario(capitalizarData)
 
-      console.log('Data enviada: ', formData);
+      console.log('Data enviada: ', formData)
 
       if (response.status === 201) {
         mostrarAlertaUsuarioCreado()
@@ -122,7 +114,7 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
 
       if (response.status === 200) {
         setDoc(response.data)
-        console.log('obtenido');
+        console.log('obtenido')
       } else {
         console.error('Error al obtener los tipos de documento:', response.status)
       }
@@ -166,10 +158,6 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   }, [])
 
   useEffect(() => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 143f046 (interaccion numdoc DNI por pais)
     if (formData.country) {
       switch (formData.country) {
         case 1: // Bolivia
@@ -191,24 +179,10 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   const handleDocNumChange = e => {
     const newValue = e.target.value
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    // Asegurarse de que el valor no exceda maxDocLength y solo sea numérico
->>>>>>> 143f046 (interaccion numdoc DNI por pais)
-=======
->>>>>>> c2dfb90 (cambios borrar un comentario)
     if (/^\d*$/.test(newValue) && newValue.length <= maxDocLength) {
       setFormData({ ...formData, doc_num: newValue })
     }
   }
-<<<<<<< HEAD
-=======
-    setIsDocNumEnabled(formData.type_doc && formData.country)
-  }, [formData.type_doc, formData.country])
->>>>>>> 35e163d (cambios 1)
-=======
->>>>>>> 143f046 (interaccion numdoc DNI por pais)
 
   return (
     <Dialog
@@ -282,29 +256,6 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                label='Número de Documento'
-                type='text'
-                fullWidth
-                value={formData.doc_num}
-                disabled={!isDocNumEnabled}
-                onChange={e => {
-                  const newValue = e.target.value
-
-                  if (/^\d*$/.test(newValue)) {
-                    setFormData({ ...formData, doc_num: newValue })
-                  }
-                }}
-                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} // Permite valores numericos en dispositivos moviles
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <CustomTextField
->>>>>>> 35e163d (cambios 1)
-=======
->>>>>>> 143f046 (interaccion numdoc DNI por pais)
                 select
                 fullWidth
                 id='select-pais'
