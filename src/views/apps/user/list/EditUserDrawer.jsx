@@ -15,12 +15,17 @@ import Typography from '@mui/material/Typography'
 import { useTheme } from '@emotion/react'
 
 import CustomTextField from '@core/components/mui/TextField'
-import { obtnerTipoDocIdentidad, ActualizarUsuario, obtenerPaises, obtenerRoles } from '../../../../Service/axios.services'
+import {
+  obtnerTipoDocIdentidad,
+  ActualizarUsuario,
+  obtenerPaises,
+  obtenerRoles
+} from '../../../../Service/axios.services'
 
 import DialogCloseButton from '@components/dialogs/DialogCloseButton'
 
 const PrimeraLetraMayusEditar = string => {
-  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
 }
 
 const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
@@ -49,8 +54,15 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
   }
 
   useEffect(() => {
-    setFormData(userData)
-  }, [userData])
+    setFormData({
+      ...userData,
+      type_doc: Doc.find(doc => doc.display_name === userData.type_doc_display)?.value || '',
+      country: paises.find(country => country.display_name === userData.country_display)?.value || ''
+    })
+  }, [userData, Doc, paises])
+
+  console.log('userData edit: ', userData)
+  console.log('formData edit: ', formData)
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -61,7 +73,7 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
       last_nameF: PrimeraLetraMayusEditar(formData.last_nameF),
       last_nameS: PrimeraLetraMayusEditar(formData.last_nameS),
       name: PrimeraLetraMayusEditar(formData.name),
-      role: formData.role.id,
+      role: formData.role.id
     }
 
     console.log('Datos enviados:', updatedData)
@@ -76,7 +88,12 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
         mostrarAlertaUsuarioEditado()
         handleClose()
       } else {
-        if (response.data && response.data.doc_num && Array.isArray(response.data.doc_num) && response.data.doc_num.length > 0) {
+        if (
+          response.data &&
+          response.data.doc_num &&
+          Array.isArray(response.data.doc_num) &&
+          response.data.doc_num.length > 0
+        ) {
           setError(response.data.doc_num[0])
         } else {
           setError('Error al actualizar el usuario')
@@ -117,7 +134,7 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
   const Doctype = async () => {
     try {
       const response = await obtnerTipoDocIdentidad()
-      
+
       setDoc(response.data)
     } catch (error) {
       console.error('Error en la solicitud:', error)
@@ -209,9 +226,9 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
                 onChange={e => setFormData({ ...formData, type_doc: e.target.value })}
                 label='Seleccionar Tipo de Documento'
               >
-                {Doc.map(Doc => (
-                  <MenuItem key={Doc.value} value={Doc.value}>
-                    {Doc.display_name}
+                {Doc.map(doc => (
+                  <MenuItem key={doc.value} value={doc.value}>
+                    {doc.display_name}
                   </MenuItem>
                 ))}
               </CustomTextField>
@@ -233,7 +250,7 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
                 id='select-pais'
                 value={formData.country || ''}
                 onChange={e => setFormData({ ...formData, country: e.target.value })}
-                label='Seleccionar Pais'
+                label='Seleccionar País'
               >
                 {paises.map(country => (
                   <MenuItem key={country.value} value={country.value}>
