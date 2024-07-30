@@ -48,12 +48,12 @@ const UserDropdown = () => {
 
   // Hooks
   const router = useRouter()
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const { settings } = useSettings()
   const { lang: locale } = useParams()
 
   const handleDropdownOpen = () => {
-    !open ? setOpen(true) : setOpen(false)
+    setOpen(!open)
   }
 
   const handleDropdownClose = (event, url) => {
@@ -83,6 +83,10 @@ const UserDropdown = () => {
     }
   }
 
+  if (status === 'loading') {
+    return <div>Cargando...</div>
+  }
+
   return (
     <>
       <Badge
@@ -93,7 +97,6 @@ const UserDropdown = () => {
         className='mis-2'
       >
         <Avatar
-          ref={anchorRef}
           alt={session?.user?.name || ''}
           src={session?.user?.image || ''}
           onClick={handleDropdownOpen}
@@ -151,11 +154,10 @@ const UserDropdown = () => {
                       color='error'
                       size='small'
                       endIcon={<i className='tabler-logout' />}
-
-                       onClick={handleUserLogout}
-                       sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
+                      onClick={handleUserLogout}
+                      sx={{ '& .MuiButton-endIcon': { marginInlineStart: 1.5 } }}
                     >
-                      Cerrar sesion
+                      Cerrar sesión
                     </Button>
                   </div>
                 </MenuList>

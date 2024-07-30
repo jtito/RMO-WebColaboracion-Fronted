@@ -57,17 +57,22 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
     return <div>Cargando...</div>
   }
 
+  if (status === 'loading') {
+    // Puedes mostrar un spinner de carga aquí si lo deseas
+    return <div>Cargando...</div>
+  }
+
   return (
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
-          className: 'bs-full overflow-y-auto overflow-x-hidden',
-          onScroll: container => scrollMenu(container, false)
-        }
+            className: 'bs-full overflow-y-auto overflow-x-hidden',
+            onScroll: container => scrollMenu(container, false)
+          }
         : {
-          options: { wheelPropagation: false, suppressScrollX: true },
-          onScrollY: container => scrollMenu(container, true)
-        })}
+            options: { wheelPropagation: false, suppressScrollX: true },
+            onScrollY: container => scrollMenu(container, true)
+          })}
     >
       <Menu
         popoutMenuOffset={{ mainAxis: 23 }}
@@ -88,10 +93,10 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
               </MenuItem>
 
               <SubMenu label={dictionary['navigation'].GestiónPublicación} icon={<i className='tabler-checkup-list' />}>
-                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/publicados`}>
+                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/Publicados`}>
                   {dictionary['navigation'].Publicados}
                 </MenuItem>
-                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/borradores`}>
+                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/Borradores`}>
                   {dictionary['navigation'].Borradores}
                 </MenuItem>
               </SubMenu>

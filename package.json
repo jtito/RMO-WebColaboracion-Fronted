@@ -11,7 +11,7 @@
     "lint:fix": "next lint --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "build:icons": "tsx src/assets/iconify-icons/bundle-icons-css.js",
-    "migrate": "dotenv -e .env -- npx prisma migrate dev",
+  
     "postinstall": "prisma generate && npm run build:icons"
   },
   "dependencies": {
@@ -84,7 +84,7 @@
     "postcss": "8.4.35",
     "postcss-styled-syntax": "0.6.4",
     "prettier": "3.2.5",
-    "prisma": "5.10.2",
+
     "stylelint": "16.2.1",
     "stylelint-use-logical-spec": "5.0.1"
   },
@@ -93,8 +93,6 @@
   },
   "overrides": {
     "react": "18.2.0"
-  },
-  "prisma": {
-    "schema": "./src/prisma/schema.prisma"
   }
+
 }

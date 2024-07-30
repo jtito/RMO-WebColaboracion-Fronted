@@ -14,8 +14,6 @@ import { es } from 'date-fns/locale'
 // Material-UI Imports
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -34,7 +32,9 @@ import Swal from 'sweetalert2'
 
 import { useTheme } from '@emotion/react'
 
-// Component Imports
+import OptionMenu from '@core/components/option-menu'
+
+// Nuevas importaciones
 import AddUserDrawer from './AddUserDrawer'
 
 // Server Action Imports
@@ -215,30 +215,30 @@ const UserListTable = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <TextField
-            label="Fecha de Creación"
-            type="date"
+            label='Fecha de Creación'
+            type='date'
             value={selectedDateCreate}
             onChange={e => setSelectedDateCreate(e.target.value)}
             InputLabelProps={{
-              shrink: true,
+              shrink: true
             }}
             fullWidth
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <TextField
-            label="Fecha de Actualización"
-            type="date"
+            label='Fecha de Actualización'
+            type='date'
             value={selectedDateUpdate}
             onChange={e => setSelectedDateUpdate(e.target.value)}
             InputLabelProps={{
-              shrink: true,
+              shrink: true
             }}
             fullWidth
           />
         </Grid>
         <Grid item xs={12}>
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{ marginTop: 2 }}>
             <Table>
               <TableHead>
                 <TableRow>

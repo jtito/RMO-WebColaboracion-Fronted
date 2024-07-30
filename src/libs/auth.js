@@ -1,6 +1,6 @@
 // Third-party Imports
 import CredentialProvider from 'next-auth/providers/credentials'
-import GoogleProvider from 'next-auth/providers/google'
+
 
 export const authOptions = {
   // ** Configure one or more authentication providers
@@ -33,6 +33,7 @@ export const authOptions = {
           if (res.status === 200) {
             return {
               ...data,
+
               role: data.user.role.id
             }
           }
@@ -70,7 +71,7 @@ export const authOptions = {
       if (user) {
         token.role = user.role
 
-        token.name = user.name
+        // token.name = user.name
       }
 
       return token
@@ -78,7 +79,7 @@ export const authOptions = {
     async session({ session, token }) {
       if (session.user) {
         // ** Add custom params to user in session which are added in `jwt()` callback via `token` parameter
-        // session.user.name = token.name
+         session.user.name = token.name
 
         session.user.role = token.role
       }
