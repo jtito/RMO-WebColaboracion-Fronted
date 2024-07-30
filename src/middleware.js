@@ -68,6 +68,15 @@ export default withAuth(
     // Check if the user is logged in
     const isUserLoggedIn = !!token
 
+    // Get user role from token
+    const userRole = token?.role
+
+    // Define routes based on roles
+    const roleBasedRoutes = {
+      'Administrador del sistema': ADMIN_HOME_PAGE_URL,
+      user: USER_HOME_PAGE_URL
+    }
+
     // Guest routes (Routes that can be accessed by guest users who are not logged in)
     const guestRoutes = ['login', 'register', 'forgot-password']
 
@@ -94,12 +103,12 @@ export default withAuth(
     const isRequestedRouteIsGuestRoute = guestRoutes.some(route => pathname.endsWith(route))
 
     if (isUserLoggedIn && isRequestedRouteIsGuestRoute) {
-      return localizedRedirect(HOME_PAGE_URL, locale, request)
+      return localizedRedirect(roleBasedRoutes[userRole] ?? USER_HOME_PAGE_URL, locale, request)
     }
 
     // If the user is logged in and is trying to access root page, redirect to the home page
     if (pathname === '/' || pathname === `/${locale}`) {
-      return localizedRedirect(HOME_PAGE_URL, locale, request)
+      return localizedRedirect(roleBasedRoutes[userRole] ?? USER_HOME_PAGE_URL, locale, request)
     }
 
     // If pathname already contains a locale, return next() else redirect with localized URL

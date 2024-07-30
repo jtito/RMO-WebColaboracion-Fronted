@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 
 import dynamic from 'next/dynamic'
 
-import { useSession, getSession } from 'next-auth/react'
+import { getSession } from 'next-auth/react'
 
 // Component Imports
 import UserProfile from '@views/pages/user-profile'
@@ -26,8 +26,13 @@ const ProfilePage = () => {
     }
   }, [session])
 
-  if (status === 'loading') {
-    return <div>Loading...</div>
+  //const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL} user/usuarios/${userId}/`)
+
+
+  console.log('getdata', res)
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch profileData')
   }
 
   if (!session) {
@@ -41,9 +46,20 @@ const ProfilePage = () => {
     connections: <ConnectionsTab data={userData?.connections} />
   }
 
-  console.log('logd', session.user)
+  // // Get the session to obtain the user ID
+  // const session = await getSession()
 
-  return <UserProfile tabContentList={tabContentList} />
+  // console.log('getdata', res)
+
+  // if (!session) {
+  //   // Handle the case where the user is not logged in
+  //   return <p>User not logged in</p>
+  // }
+
+  // const userId = session.user.id // Adjust this according to how your session stores the user ID
+  // const data = await getData(userId)
+
+  return <UserProfile data={data} tabContentList={tabContentList(data)} />
 }
 
 export default ProfilePage

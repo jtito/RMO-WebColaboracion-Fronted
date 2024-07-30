@@ -89,7 +89,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
               >
                 <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/Publicados`}>{dictionary['navigation'].Publicados}</MenuItem>
                 <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/Borradores`}>{dictionary['navigation'].Borradores}</MenuItem>
-                
+
               </SubMenu>
 
               {/* <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones`} icon={<i className='tabler-checkup-list' />}>
@@ -102,6 +102,22 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
               {dictionary['navigation'].GestionUsuario}
             </MenuItem>
           )}
+        {!isAdmin && (
+          <>
+          <MenuItem href={`/${locale}/dashboards/publicaciones`} icon={<i className='tabler-file-description' />}>
+            {dictionary['navigation'].Publicacion}
+          </MenuItem>
+
+          <MenuItem href={`/${locale}/apps/invoice/list`} icon={<i className='tabler-checkup-list' />}>
+            {dictionary['navigation'].GestionPublicacion}
+          </MenuItem>
+          </>
+          )}
+          {isAdmin && (
+        <MenuItem href={`/${locale}/apps/user/list`} icon={<i className='tabler-user' />}>
+          {dictionary['navigation'].GestionUsuario}
+        </MenuItem>
+      )}
 
         </MenuSection>
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
 
 import Grid from '@mui/material/Grid'
 import Dialog from '@mui/material/Dialog'
@@ -11,10 +12,21 @@ import DialogActions from '@mui/material/DialogActions'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 
+import { useTheme } from '@emotion/react'
+
 import CustomTextField from '@core/components/mui/TextField'
-import { obtnerTipoDocIdentidad, ActualizarUsuario, obtenerPaises, obtenerRoles } from '../../../../Service/axios.services'
+import {
+  obtnerTipoDocIdentidad,
+  ActualizarUsuario,
+  obtenerPaises,
+  obtenerRoles
+} from '../../../../Service/axios.services'
 
 import DialogCloseButton from '@components/dialogs/DialogCloseButton'
+
+const PrimeraLetraMayusEditar = string => {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase()
+}
 
 const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
   const [error, setError] = useState(null)
@@ -23,13 +35,45 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
   const [Doc, setDoc] = useState([])
   const [formData, setFormData] = useState(userData)
 
+  const theme = useTheme()
+
+  const mostrarAlertaUsuarioEditado = () => {
+    const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
+    const backgroundColor = theme.palette.background.paper
+    const confirmButtonColor = theme.palette.primary.main
+
+    Swal.fire({
+      html: `<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">Usuario editado exitosamente</span>`,
+      icon: 'success',
+      showConfirmButton: true,
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: confirmButtonColor,
+      timer: 6000,
+      background: backgroundColor
+    })
+  }
+
+  useEffect(() => {
+    setFormData({
+      ...userData,
+      type_doc: Doc.find(doc => doc.display_name === userData.type_doc_display)?.value || '',
+      country: paises.find(country => country.display_name === userData.country_display)?.value || ''
+    })
+  }, [userData, Doc, paises])
+
+  console.log('userData edit: ', userData)
+  console.log('formData edit: ', formData)
+
   const handleSubmit = async e => {
     e.preventDefault()
     setError(null)
 
     const updatedData = {
       ...formData,
-      role: formData.role.id,
+      last_nameF: PrimeraLetraMayusEditar(formData.last_nameF),
+      last_nameS: PrimeraLetraMayusEditar(formData.last_nameS),
+      name: PrimeraLetraMayusEditar(formData.name),
+      role: formData.role.id
     }
 
     console.log('Datos enviados:', updatedData)
@@ -40,25 +84,24 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
       console.log('Respuesta del servidor:', response)
 
       if (response.status === 200) {
-        toast.success('Usuario Actualizado')
+        //toast.success('Usuario Actualizado')
+        mostrarAlertaUsuarioEditado()
         handleClose()
       } else {
-        if (response.data && response.data.doc_num) {
-          setError('El Número de Documento ya Existe')
-        } else if (response.data && response.data.email) {
-          setError('Email ya se encuentra Registrado')
+        if (
+          response.data &&
+          response.data.doc_num &&
+          Array.isArray(response.data.doc_num) &&
+          response.data.doc_num.length > 0
+        ) {
+          setError(response.data.doc_num[0])
         } else {
-          setError('No se pudo Actualizar')
+          setError('Error al actualizar el usuario')
         }
       }
     } catch (error) {
-      if (error.response) {
-        setError(`Error en la solicitud: ${error.response.data}`)
-      } else {
-        setError(`Error en la solicitud: ${error.message}`)
-      }
-
-      toast.error(`Error en la solicitud: ${error.message}`);
+      console.error('Error al actualizar el usuario:', error)
+      setError('Error al actualizar el usuario')
     }
   }
 
@@ -68,18 +111,11 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
     setError(null)
   }
 
-  const Doctype = async () => {
+  const ObtenerRoles = async () => {
     try {
-      const response = await obtnerTipoDocIdentidad()
+      const response = await obtenerRoles()
 
-      console.log(response, 'respuesta')
-
-      if (response.status === 200) {
-        setDoc(response.data)
-        console.log('obtenido')
-      } else {
-        console.error('Error al obtener los tipos de documentos:', response.status)
-      }
+      setRoles(response.data)
     } catch (error) {
       console.error('Error en la solicitud:', error)
     }
@@ -89,31 +125,17 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
     try {
       const response = await obtenerPaises()
 
-      console.log(response, 'respuesta')
-
-      if (response.status === 200) {
-        setPaises(response.data)
-        console.log('obtenido')
-      } else {
-        console.error('Error al obtener los países:', response.status)
-      }
+      setPaises(response.data)
     } catch (error) {
       console.error('Error en la solicitud:', error)
     }
   }
 
-  const ObtenerRoles = async () => {
+  const Doctype = async () => {
     try {
-      const response = await obtenerRoles()
+      const response = await obtnerTipoDocIdentidad()
 
-      console.log(response, 'respuestaR')
-
-      if (response.status === 200) {
-        setRoles(response.data)
-        console.log('obtenidoR')
-      } else {
-        console.error('Error al obtener los roles:', response.status)
-      }
+      setDoc(response.data)
     } catch (error) {
       console.error('Error en la solicitud:', error)
     }
@@ -204,9 +226,9 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
                 onChange={e => setFormData({ ...formData, type_doc: e.target.value })}
                 label='Seleccionar Tipo de Documento'
               >
-                {Doc.map(Doc => (
-                  <MenuItem key={Doc.value} value={Doc.value}>
-                    {Doc.display_name}
+                {Doc.map(doc => (
+                  <MenuItem key={doc.value} value={doc.value}>
+                    {doc.display_name}
                   </MenuItem>
                 ))}
               </CustomTextField>
@@ -228,7 +250,7 @@ const EditUserDrawer = ({ open, setOpen, handleClose, userData }) => {
                 id='select-pais'
                 value={formData.country || ''}
                 onChange={e => setFormData({ ...formData, country: e.target.value })}
-                label='Seleccionar Pais'
+                label='Seleccionar País'
               >
                 {paises.map(country => (
                   <MenuItem key={country.value} value={country.value}>
