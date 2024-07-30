@@ -83,9 +83,7 @@ const UserListTable = () => {
     let filtered = usuarios
 
     if (selectedRole) {
-      setFilteredUsuarios(usuarios.filter(user => user.role?.description === selectedRole))
-    } else {
-      setFilteredUsuarios(usuarios)
+      filtered = filtered.filter(user => user.role?.description === selectedRole)
     }
 
     if (selectedDateCreate) {
@@ -95,6 +93,7 @@ const UserListTable = () => {
         const userDate = parseISO(user.create_at)
 
         return userDate.toDateString() === selected.toDateString()
+
       })
     }
 
@@ -105,6 +104,7 @@ const UserListTable = () => {
         const userDate = parseISO(user.updated_at)
 
         return userDate.toDateString() === selected.toDateString()
+
       })
     }
 
@@ -149,11 +149,11 @@ const UserListTable = () => {
     const cancelButtonColor = theme.palette.error.main
 
     const result = await Swal.fire({
-      html: `<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">¿Estás seguro de que deseas desactivar este usuario?</span>`,
+      html: `<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">¿Estás seguro de que deseas eliminar este usuario?</span>`,
       icon: 'warning',
       showCancelButton: true,
       showConfirmButton: true,
-      confirmButtonText: 'Sí, desactivar',
+      confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
       confirmButtonColor: confirmButtonColor,
       cancelButtonColor: cancelButtonColor,
@@ -215,24 +215,24 @@ const UserListTable = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <TextField
-            label='Fecha de Creación'
-            type='date'
+            label="Fecha de Creación"
+            type="date"
             value={selectedDateCreate}
             onChange={e => setSelectedDateCreate(e.target.value)}
             InputLabelProps={{
-              shrink: true
+              shrink: true,
             }}
             fullWidth
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <TextField
-            label='Fecha de Actualización'
-            type='date'
+            label="Fecha de Actualización"
+            type="date"
             value={selectedDateUpdate}
             onChange={e => setSelectedDateUpdate(e.target.value)}
             InputLabelProps={{
-              shrink: true
+              shrink: true,
             }}
             fullWidth
           />

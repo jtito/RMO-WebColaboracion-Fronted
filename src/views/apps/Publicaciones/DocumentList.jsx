@@ -20,8 +20,12 @@ import {
   Select,
   TextField,
   Typography,
-  Dialog
+  Dialog,
+  Fab
 } from '@mui/material'
+
+
+import AddIcon from '@mui/icons-material/Add'
 
 import AddDoc from './AddDoc'
 import SelectUsers from './SelectUsers'
@@ -192,11 +196,11 @@ const DocumentList = ({ type }) => {
                         </IconButton>
                       </Grid>
                     </Grid>
-                    <Typography 
-                      variant='body2' 
+                    <Typography
+                      variant='body2'
                       color='text.secondary'
-                      sx={{ maxWidth: '35vw'}}>
-                        {documento.description}
+                      sx={{ maxWidth: '35vw' }}>
+                      {documento.description}
                     </Typography>
                     <Grid container spacing={2}>
                       <Grid item xs={12} sm={6}>
@@ -215,9 +219,9 @@ const DocumentList = ({ type }) => {
                     </Typography>*/}
                     <Grid item xs={12} sx={{ mt: 2 }}>
                       {documento.state.description === 'Borrador' && (
-                        <Button 
-                          variant='contained' 
-                          color='primary' 
+                        <Button
+                          variant='contained'
+                          color='primary'
                           startIcon={<i className='bi bi-send' />}
                           sx={{ padding: '2px 10px', fontSize: '0.9rem' }}>
                           Borrador
@@ -240,14 +244,22 @@ const DocumentList = ({ type }) => {
             No se encontraron documentos.
           </Typography>
         )}
+        <Fab
+          color='primary'
+          aria-label='add'
+          sx={{ position: 'absolute', bottom: 16, right: 16 }}
+          onClick={handleClickOpenAddDoc}
+        >
+          <AddIcon />
+        </Fab>
 
         <AddDoc open={openAddDoc} handleClose={handleCloseAddDoc} handleNext={handleNext} />
-        <SelectUsers
+        {/* <SelectUsers
           perfil={perfil}
           open={openSelectUsers}
           handleClose={handleCloseSelectUsers}
           handleConfirm={handleConfirm}
-        />
+        /> */}
         <Dialog open={openImageDialog} onClose={handleCloseImageDialog}>
           <CardMedia
             component='img'

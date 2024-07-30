@@ -66,13 +66,13 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
-            className: 'bs-full overflow-y-auto overflow-x-hidden',
-            onScroll: container => scrollMenu(container, false)
-          }
+          className: 'bs-full overflow-y-auto overflow-x-hidden',
+          onScroll: container => scrollMenu(container, false)
+        }
         : {
-            options: { wheelPropagation: false, suppressScrollX: true },
-            onScrollY: container => scrollMenu(container, true)
-          })}
+          options: { wheelPropagation: false, suppressScrollX: true },
+          onScrollY: container => scrollMenu(container, true)
+        })}
     >
       <Menu
         popoutMenuOffset={{ mainAxis: 23 }}
@@ -92,12 +92,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
                 {dictionary['navigation'].Publicacion}
               </MenuItem>
 
-              <SubMenu
-                label={dictionary['navigation'].GestiónPublicación}
-                icon={<i className='tabler-checkup-list' />}
-
-                // suffix={<CustomChip label='1' size='small' color='error' round='true' />}
-              >
+              <SubMenu label={dictionary['navigation'].GestiónPublicación} icon={<i className='tabler-checkup-list' />}>
                 <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/publicados`}>
                   {dictionary['navigation'].Publicados}
                 </MenuItem>
@@ -106,11 +101,6 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
                 </MenuItem>
               </SubMenu>
             </>
-          )}
-          {isAdmin && (
-            <MenuItem href={`/${locale}/apps/user/list`} icon={<i className='tabler-user' />}>
-              {dictionary['navigation'].GestionUsuario}
-            </MenuItem>
           )}
         </MenuSection>
       </Menu>

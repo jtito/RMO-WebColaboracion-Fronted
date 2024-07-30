@@ -10,8 +10,8 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
-    "build:icons": "tsx src/assets/iconify-icons/bundle-icons-css.js",
-    "postinstall": "prisma generate && npm run build:icons"
+    "build:icons": "tsx src/assets/iconify-icons/bundle-icons-css.js"
+ 
   },
   "dependencies": {
     "@emotion/cache": "11.11.0",

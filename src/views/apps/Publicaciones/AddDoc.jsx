@@ -15,51 +15,96 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Box
+  Box,
+  List,
+  ListItem
 } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 
-import { obtenerperfil, obtenertiposDoc } from '@/Service/axios.services'
+import { obtenerperfil, obtenertiposDoc, crearDocumento } from '@/Service/axios.services'
+import SelectUsers from './SelectUsers'
 
 const AddDoc = ({ open, handleClose, handleNext }) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [file, setFile] = useState(null)
+  const [selectedTypeDoc, setSelectedTypeDoc] = useState('') // Estado para el tipo de documento seleccionado
   const [tipodoc, settipodoc] = useState([])
+  const [userProfiles, setUserProfiles] = useState([])
+  const [perfil, setperfil] = useState([])
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false)
 
+  useEffect(() => {
+    obtenerTypoDoc()
+    obtenerperfildoc()
+  }, [])
 
   const handleFileChange = event => {
     setFile(event.target.files[0])
   }
 
-
   const obtenerTypoDoc = async () => {
     try {
       const response = await obtenertiposDoc()
 
-      console.log(response, 'respuestadoc')
-
       if (response.status === 200) {
         settipodoc(response.data)
-
-        console.log('obtenidodoc')
-      } else {
-        console.error('Error al obtener los roles:', response.status)
       }
     } catch (error) {
       console.error('Error en la solicitud:', error)
     }
   }
 
-  useEffect(() => {
-    obtenerTypoDoc()
-  }, [])
+  const obtenerperfildoc = async () => {
+    try {
+      const response = await obtenerperfil()
 
-  const handleSubmit = event => {
+      if (response.status === 200) {
+        setperfil(response.data)
+      } else {
+        console.error('Error al obtener los perfiles:', response.status)
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error)
+    }
+  }
+
+  const handleAddUserProfile = userProfile => {
+    setUserProfiles(prevProfiles => [...prevProfiles, userProfile])
+  }
+
+  const handleSubmit = async event => {
     event.preventDefault()
 
-    // Aquí puedes manejar el envío del formulario, subir el archivo, etc.
-    handleNext({ title, description, file })
-    handleClose()
+    if (!title || !description || !selectedTypeDoc || !file) {
+      console.error('Por favor, complete todos los campos')
+
+      return
+    }
+
+    const data = {
+      typeDoc: selectedTypeDoc,
+      state: 1, // Estado por defecto
+      user_perfil: userProfiles.map(profile => profile.id),
+      title,
+      description,
+      change_state: new Date().toISOString().split('T')[0],
+      usuario_creador: 1 // Ajusta según corresponda
+    }
+
+    try {
+      const response = await crearDocumento(data)
+
+      if (response.status === 201) {
+        console.log('Documento creado exitosamente:', response.data)
+        handleNext(response.data)
+        handleClose()
+      } else {
+        console.error('Error al crear el documento:', response.status)
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error)
+    }
   }
 
   return (
@@ -90,7 +135,11 @@ const AddDoc = ({ open, handleClose, handleNext }) => {
             <Grid item xs={8}>
               <FormControl fullWidth>
                 <InputLabel>Tipo de Documento</InputLabel>
-                <Select defaultValue='' label='Tipo de Documento'>
+                <Select
+                  value={selectedTypeDoc}
+                  onChange={e => setSelectedTypeDoc(e.target.value)}
+                  label='Tipo de Documento'
+                >
                   {tipodoc.map(tipo => (
                     <MenuItem key={tipo.id} value={tipo.id}>
                       {tipo.description}
@@ -111,16 +160,33 @@ const AddDoc = ({ open, handleClose, handleNext }) => {
               <Typography variant='body2'>{file.name}</Typography>
             </Box>
           )}
+          <List>
+            {userProfiles.map((profile, index) => (
+              <ListItem key={index}>
+                {profile.name} - {profile.typeDoc}
+              </ListItem>
+            ))}
+          </List>
+          <Button variant='outlined' onClick={() => setSearchDialogOpen(true)} startIcon={<AddIcon />}>
+            Asignar Perfiles
+          </Button>
           <DialogActions>
             <Button onClick={handleClose} color='secondary'>
               Cancelar
             </Button>
             <Button type='submit' color='primary'>
-              Agregar
+              Guardar
             </Button>
           </DialogActions>
         </form>
       </DialogContent>
+
+      <SelectUsers
+        perfil={perfil}
+        open={searchDialogOpen}
+        handleClose={() => setSearchDialogOpen(false)}
+        handleConfirm={handleAddUserProfile}
+      />
     </Dialog>
   )
 }
