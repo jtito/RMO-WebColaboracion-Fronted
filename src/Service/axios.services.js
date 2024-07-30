@@ -93,11 +93,7 @@ export const ObteneridRol = async idRol => {
       return status < 500
     }
   })
-
 }
-
-
-
 
 export const ActualizarUsuario = async (id, body) => {
   try {
@@ -118,27 +114,24 @@ export const ActualizarUsuarioEstados = async (id, datosActualizados) => {
   try {
     const response = await API.put(`user/usuarios/${id}/`, datosActualizados, {
       validateStatus: function (status) {
-        return status < 500; // Aceptar códigos de estado < 500
+        return status < 500 // Aceptar códigos de estado < 500
       }
-    });
+    })
 
     if (response.status >= 200 && response.status < 300) {
       // La actualización fue exitosa
-      return response.data;
+      return response.data
     } else {
       // Manejar errores específicos del servidor
-      console.error('Error al actualizar el estado:', response.status, response.statusText);
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      console.error('Error al actualizar el estado:', response.status, response.statusText)
+      throw new Error(`Error ${response.status}: ${response.statusText}`)
     }
   } catch (error) {
     // Manejar errores de la solicitud
-    console.error('Error en la solicitud:', error);
-    throw error;
+    console.error('Error en la solicitud:', error)
+    throw error
   }
-};
-
-
-
+}
 
 export const obtenerTodosLosPermisos = () => {
   return API.get('permisos/permiso/', {
@@ -158,6 +151,38 @@ export const obtenerEcenariosporid = async idEcenario => {
 
 export const obtenerEscenarios = () => {
   return API.get('escenario/escenario/', {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
+export const obtenertiposDoc = () => {
+  return API.get('docs/tipo/', {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
+export const obtenerperfil = () => {
+  return API.get('perfil/simple/', {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
+export const crearPerfilUsuario = async data => {
+  return API.post('docs/perfil/user/', data, {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
+export const obtenerDocumentos = () => {
+  return API.get('docs/docs/', {
     validateStatus: function (status) {
       return status < 500
     }
