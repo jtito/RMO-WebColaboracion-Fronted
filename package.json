@@ -86,7 +86,7 @@
     "postcss": "8.4.35",
     "postcss-styled-syntax": "0.6.4",
     "prettier": "3.2.5",
-    "prisma": "5.10.2",
+
     "stylelint": "16.2.1",
     "stylelint-use-logical-spec": "5.0.1"
   },
@@ -96,4 +96,5 @@
   "overrides": {
     "react": "18.2.0"
   }
+
 }
