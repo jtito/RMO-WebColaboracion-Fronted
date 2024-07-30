@@ -224,7 +224,7 @@ const DocumentList = ({ type }) => {
                           color='primary'
                           startIcon={<i className='bi bi-send' />}
                           sx={{ padding: '2px 10px', fontSize: '0.9rem' }}>
-                          Borrador
+                          Publicar
                           <IconButton>
                             <i className='tabler-send text-[22px] text-textSecondary' />
                           </IconButton>
