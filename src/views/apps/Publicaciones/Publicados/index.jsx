@@ -33,24 +33,10 @@ const Publicados = () => {
   const [openSelectUsers, setOpenSelectUsers] = useState(false)
   const [coverImage, setCoverImage] = useState(null)
   const [openImageDialog, setOpenImageDialog] = useState(false)
-  const [perfil, setperfil] = useState([])
+
   const [docperf, setdocperf] = useState([])
 
   const router = useRouter() // Crear una instancia de useRouter
-
-  const obtenerperfildoc = async () => {
-    try {
-      const response = await obtenerperfil()
-
-      if (response.status === 200) {
-        setperfil(response.data)
-      } else {
-        console.error('Error al obtener los roles:', response.status)
-      }
-    } catch (error) {
-      console.error('Error en la solicitud:', error)
-    }
-  }
 
   const obtenerDocumentosperf = async () => {
     try {
@@ -67,7 +53,6 @@ const Publicados = () => {
   }
 
   useEffect(() => {
-    obtenerperfildoc()
     obtenerDocumentosperf()
   }, [])
 
@@ -180,12 +165,12 @@ const Publicados = () => {
           <AddIcon />
         </Fab>
         <AddDoc open={openAddDoc} handleClose={handleCloseAddDoc} handleNext={handleNext} />
-        <SelectUsers
+        {/* <SelectUsers
           perfil={perfil}
           open={openSelectUsers}
           handleClose={handleCloseSelectUsers}
           handleConfirm={handleConfirm}
-        />
+        /> */}
         <Dialog open={openImageDialog} onClose={handleCloseImageDialog}>
           <CardMedia
             component='img'
