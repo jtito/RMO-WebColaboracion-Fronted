@@ -270,7 +270,6 @@ const DocumentList = ({ type }) => {
                     </Typography>
                     <Grid item xs={12} sx={{ mt: 2 }}>
                       {documento.state.description === 'Borrador' && (
-<<<<<<< HEAD
                         <Button
                           variant='contained'
                           color='primary'
