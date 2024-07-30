@@ -1,6 +1,10 @@
 'use client'
 
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react'
+=======
+import React, { useState } from 'react'
+>>>>>>> 5fd2fa9 (Se diseño DocPublicados/Borrador)
 
 import {
   Dialog,
@@ -16,6 +20,7 @@ import {
   List,
   ListItem,
   ListItemText,
+<<<<<<< HEAD
   Grid,
   IconButton
 } from '@mui/material'
@@ -169,6 +174,56 @@ const SelectUsers = ({ perfil, open, handleClose, handleConfirm }) => {
   useEffect(() => {
     console.log('Usuarios asignados actualizados:', assignedUsers)
   }, [assignedUsers])
+=======
+  ListItemSecondaryAction,
+  IconButton,
+  Typography,
+  Grid
+} from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
+
+const SelectUsers = ({ perfil, open, handleClose, handleConfirm }) => {
+  const [searchTerm, setSearchTerm] = useState('')
+  const [users, setUsers] = useState(['Usuario 1', 'Usuario 2', 'Usuario 3']) // Reemplaza estos valores con la lista real de usuarios
+  const [selectedUsers, setSelectedUsers] = useState([])
+  const [roles, setRoles] = useState({})
+
+  const handleSearchChange = event => {
+    setSearchTerm(event.target.value)
+  }
+
+  const handleRoleChange = (user, role) => {
+    setRoles(prev => ({
+      ...prev,
+      [user]: role
+    }))
+  }
+
+  const handleAddUser = user => {
+    if (!selectedUsers.includes(user)) {
+      setSelectedUsers([...selectedUsers, user])
+    }
+  }
+
+  const handleRemoveUser = user => {
+    setSelectedUsers(selectedUsers.filter(u => u !== user))
+    setRoles(prev => {
+      const updatedRoles = { ...prev }
+
+      delete updatedRoles[user]
+
+      return updatedRoles
+    })
+  }
+
+  const handleSubmit = () => {
+    handleConfirm(selectedUsers.map(user => ({ user, role: roles[user] })))
+    handleClose()
+  }
+
+  const filteredUsers = users.filter(user => user.toLowerCase().includes(searchTerm.toLowerCase()))
+>>>>>>> 5fd2fa9 (Se diseño DocPublicados/Borrador)
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth='md'>
@@ -183,6 +238,7 @@ const SelectUsers = ({ perfil, open, handleClose, handleConfirm }) => {
           variant='outlined'
           sx={{ mb: 2 }}
         />
+<<<<<<< HEAD
         <Button onClick={handleSearch}>Buscar</Button>
         <List>
           {searchResults.map(user => (
@@ -190,14 +246,28 @@ const SelectUsers = ({ perfil, open, handleClose, handleConfirm }) => {
               <Grid container spacing={2} alignItems='center'>
                 <Grid item xs={6}>
                   <ListItemText primary={`${user.name} ${user.last_nameF} ${user.last_nameS}`} />
+=======
+        <List>
+          {filteredUsers.map(user => (
+            <ListItem key={user} sx={{ mb: 2 }}>
+              <Grid container spacing={2} alignItems='center'>
+                <Grid item xs={6}>
+                  <ListItemText primary={user} />
+>>>>>>> 5fd2fa9 (Se diseño DocPublicados/Borrador)
                 </Grid>
                 <Grid item xs={5}>
                   <FormControl variant='outlined' fullWidth>
                     <InputLabel>Tipo de Perfil</InputLabel>
                     <Select
+<<<<<<< HEAD
                       label='Tipo de perfil'
                       value={userProfiles[user.id] || ''}
                       onChange={event => handlePerfilChange(user.id, event)}
+=======
+                      value={roles[user] || ''}
+                      onChange={e => handleRoleChange(user, e.target.value)}
+                      label='Rol'
+>>>>>>> 5fd2fa9 (Se diseño DocPublicados/Borrador)
                     >
                       {perfil.map(tipo => (
                         <MenuItem key={tipo.id} value={tipo.id}>
@@ -208,7 +278,11 @@ const SelectUsers = ({ perfil, open, handleClose, handleConfirm }) => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={1}>
+<<<<<<< HEAD
                   <IconButton onClick={() => handleAddUserProfile(user.id)}>
+=======
+                  <IconButton edge='end' onClick={() => handleAddUser(user)}>
+>>>>>>> 5fd2fa9 (Se diseño DocPublicados/Borrador)
                     <AddIcon />
                   </IconButton>
                 </Grid>
@@ -216,6 +290,7 @@ const SelectUsers = ({ perfil, open, handleClose, handleConfirm }) => {
             </ListItem>
           ))}
         </List>
+<<<<<<< HEAD
         <DialogTitle>Usuarios Asignados</DialogTitle>
         <List>
           {assignedUsers.map(user => (
@@ -226,6 +301,38 @@ const SelectUsers = ({ perfil, open, handleClose, handleConfirm }) => {
                 </Grid>
                 <Grid item xs={4} textAlign='right'>
                   <IconButton color='error' onClick={() => handleRemoveUserProfile(user.id)}>
+=======
+        <Typography variant='h6' gutterBottom>
+          Usuarios Seleccionados
+        </Typography>
+        <List>
+          {selectedUsers.map(user => (
+            <ListItem key={user} sx={{ mb: 2 }}>
+              <Grid container spacing={2} alignItems='center'>
+                <Grid item xs={6}>
+                  <ListItemText primary={user} />
+                </Grid>
+                <Grid item xs={5}>
+                  <FormControl variant='outlined' fullWidth>
+                    <InputLabel>Rol</InputLabel>
+                    <Select
+                      value={roles[user] || ''}
+                      onChange={e => handleRoleChange(user, e.target.value)}
+                      label='Rol'
+                    >
+                      <MenuItem value=''>
+                        <em>Seleccionar Rol</em>
+                      </MenuItem>
+                      {/* Reemplaza estos valores con la lista real de roles */}
+                      <MenuItem value='Rol 1'>Rol 1</MenuItem>
+                      <MenuItem value='Rol 2'>Rol 2</MenuItem>
+                      <MenuItem value='Rol 3'>Rol 3</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={1}>
+                  <IconButton edge='end' onClick={() => handleRemoveUser(user)}>
+>>>>>>> 5fd2fa9 (Se diseño DocPublicados/Borrador)
                     <DeleteIcon />
                   </IconButton>
                 </Grid>
@@ -238,7 +345,11 @@ const SelectUsers = ({ perfil, open, handleClose, handleConfirm }) => {
         <Button onClick={handleClose} color='secondary'>
           Cancelar
         </Button>
+<<<<<<< HEAD
         <Button onClick={handleConfirmChanges} color='primary'>
+=======
+        <Button onClick={handleSubmit} color='primary'>
+>>>>>>> 5fd2fa9 (Se diseño DocPublicados/Borrador)
           Confirmar
         </Button>
       </DialogActions>
