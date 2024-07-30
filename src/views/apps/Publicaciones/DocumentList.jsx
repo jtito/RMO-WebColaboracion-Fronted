@@ -270,6 +270,7 @@ const DocumentList = ({ type }) => {
                     </Typography>
                     <Grid item xs={12} sx={{ mt: 2 }}>
                       {documento.state.description === 'Borrador' && (
+<<<<<<< HEAD
                         <Button
                           variant='contained'
                           color='primary'
@@ -277,6 +278,9 @@ const DocumentList = ({ type }) => {
                           sx={{ width: 'auto', px: 2 }} // Ajusta el tamaño del botón
                         >
                           Publicar
+                          <IconButton>
+                            <i className='tabler-send text-[22px] text-textSecondary' />
+                          </IconButton>
                         </Button>
                       )}
                     </Grid>
