@@ -27,7 +27,6 @@ import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNav
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 
-
 const RenderExpandIcon = ({ open, transitionDuration }) => (
   <StyledVerticalNavExpandIcon open={open} transitionDuration={transitionDuration}>
     <i className='tabler-chevron-right' />
@@ -57,15 +56,14 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
-          className: 'bs-full overflow-y-auto overflow-x-hidden',
-          onScroll: container => scrollMenu(container, false)
-        }
+            className: 'bs-full overflow-y-auto overflow-x-hidden',
+            onScroll: container => scrollMenu(container, false)
+          }
         : {
-          options: { wheelPropagation: false, suppressScrollX: true },
-          onScrollY: container => scrollMenu(container, true)
-        })}
+            options: { wheelPropagation: false, suppressScrollX: true },
+            onScrollY: container => scrollMenu(container, true)
+          })}
     >
-
       <Menu
         popoutMenuOffset={{ mainAxis: 23 }}
         menuItemStyles={menuItemStyles(verticalNavOptions, theme, settings)}
@@ -73,7 +71,6 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='tabler-circle text-xs' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-
         <MenuSection label={dictionary['navigation'].Colaboracion}>
           {!isAdmin && (
             <>
@@ -85,11 +82,14 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
                 label={dictionary['navigation'].GestiónPublicación}
                 icon={<i className='tabler-checkup-list' />}
 
-              // suffix={<CustomChip label='1' size='small' color='error' round='true' />}
+                // suffix={<CustomChip label='1' size='small' color='error' round='true' />}
               >
-                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/Publicados`}>{dictionary['navigation'].Publicados}</MenuItem>
-                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/Borradores`}>{dictionary['navigation'].Borradores}</MenuItem>
-                
+                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/Publicados`}>
+                  {dictionary['navigation'].Publicados}
+                </MenuItem>
+                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/borradores`}>
+                  {dictionary['navigation'].Borradores}
+                </MenuItem>
               </SubMenu>
 
               {/* <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones`} icon={<i className='tabler-checkup-list' />}>
@@ -102,11 +102,8 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
               {dictionary['navigation'].GestionUsuario}
             </MenuItem>
           )}
-
         </MenuSection>
-
       </Menu>
-
     </ScrollWrapper>
   )
 }
