@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@media print {
+  body {
+    margin: 0 !important;
+  }
+}
+
+.main-container {
+  --ckeditor5-preview-sidebar-width: 270px;
+  --ckeditor5-preview-height: 700px;
+  font-family: 'Lato';
+  inline-size: fit-content;
+  margin-inline: auto;
+}
+
+.main-container .presence {
+  margin-block-end: 8px;
+}
+
+.ck-content {
+  font-family: 'Lato';
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.editor-container__editor-wrapper {
+  display: flex;
+  inline-size: fit-content;
+}
+
+.editor-container_document-editor {
+  border: 1px solid var(--ck-color-base-border);
+}
+
+.editor-container_document-editor .editor-container__toolbar {
+  display: flex;
+  position: relative;
+  box-shadow: 0 2px 3px hsla(0, 0%, 0%, 0.078);
+}
+
+.editor-container_document-editor .editor-container__toolbar > .ck.ck-toolbar {
+  flex-grow: 1;
+  inline-size: 0;
+  border-end-end-radius: 0;
+  border-end-start-radius: 0;
+  border-block-start: 0;
+  border-inline-start: 0;
+  border-inline-end: 0;
+}
+
+.editor-container_document-editor .editor-container__menu-bar > .ck.ck-menu-bar {
+  border-end-end-radius: 0;
+  border-end-start-radius: 0;
+  border-block-start: 0;
+  border-inline-start: 0;
+  border-inline-end: 0;
+}
+
+.editor-container_document-editor .editor-container__editor-wrapper {
+  max-block-size: var(--ckeditor5-preview-height);
+  min-block-size: var(--ckeditor5-preview-height);
+  overflow-y: scroll;
+  background: var(--ck-color-base-foreground);
+}
+
+.editor-container_document-editor .editor-container__editor {
+  margin-block: 28px;
+  block-size: 100%;
+}
+
+.editor-container_document-editor .editor-container__editor .ck.ck-editor__editable {
+  box-sizing: border-box;
+  min-inline-size: calc(210mm + 2px);
+  max-inline-size: calc(210mm + 2px);
+  min-block-size: 297mm;
+  block-size: fit-content;
+  padding-block: 20mm;
+  padding-inline: 12mm;
+  border: 1px hsl(0, 0%, 82.7%) solid;
+  background: hsl(0, 0%, 100%);
+  box-shadow: 0 2px 3px hsla(0, 0%, 0%, 0.078);
+  flex: 1 1 auto;
+  margin-inline: 72px;
+}
+
+.editor-container_include-outline .editor-container__editor .ck.ck-editor__editable {
+  margin-inline-start: 0;
+}
+
+.editor-container_include-annotations .editor-container__editor .ck.ck-editor__editable {
+  margin-inline-end: 0;
+}
+
+.editor-container__sidebar {
+  min-inline-size: var(--ckeditor5-preview-sidebar-width);
+  max-inline-size: var(--ckeditor5-preview-sidebar-width);
+  margin-block-start: 28px;
+  margin-inline: 10px;
+}
+
+.revision-history {
+  display: none;
+}
+
+.revision-history__wrapper {
+  display: flex;
+}
+
+.revision-history__wrapper .ck.ck-editor {
+  margin: 0;
+  inline-size: 795px;
+}
+
+.revision-history__wrapper .revision-history__sidebar {
+  border: 1px solid var(--ck-color-base-border);
+  border-inline-start: 0;
+  inline-size: var(--ckeditor5-preview-sidebar-width);
+  min-block-size: 100%;
+}
+
+.revision-history__wrapper .revision-history__sidebar .ck-revision-history-sidebar {
+  block-size: 100%;
+}
+
+.ck-content .table thead {
+  display: table-row-group;
+}
+
+.ck-content .table tr {
+  break-inside: avoid;
+  break-after: auto;
+}
