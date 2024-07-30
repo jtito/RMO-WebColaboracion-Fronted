@@ -173,7 +173,7 @@ export const obtenerperfil = () => {
   })
 }
 
-export const crearPerfilUsuario = async data => {
+export const agregarPerfilUsuario = async data => {
   return API.post('docs/perfil/user/', data, {
     validateStatus: function (status) {
       return status < 500
@@ -183,6 +183,30 @@ export const crearPerfilUsuario = async data => {
 
 export const obtenerDocumentos = () => {
   return API.get('docs/docs/', {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
+export const obtenerUsuariosAsignados = () => {
+  return API.get('docs/perfil/user/', {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
+export const eliminarPerfilUsuario = async userId => {
+  return await API.delete(`docs/perfil/user/${userId}`, {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
+export const crearDocumento = async data => {
+  return API.post('docs/docs/', data, {
     validateStatus: function (status) {
       return status < 500
     }
