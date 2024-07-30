@@ -73,6 +73,7 @@ const VistaDocumento = () => {
           <ReactQuill value={editorContent} onChange={handleEditorChange} theme='snow' modules={editorModules} />
         </Box>
         <Button
+        
           // onClick={exportToWord}
 
           variant='contained'

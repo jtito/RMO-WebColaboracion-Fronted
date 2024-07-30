@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { 
-  Button, Card, CardActions, CardContent, CardMedia, Divider, FormControl, 
+import {
+  Button, Card, CardActions, CardContent, CardMedia, Divider, FormControl,
   Grid, InputLabel, MenuItem, Select, TextField, Typography, Dialog
 } from '@mui/material';
 
@@ -21,6 +21,8 @@ const DocumentList = ({ type }) => {
   const [perfil, setperfil] = useState([]);
   const [docperf, setdocperf] = useState([]);
   const [filteredDocs, setFilteredDocs] = useState([]);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   const router = useRouter();
 
@@ -41,7 +43,7 @@ const DocumentList = ({ type }) => {
   const obtenerDocumentosperf = async () => {
     try {
       const response = await obtenerDocumentos();
-
+      
       if (response.status === 200) {
         setdocperf(response.data);
       } else {
@@ -58,17 +60,28 @@ const DocumentList = ({ type }) => {
   }, [type]);
 
   useEffect(() => {
-    // Filtra los documentos según el tipo
     const filterDocs = () => {
+      let filtered = [];
+      
       if (type === "publicados") {
-        setFilteredDocs(docperf.filter(doc => doc.state.description === "Publicado"));
+        filtered = docperf.filter(doc => doc.state.description === "Publicado");
       } else if (type === "borradores") {
-        setFilteredDocs(docperf.filter(doc => doc.state.description === "Borrador"));
+        filtered = docperf.filter(doc => doc.state.description === "Borrador");
       }
+
+      if (startDate) {
+        filtered = filtered.filter(doc => new Date(doc.updated_at) >= new Date(startDate));
+      }
+
+      if (endDate) {
+        filtered = filtered.filter(doc => new Date(doc.updated_at) <= new Date(endDate));
+      }
+
+      setFilteredDocs(filtered);
     };
 
     filterDocs();
-  }, [docperf, type]);
+  }, [docperf, type, startDate, endDate]);
 
   const handleClickOpenAddDoc = () => {
     setOpenAddDoc(true);
@@ -108,18 +121,35 @@ const DocumentList = ({ type }) => {
       <Grid item xs={12}>
         <Grid container spacing={8} alignItems='center'>
           <Grid item xs={12} md={8} container spacing={12}>
-            <Grid item xs={12} sm={8}>
-              <TextField fullWidth variant='outlined' label='Buscar' placeholder='Buscar...' />
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                variant='outlined'
+                label='Buscar'
+                placeholder='Buscar...'
+              />
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <FormControl fullWidth>
-                <InputLabel>Filtro</InputLabel>
-                <Select defaultValue='' label='Filtro'>
-                  <MenuItem value='opcion1'>Opción 1</MenuItem>
-                  <MenuItem value='opcion2'>Opción 2</MenuItem>
-                  <MenuItem value='opcion3'>Opción 3</MenuItem>
-                </Select>
-              </FormControl>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                fullWidth
+                variant='outlined'
+                type='date'
+                label='Fecha de Inicio'
+                value={startDate}
+                onChange={e => setStartDate(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                fullWidth
+                variant='outlined'
+                type='date'
+                label='Fecha de Fin'
+                value={endDate}
+                onChange={e => setEndDate(e.target.value)}
+                InputLabelProps={{ shrink: true }}
+              />
             </Grid>
           </Grid>
         </Grid>
