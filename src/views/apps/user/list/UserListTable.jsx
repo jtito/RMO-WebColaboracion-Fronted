@@ -80,35 +80,31 @@ const UserListTable = () => {
 
   useEffect(() => {
     let filtered = usuarios
-
+  
     if (selectedRole) {
-      setFilteredUsuarios(usuarios.filter(user => user.role?.description === selectedRole))
-    } else {
-      setFilteredUsuarios(usuarios)
+      filtered = filtered.filter(user => user.role?.description === selectedRole)
     }
-
+  
     if (selectedDateCreate) {
       const selected = parseISO(selectedDateCreate)
-
+  
       filtered = filtered.filter(user => {
         const userDate = parseISO(user.create_at)
-
         return userDate.toDateString() === selected.toDateString()
       })
     }
-
+  
     if (selectedDateUpdate) {
       const selected = parseISO(selectedDateUpdate)
-
+  
       filtered = filtered.filter(user => {
         const userDate = parseISO(user.updated_at)
-
         return userDate.toDateString() === selected.toDateString()
       })
     }
-
+  
     setFilteredUsuarios(filtered)
-  }, [selectedRole, selectedDateCreate, selectedDateUpdate, usuarios])
+  }, [selectedRole, selectedDateCreate, selectedDateUpdate, usuarios])  
 
   const handleUserAdded = async newUser => {
     try {
