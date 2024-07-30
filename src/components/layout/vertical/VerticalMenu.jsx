@@ -97,6 +97,11 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
               </SubMenu>
             </>
           )}
+          {isAdmin && (
+            <MenuItem href={`/${locale}/apps/user/list`} icon={<i className='tabler-user' />}>
+              {dictionary['navigation'].GestionUsuario}
+            </MenuItem>
+          )}
         </MenuSection>
       </Menu>
     </ScrollWrapper>
