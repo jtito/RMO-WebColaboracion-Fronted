@@ -84,7 +84,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
 
                 // suffix={<CustomChip label='1' size='small' color='error' round='true' />}
               >
-                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/Publicados`}>
+                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/publicados`}>
                   {dictionary['navigation'].Publicados}
                 </MenuItem>
                 <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/borradores`}>
