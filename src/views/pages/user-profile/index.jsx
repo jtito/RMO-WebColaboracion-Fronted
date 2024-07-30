@@ -8,13 +8,18 @@ import Grid from '@mui/material/Grid'
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabPanel from '@mui/lab/TabPanel'
+import { useSession } from 'next-auth/react'
 
 // Component Imports
 import UserProfileHeader from './UserProfileHeader'
 import CustomTabList from '@core/components/mui/TabList'
 
-const UserProfile = ({ tabContentList, data }) => {
-  console.log('nuevaData', data)
+const UserProfile = ({ tabContentList }) => {
+  
+
+  const { data: session } = useSession()
+
+  console.log('lof',session.user)
 
   // States
   const [activeTab, setActiveTab] = useState('profile')
