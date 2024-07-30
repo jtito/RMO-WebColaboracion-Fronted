@@ -92,15 +92,25 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
                 {dictionary['navigation'].Publicacion}
               </MenuItem>
 
-              <SubMenu label={dictionary['navigation'].GestiónPublicación} icon={<i className='tabler-checkup-list' />}>
+              <SubMenu
+                label={dictionary['navigation'].GestiónPublicación}
+                icon={<i className='tabler-checkup-list' />}
+
+                // suffix={<CustomChip label='1' size='small' color='error' round='true' />}
+              >
                 <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/Publicados`}>
                   {dictionary['navigation'].Publicados}
                 </MenuItem>
-                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/Borradores`}>
+                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/borradores`}>
                   {dictionary['navigation'].Borradores}
                 </MenuItem>
               </SubMenu>
             </>
+          )}
+          {isAdmin && (
+            <MenuItem href={`/${locale}/apps/user/list`} icon={<i className='tabler-user' />}>
+              {dictionary['navigation'].GestionUsuario}
+            </MenuItem>
           )}
         </MenuSection>
       </Menu>
