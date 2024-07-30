@@ -1,3 +1,10 @@
+import React from 'react';
+
+import DocumentList from '../DocumentList';
+
+const Borradores = () => {
+  return <DocumentList type="borradores" />;
+};
 import { Button, Card, CardActions, CardContent, CardMedia, Divider, Grid, Typography } from '@mui/material'
 
 const Borrador = () => {
@@ -35,4 +42,4 @@ const Borrador = () => {
   )
 }
 
-export default Borrador
+export default Borradores
