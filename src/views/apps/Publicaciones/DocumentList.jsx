@@ -215,7 +215,11 @@ const DocumentList = ({ type }) => {
                     </Typography>*/}
                     <Grid item xs={12} sx={{ mt: 2 }}>
                       {documento.state.description === 'Borrador' && (
-                        <Button variant='contained' color='primary' startIcon={<i className='bi bi-send' />}>
+                        <Button 
+                          variant='contained' 
+                          color='primary' 
+                          startIcon={<i className='bi bi-send' />}
+                          sx={{ padding: '2px 10px', fontSize: '0.9rem' }}>
                           Borrador
                           <IconButton>
                             <i className='tabler-send text-[22px] text-textSecondary' />
