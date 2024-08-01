@@ -1,5 +1,5 @@
 
-import Borrador from '@/views/apps/Publicaciones/Borradores'
+import Borrador from '@/views/apps/Publicaciones/borradores'
 
 
 

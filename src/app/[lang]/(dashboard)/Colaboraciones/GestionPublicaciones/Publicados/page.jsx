@@ -1,4 +1,4 @@
-import Publicados from '@views/apps/Publicaciones/Publicados'
+import Publicados from '@/views/apps/Publicaciones/publicados'
 
 const PublicadosPage = () => {
   return <Publicados />
