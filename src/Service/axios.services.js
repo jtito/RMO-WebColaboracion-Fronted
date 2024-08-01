@@ -189,6 +189,14 @@ export const obtenerDocumentos = () => {
   })
 }
 
+export const obtenerDocumentosid = idrol => {
+  return API.get(`docs/docs/${idrol}/`, {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
 export const obtenerUsuariosAsignados = () => {
   return API.get('docs/perfil/user/', {
     validateStatus: function (status) {

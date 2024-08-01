@@ -1,10 +1,6 @@
-// Third-party Imports
 import CredentialProvider from 'next-auth/providers/credentials'
 
-
 export const authOptions = {
-  // ** Configure one or more authentication providers
-  // ** Please refer to https://next-auth.js.org/configuration/options#providers for more `providers` options
   providers: [
     CredentialProvider({
       name: 'Credentials',
@@ -33,8 +29,20 @@ export const authOptions = {
           if (res.status === 200) {
             return {
               ...data,
-
-              role: data.user.role.id
+              user: {
+                id: data.user.id,
+                name: `${data.user.name} ${data.user.last_nameF} ${data.user.last_nameS}`,
+                role: data.user.role.id,
+                email: data.user.email,
+                is_active: data.user.is_active,
+                create_at: data.user.create_at,
+                updated_at: data.user.updated_at,
+                country_display: data.user.country_display,
+                type_doc_display: data.user.type_doc_display,
+                doc_num: data.user.doc_num
+              },
+              access_token: data.access_token,
+              refresh_token: data.refresh_token
             }
           }
 
@@ -44,44 +52,50 @@ export const authOptions = {
         }
       }
     })
-
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_CLIENT_ID,
-    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET
-    // })
-
-    // ** ...add more providers here
   ],
 
-  // ** Please refer to https://next-auth.js.org/configuration/options#session for more `session` options
   session: {
     strategy: 'jwt',
-
-    maxAge: 30 * 24 * 60 * 60 // ** 30 days
+    maxAge: 30 * 24 * 60 * 60
   },
 
-  // ** Please refer to https://next-auth.js.org/configuration/options#pages for more `pages` options
   pages: {
     signIn: '/login'
   },
 
-  // ** Please refer to https://next-auth.js.org/configuration/options#callbacks for more `callbacks` options
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role
-
-        // token.name = user.name
+        token.role = user.user.role
+        token.userId = user.user
+        token.name = user.user.name
+        token.email = user.user.email
+        token.is_active = user.user.is_active
+        token.create_at = user.user.create_at
+        token.updated_at = user.user.updated_at
+        token.country_display = user.user.country_display
+        token.type_doc_display = user.user.type_doc_display
+        token.doc_num = user.user.doc_num
+        token.access_token = user.access_token
+        token.refresh_token = user.refresh_token
       }
 
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-        // ** Add custom params to user in session which are added in `jwt()` callback via `token` parameter
+        session.user.id = token.userId
         session.user.name = token.name
-
         session.user.role = token.role
+        session.user.email = token.email
+        session.user.is_active = token.is_active
+        session.user.create_at = token.create_at
+        session.user.updated_at = token.updated_at
+        session.user.country_display = token.country_display
+        session.user.type_doc_display = token.type_doc_display
+        session.user.doc_num = token.doc_num
+        session.access_token = token.access_token
+        session.refresh_token = token.refresh_token
       }
 
       return session

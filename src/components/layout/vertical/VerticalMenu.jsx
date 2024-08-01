@@ -49,6 +49,9 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
 
   const isAdmin = session?.user?.role === 1
 
+  console.log('session', session)
+  console.log('isAdmin', isAdmin)
+
   if (status === 'loading') {
     // Puedes mostrar un spinner de carga aquí si lo deseas
     return <div>Cargando...</div>
@@ -58,13 +61,13 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
     <ScrollWrapper
       {...(isBreakpointReached
         ? {
-          className: 'bs-full overflow-y-auto overflow-x-hidden',
-          onScroll: container => scrollMenu(container, false)
-        }
+            className: 'bs-full overflow-y-auto overflow-x-hidden',
+            onScroll: container => scrollMenu(container, false)
+          }
         : {
-          options: { wheelPropagation: false, suppressScrollX: true },
-          onScrollY: container => scrollMenu(container, true)
-        })}
+            options: { wheelPropagation: false, suppressScrollX: true },
+            onScrollY: container => scrollMenu(container, true)
+          })}
     >
       <Menu
         popoutMenuOffset={{ mainAxis: 23 }}

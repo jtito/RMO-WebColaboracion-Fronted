@@ -18,7 +18,7 @@ const ProfileTab = () => {
     return <div>Please log in</div>
   }
 
- console .log ('log',session.user)
+  console.log('log', session.user)
 
   return (
     <Grid container spacing={6}>

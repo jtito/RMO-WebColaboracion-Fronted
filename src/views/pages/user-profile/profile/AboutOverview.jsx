@@ -1,81 +1,60 @@
-// MUI Imports
+import Image from 'next/image'
+
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
 
-const renderList = list => {
-  return (
-    list.length > 0 &&
-    list.map((item, index) => {
-      return (
-        <div key={index} className='flex items-center gap-2'>
-          <i className={item.icon} />
-          <div className='flex items-center flex-wrap gap-2'>
-            <Typography className='font-medium'>
-              {`${item.property.charAt(0).toUpperCase() + item.property.slice(1)}:`}
-            </Typography>
-            <Typography> {item.value.charAt(0).toUpperCase() + item.value.slice(1)}</Typography>
-          </div>
-        </div>
-      )
-    })
-  )
-}
-
-const renderTeams = teams => {
-  return (
-    teams.length > 0 &&
-    teams.map((item, index) => {
-      return (
-        <div key={index} className='flex items-center flex-wrap gap-2'>
-          <Typography className='font-medium'>
-            {item.property.charAt(0).toUpperCase() + item.property.slice(1)}
-          </Typography>
-          <Typography>{item.value.charAt(0).toUpperCase() + item.value.slice(1)}</Typography>
-        </div>
-      )
-    })
-  )
-}
+const coverImg = '/images/pages/profile-banner.png'
 
 const AboutOverview = ({ data }) => {
+  console.log('log', data)
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
+          <CardMedia>
+            <Image src={coverImg} alt='Profile Banner' layout='responsive' width={500} height={250} />
+          </CardMedia>
           <CardContent className='flex flex-col gap-6'>
             <div className='flex flex-col gap-4'>
-              <Typography className='uppercase' variant='body2' color='text.disabled'>
-                About
+              <Typography className='uppercase' variant='body2' color='ActiveCaption'>
+                Name: {data?.name}
               </Typography>
-              {data?.about && renderList(data?.about)}
             </div>
             <div className='flex flex-col gap-4'>
-              <Typography className='uppercase' variant='body2' color='text.disabled'>
-                Contacts
+              <Typography className='uppercase' variant='body2' color='ActiveCaption'>
+                Rol: {data?.role}
               </Typography>
-              {data?.contacts && renderList(data?.contacts)}
             </div>
             <div className='flex flex-col gap-4'>
-              <Typography className='uppercase' variant='body2' color='text.disabled'>
-                Teams
+              <Typography className='uppercase' variant='body2' color='ActiveCaption'>
+                Email: {data?.email}
               </Typography>
-              {data?.teams && renderTeams(data?.teams)}
+            </div>
+            <div className='flex flex-col gap-4'>
+              <Typography className='uppercase' variant='body2' color='ActiveCaption'>
+                Country: {data?.country_display}
+              </Typography>
+            </div>
+            <div className='flex flex-col gap-4'>
+              <Typography className='uppercase' variant='body2' color='ActiveCaption'>
+                Document Type: {data?.type_doc_display}
+              </Typography>
+            </div>
+            <div className='flex flex-col gap-4'>
+              <Typography className='uppercase' variant='body2' color='ActiveCaption'>
+                Document Number: {data?.doc_num}
+              </Typography>
+            </div>
+            <div className='flex flex-col gap-4'>
+              <Typography className='uppercase' variant='body2' color='ActiveCaption'>
+                Active: {data?.is_active ? 'Yes' : 'No'}
+              </Typography>
             </div>
           </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12}>
-        <Card>
-          {/* <CardContent className='flex flex-col gap-6'>
-            <div className='flex flex-col gap-4'>
-              <Typography className='uppercase' variant='body2' color='text.disabled'>
-                Overview
-              </Typography>
-              {data?.overview && renderList(data?.overview)}
-            </div>
-          </CardContent> */}
         </Card>
       </Grid>
     </Grid>

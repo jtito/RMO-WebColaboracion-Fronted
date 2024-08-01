@@ -51,7 +51,7 @@ const TabList = styled(MuiTabList)(({ color, theme, pill, orientation }) => ({
 }))
 
 const CustomTabList = props => {
-  // Props
+ 
   const { color = 'primary', ...rest } = props
 
   return <TabList color={color} {...rest} />

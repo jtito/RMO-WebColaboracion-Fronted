@@ -24,12 +24,13 @@ import {
   Fab
 } from '@mui/material'
 
-
 import AddIcon from '@mui/icons-material/Add'
+
+import { useSession } from 'next-auth/react'
 
 import AddDoc from './AddDoc'
 import SelectUsers from './SelectUsers'
-import { obtenerDocumentos, obtenerperfil } from '@/Service/axios.services'
+import { obtenerDocumentos, obtenerDocumentosid, obtenerperfil } from '@/Service/axios.services'
 
 const DocumentList = ({ type }) => {
   const [openAddDoc, setOpenAddDoc] = useState(false)
@@ -43,6 +44,12 @@ const DocumentList = ({ type }) => {
   const [endDate, setEndDate] = useState('')
 
   const router = useRouter()
+
+  const { data: session, status } = useSession()
+
+  const idrol = session?.user?.id.id
+
+  console.log('lgorol', idrol)
 
   const obtenerperfildoc = async () => {
     try {
@@ -58,12 +65,17 @@ const DocumentList = ({ type }) => {
     }
   }
 
-  const obtenerDocumentosperf = async () => {
+  const obtenerDocumentosperf = async idrol => {
+    console.log('rolid', idrol)
+
     try {
-      const response = await obtenerDocumentos()
+      const response = await obtenerDocumentosid(idrol)
+
+      console.log('rolid', idrol)
 
       if (response.status === 200) {
         setdocperf(response.data)
+        console.log('documentos', response.data)
       } else {
         console.error('Error al obtener los documentos:', response.status)
       }
@@ -74,17 +86,26 @@ const DocumentList = ({ type }) => {
 
   useEffect(() => {
     obtenerperfildoc()
-    obtenerDocumentosperf()
+
+    // obtenerDocumentosperf(idrol);
   }, [type])
 
   useEffect(() => {
+    if (idrol) {
+      obtenerDocumentosperf(idrol)
+    }
+  }, [idrol])
+
+  useEffect(() => {
     const filterDocs = () => {
+      let documentsArray = Array.isArray(docperf) ? docperf : [docperf]
+
       let filtered = []
 
       if (type === 'publicados') {
-        filtered = docperf.filter(doc => doc.state.description === 'Publicado')
+        filtered = documentsArray.filter(doc => doc.state.description === 'Publicado')
       } else if (type === 'borradores') {
-        filtered = docperf.filter(doc => doc.state.description === 'Borrador')
+        filtered = documentsArray.filter(doc => doc.state.description === 'Borrador')
       }
 
       if (startDate) {
@@ -196,10 +217,7 @@ const DocumentList = ({ type }) => {
                         </IconButton>
                       </Grid>
                     </Grid>
-                    <Typography
-                      variant='body2'
-                      color='text.secondary'
-                      sx={{ maxWidth: '35vw' }}>
+                    <Typography variant='body2' color='text.secondary' sx={{ maxWidth: '35vw' }}>
                       {documento.description}
                     </Typography>
                     <Grid container spacing={2}>
@@ -214,16 +232,17 @@ const DocumentList = ({ type }) => {
                         </Typography>
                       </Grid>
                     </Grid>
-                    {/*<Typography variant='body2' color='text.secondary'>
-                      Estado: {documento.state.description}
-                    </Typography>*/}
+                    <Typography variant='body2' color='text.secondary'>
+                      {documento.typeDoc.description}
+                    </Typography>
                     <Grid item xs={12} sx={{ mt: 2 }}>
                       {documento.state.description === 'Borrador' && (
                         <Button
                           variant='contained'
                           color='primary'
                           startIcon={<i className='bi bi-send' />}
-                          sx={{ padding: '2px 10px', fontSize: '0.9rem' }}>
+                          sx={{ padding: '2px 10px', fontSize: '0.9rem' }}
+                        >
                           Publicar
                           <IconButton>
                             <i className='tabler-send text-[22px] text-textSecondary' />
