@@ -16,7 +16,6 @@ import CustomTabList from '@core/components/mui/TabList'
 
 const UserProfile = ({ tabContentList, data }) => {
 
-
   // States
   const [activeTab, setActiveTab] = useState('profile')
 
