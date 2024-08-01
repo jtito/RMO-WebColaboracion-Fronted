@@ -14,12 +14,8 @@ import { useSession } from 'next-auth/react'
 import UserProfileHeader from './UserProfileHeader'
 import CustomTabList from '@core/components/mui/TabList'
 
-const UserProfile = ({ tabContentList }) => {
-  
+const UserProfile = ({ tabContentList, data }) => {
 
-  const { data: session } = useSession()
-
-  console.log('lof',session.user)
 
   // States
   const [activeTab, setActiveTab] = useState('profile')

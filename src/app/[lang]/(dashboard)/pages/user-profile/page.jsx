@@ -1,11 +1,10 @@
-'use client'
-
 // Next Imports
+'use client'
 import { useEffect, useState } from 'react'
 
 import dynamic from 'next/dynamic'
 
-import { useSession, getSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 
 // Component Imports
 import UserProfile from '@views/pages/user-profile'
@@ -21,10 +20,13 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (session) {
-      // Here you can fetch additional user data if necessary
-      setUserData(session.user) // or fetch from an API
+      setUserData(session.user)
     }
   }, [session])
+
+  useEffect(() => {
+    console.log('User data:', userData)
+  }, [userData])
 
   if (status === 'loading') {
     return <div>Loading...</div>
@@ -41,9 +43,7 @@ const ProfilePage = () => {
     connections: <ConnectionsTab data={userData?.connections} />
   }
 
-  console.log('logd', session.user)
-
-  return <UserProfile tabContentList={tabContentList} />
+  return <UserProfile data={userData} tabContentList={tabContentList} />
 }
 
 export default ProfilePage
