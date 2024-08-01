@@ -11,6 +11,7 @@ import { useParams } from 'next/navigation'
 import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
 
+// Material-UI Imports
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Table from '@mui/material/Table'
@@ -246,6 +247,7 @@ const UserListTable = () => {
                   <TableCell>Apellido Materno</TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell>Rol</TableCell>
+                  {/* <TableCell>Estado</TableCell> */}
                   <TableCell>Numero de Documento</TableCell>
                   <TableCell>Pais</TableCell>
                   <TableCell>Estado</TableCell>
