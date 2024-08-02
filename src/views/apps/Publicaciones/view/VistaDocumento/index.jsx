@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 'use client'
 
 import React, { useState } from 'react'
@@ -11,24 +10,7 @@ import 'react-quill/dist/quill.snow.css' // Importa el estilo de Quill
 import Ckeditored from '../Ckeditored'
 
 const VistaDocumento = () => {
-
-  return (
-    <Ckeditored />
-  )
+  return <Ckeditored />
 }
 
-
-
-=======
-
-
-const VistaDocumento = () => {
-  const usuario = 'some user' // Define or obtain 'usuario' as needed
-
-  console.log('usuario', usuario)
-
-  return <h1>Esto deve ser un editor de texto para crear documementos agregar tablas y poner texto en negrita </h1>
-}
-
->>>>>>> 5fd2fa9 (Se diseño DocPublicados/Borrador)
 export default VistaDocumento
