@@ -28,7 +28,7 @@ import AddIcon from '@mui/icons-material/Add'
 
 import { useSession } from 'next-auth/react'
 
-import AddDoc from './AddDoc'
+import AddDocumentForm from './view/AddDocumentForm'
 import SelectUsers from './SelectUsers'
 import { obtenerDocumentos, obtenerDocumentosid, obtenerperfil } from '@/Service/axios.services'
 
@@ -37,7 +37,8 @@ const DocumentList = ({ type }) => {
   const [openSelectUsers, setOpenSelectUsers] = useState(false)
   const [coverImage, setCoverImage] = useState(null)
   const [openImageDialog, setOpenImageDialog] = useState(false)
-  const [perfil, setperfil] = useState([])
+
+  const [perfiles, setPerfiles] = useState([])
   const [docperf, setdocperf] = useState([])
   const [filteredDocs, setFilteredDocs] = useState([])
   const [startDate, setStartDate] = useState('')
@@ -129,6 +130,22 @@ const DocumentList = ({ type }) => {
   const handleCloseAddDoc = () => {
     setOpenAddDoc(false)
   }
+
+  useEffect(() => {
+    const fetchPerfiles = async () => {
+      try {
+        const response = await obtenerperfil()
+
+        if (response.status === 200) {
+          setPerfiles(response.data)
+        }
+      } catch (error) {
+        console.error('Error al obtener perfiles', error)
+      }
+    }
+
+    fetchPerfiles()
+  }, [])
 
   const handleNext = docData => {
     setCoverImage(docData.file)
@@ -272,13 +289,8 @@ const DocumentList = ({ type }) => {
           <AddIcon />
         </Fab>
 
-        <AddDoc open={openAddDoc} handleClose={handleCloseAddDoc} handleNext={handleNext} />
-        {/* <SelectUsers
-          perfil={perfil}
-          open={openSelectUsers}
-          handleClose={handleCloseSelectUsers}
-          handleConfirm={handleConfirm}
-        /> */}
+        <AddDocumentForm open={openAddDoc} handleClose={handleCloseAddDoc} perfiles={perfiles} />
+
         <Dialog open={openImageDialog} onClose={handleCloseImageDialog}>
           <CardMedia
             component='img'
