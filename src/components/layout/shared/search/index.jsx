@@ -82,16 +82,16 @@ const NavSearch = () => {
           )
         })}
       >
-        <div className='flex items-center gap-2'>
+        {/* <div className='flex items-center gap-2'>
           <IconButton className='text-textPrimary'>
             <i className='tabler-search' />
           </IconButton>
           <div className='whitespace-nowrap text-textDisabled'>Search ⌘K</div>
-        </div>
+        </div> */}
       </ComponentWithUseKBar>
       <KBarPortal>
         <KBarPositioner className='!p-0 !items-center z-[calc(var(--search-z-index)+1)]'>
-          <StyledKBarAnimator skin={settings.skin} isSmallScreen={isSmallScreen}>
+          {/* <StyledKBarAnimator skin={settings.skin} isSmallScreen={isSmallScreen}>
             <div className='flex items-center gap-2 plb-5 pli-6 border-be'>
               <div className='flex'>
                 <i className='tabler-search' />
@@ -109,7 +109,7 @@ const NavSearch = () => {
               />
             </div>
             <SearchResults currentPath={pathName} data={data} />
-          </StyledKBarAnimator>
+          </StyledKBarAnimator> */}
         </KBarPositioner>
         <div
           className='ts-nav-search-backdrop fixed inset-0 z-search bg-backdrop'

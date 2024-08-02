@@ -166,7 +166,7 @@ export const obtenertiposDoc = () => {
 }
 
 export const obtenerperfil = () => {
-  return API.get('perfil/simple/', {
+  return API.get('docs/perfil/user/', {
     validateStatus: function (status) {
       return status < 500
     }
@@ -213,10 +213,14 @@ export const eliminarPerfilUsuario = async userId => {
   })
 }
 
-export const crearDocumento = async data => {
+export const enviarDocumento = async data => {
   return API.post('docs/docs/', data, {
     validateStatus: function (status) {
+      console.log(data)
+
       return status < 500
     }
   })
 }
+
+
