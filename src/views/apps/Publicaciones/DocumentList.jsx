@@ -26,7 +26,13 @@ import {
 
 import AddIcon from '@mui/icons-material/Add'
 
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+
 import { useSession } from 'next-auth/react'
+
+import { isWithinInterval, parseISO } from 'date-fns'
+import { es } from 'date-fns/locale'
 
 import AddDoc from './AddDoc'
 import SelectUsers from './SelectUsers'
@@ -37,11 +43,11 @@ const DocumentList = ({ type }) => {
   const [openSelectUsers, setOpenSelectUsers] = useState(false)
   const [coverImage, setCoverImage] = useState(null)
   const [openImageDialog, setOpenImageDialog] = useState(false)
-
   const [perfiles, setPerfiles] = useState([])
   const [docperf, setdocperf] = useState([])
   const [filteredDocs, setFilteredDocs] = useState([])
-  const [startDate, setStartDate] = useState('')
+  const [dateRangeCreate, setDateRangeCreate] = useState([null, null]) // Estado para el filtro de fechas de creacion
+  const [dateRangeUpdate, setDateRangeUpdate] = useState([null, null]) // Estado para el filtro de fechas de actualizacion
   const [endDate, setEndDate] = useState('')
 
   const router = useRouter()
@@ -111,19 +117,28 @@ const DocumentList = ({ type }) => {
         filtered = documentsArray.filter(doc => doc.state.description === 'Borrador')
       }
 
-      if (startDate) {
-        filtered = filtered.filter(doc => new Date(doc.updated_at) >= new Date(startDate))
+      if (dateRangeCreate[0] && dateRangeCreate[1]) {
+        filtered = filtered.filter(doc => {
+          const documentDateCreate = parseISO(doc.create_at)
+
+          return isWithinInterval(documentDateCreate, { start: dateRangeCreate[0], end: dateRangeCreate[1] })
+        })
       }
 
-      if (endDate) {
-        filtered = filtered.filter(doc => new Date(doc.updated_at) <= new Date(endDate))
+      if (dateRangeUpdate[0] && dateRangeUpdate[1]) {
+        filtered = filtered.filter(doc => {
+          if (!doc.updated_at) return false
+          const documentoDateUpdate = parseISO(doc.updated_at)
+
+          return isWithinInterval(documentoDateUpdate, { start: dateRangeUpdate[0], end: dateRangeUpdate[1] })
+        })
       }
 
       setFilteredDocs(filtered)
     }
 
     filterDocs()
-  }, [docperf, type, startDate, endDate])
+  }, [docperf, type, dateRangeCreate, dateRangeUpdate])
 
   const handleClickOpenAddDoc = () => {
     setOpenAddDoc(true)
@@ -183,25 +198,31 @@ const DocumentList = ({ type }) => {
               <TextField fullWidth variant='outlined' label='Buscar' placeholder='Buscar...' />
             </Grid>
             <Grid item xs={12} sm={3}>
-              <TextField
-                fullWidth
-                variant='outlined'
-                type='date'
-                label='Fecha de Inicio'
-                value={startDate}
-                onChange={e => setStartDate(e.target.value)}
-                InputLabelProps={{ shrink: true }}
+              <DatePicker
+                selected={dateRangeCreate[0]}
+                onChange={dates => setDateRangeCreate(dates)}
+                startDate={dateRangeCreate[0]}
+                endDate={dateRangeCreate[1]}
+                selectsRange
+                dateFormat='dd/MM/yyyy'
+                locale={es}
+                placeholderText='Seleccionar rango de fechas'
+                className='form-control'
+                isClearable
               />
             </Grid>
             <Grid item xs={12} sm={3}>
-              <TextField
-                fullWidth
-                variant='outlined'
-                type='date'
-                label='Fecha de Fin'
-                value={endDate}
-                onChange={e => setEndDate(e.target.value)}
-                InputLabelProps={{ shrink: true }}
+              <DatePicker
+                selected={dateRangeUpdate[0]}
+                onChange={dates => setDateRangeUpdate(dates)}
+                startDate={dateRangeUpdate[0]}
+                endDate={dateRangeUpdate[1]}
+                selectsRange
+                dateFormat='dd/MM/yyyy'
+                locale={es}
+                placeholderText='Seleccione rango de fechas'
+                className='form-control'
+                isClearable
               />
             </Grid>
           </Grid>
