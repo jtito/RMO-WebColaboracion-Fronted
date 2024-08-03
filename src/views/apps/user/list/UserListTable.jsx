@@ -85,29 +85,29 @@ const UserListTable = () => {
   }, [])
 
   useEffect(() => {
-    let filtered = usuarios;
-  
+    let filtered = usuarios
+
     if (selectedRole) {
-      filtered = filtered.filter(user => user.role?.description === selectedRole);
+      filtered = filtered.filter(user => user.role?.description === selectedRole)
     }
-  
+
     if (dateRangeCreate[0] && dateRangeCreate[1]) {
       filtered = filtered.filter(user => {
-        const userDateCreate = parseISO(user.create_at);
+        const userDateCreate = parseISO(user.create_at)
 
-        return isWithinInterval(userDateCreate, { start: dateRangeCreate[0], end: dateRangeCreate[1] });
-      });
+        return isWithinInterval(userDateCreate, { start: dateRangeCreate[0], end: dateRangeCreate[1] })
+      })
     }
-  
+
     if (dateRangeUpdate[0] && dateRangeUpdate[1]) {
       filtered = filtered.filter(user => {
-        if (!user.updated_at) return false; // Asegúrate de que user.updated_at no es undefined
-        const userDateUpdate = parseISO(user.updated_at); // Aquí se corrige el error
-        
-        return isWithinInterval(userDateUpdate, { start: dateRangeUpdate[0], end: dateRangeUpdate[1] });
-      });
+        if (!user.updated_at) return false // Asegúrate de que user.updated_at no es undefined
+        const userDateUpdate = parseISO(user.updated_at) // Aquí se corrige el error
+
+        return isWithinInterval(userDateUpdate, { start: dateRangeUpdate[0], end: dateRangeUpdate[1] })
+      })
     }
-  
+
     // Filtro por término de búsqueda
     if (searchTerm) {
       filtered = filtered.filter(
@@ -116,11 +116,11 @@ const UserListTable = () => {
           user.last_nameF.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.last_nameS.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.email.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      )
     }
-  
-    setFilteredUsuarios(filtered);
-  }, [selectedRole, dateRangeCreate, dateRangeUpdate, searchTerm, usuarios]);  
+
+    setFilteredUsuarios(filtered)
+  }, [selectedRole, dateRangeCreate, dateRangeUpdate, searchTerm, usuarios])
 
   const handleUserAdded = async newUser => {
     try {
