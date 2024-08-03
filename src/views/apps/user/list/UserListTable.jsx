@@ -11,6 +11,7 @@ import { useParams } from 'next/navigation'
 import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
 
+// Material-UI Imports
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import Table from '@mui/material/Table'
@@ -51,6 +52,7 @@ const UserListTable = () => {
   const [selectedDateUpdate, setSelectedDateUpdate] = useState('') // Estado para filtrar por fecha de actualizacion del usuario
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [searchTerm, setSearchTerm] = useState('')
 
   const theme = useTheme()
 
@@ -92,7 +94,6 @@ const UserListTable = () => {
         const userDate = parseISO(user.create_at)
 
         return userDate.toDateString() === selected.toDateString()
-
       })
     }
 
@@ -103,12 +104,22 @@ const UserListTable = () => {
         const userDate = parseISO(user.updated_at)
 
         return userDate.toDateString() === selected.toDateString()
-
       })
     }
 
+    // Filtro por término de búsqueda
+    if (searchTerm) {
+      filtered = filtered.filter(
+        user =>
+          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.last_nameF.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.last_nameS.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
     setFilteredUsuarios(filtered)
-  }, [selectedRole, selectedDateCreate, selectedDateUpdate, usuarios])
+  }, [selectedRole, selectedDateCreate, selectedDateUpdate, searchTerm, usuarios])
 
   const handleUserAdded = async newUser => {
     try {
@@ -176,6 +187,15 @@ const UserListTable = () => {
   return (
     <>
       <Grid container spacing={2}>
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <TextField
+            label='Buscar'
+            type='text'
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            fullWidth
+          />
+        </Grid>
         <Grid item xs={12}>
           <Button
             color='secondary'
@@ -214,24 +234,24 @@ const UserListTable = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <TextField
-            label="Fecha de Creación"
-            type="date"
+            label='Fecha de Creación'
+            type='date'
             value={selectedDateCreate}
             onChange={e => setSelectedDateCreate(e.target.value)}
             InputLabelProps={{
-              shrink: true,
+              shrink: true
             }}
             fullWidth
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <TextField
-            label="Fecha de Actualización"
-            type="date"
+            label='Fecha de Actualización'
+            type='date'
             value={selectedDateUpdate}
             onChange={e => setSelectedDateUpdate(e.target.value)}
             InputLabelProps={{
-              shrink: true,
+              shrink: true
             }}
             fullWidth
           />
@@ -246,6 +266,7 @@ const UserListTable = () => {
                   <TableCell>Apellido Materno</TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell>Rol</TableCell>
+                  {/* <TableCell>Estado</TableCell> */}
                   <TableCell>Numero de Documento</TableCell>
                   <TableCell>Pais</TableCell>
                   <TableCell>Estado</TableCell>

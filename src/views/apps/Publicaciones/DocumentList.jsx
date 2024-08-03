@@ -28,7 +28,7 @@ import AddIcon from '@mui/icons-material/Add'
 
 import { useSession } from 'next-auth/react'
 
-import AddDocumentForm from './view/AddDocumentForm'
+import AddDoc from './AddDoc'
 import SelectUsers from './SelectUsers'
 import { obtenerDocumentos, obtenerDocumentosid, obtenerperfil } from '@/Service/axios.services'
 
@@ -55,6 +55,8 @@ const DocumentList = ({ type }) => {
   const obtenerperfildoc = async () => {
     try {
       const response = await obtenerperfil()
+
+      console.log(response)
 
       if (response.status === 200) {
         setperfil(response.data)
@@ -289,7 +291,7 @@ const DocumentList = ({ type }) => {
           <AddIcon />
         </Fab>
 
-        <AddDocumentForm open={openAddDoc} handleClose={handleCloseAddDoc} perfiles={perfiles} />
+        <AddDoc open={openAddDoc} handleClose={handleCloseAddDoc} perfiles={perfiles} />
 
         <Dialog open={openImageDialog} onClose={handleCloseImageDialog}>
           <CardMedia
