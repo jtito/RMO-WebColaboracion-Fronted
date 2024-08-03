@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 
 // Importaciones de fechas
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, isWithinInterval } from 'date-fns'
 import { es } from 'date-fns/locale'
 
 // Material-UI Imports
@@ -26,6 +26,10 @@ import MenuItem from '@mui/material/MenuItem'
 import TablePagination from '@mui/material/TablePagination'
 import IconButton from '@mui/material/IconButton'
 import { TextField } from '@mui/material'
+
+//Importar DatePicker
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
@@ -48,8 +52,8 @@ const UserListTable = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [addUserOpen, setAddUserOpen] = useState(false)
   const [selectedRole, setSelectedRole] = useState('') // Estado para el rol seleccionado
-  const [selectedDateCreate, setSelectedDateCreate] = useState('') // Estado para filtrar por fecha de creacion del usuario
-  const [selectedDateUpdate, setSelectedDateUpdate] = useState('') // Estado para filtrar por fecha de actualizacion del usuario
+  const [dateRangeCreate, setDateRangeCreate] = useState([null, null]) // Estado para el filtro de fechas de creacion
+  const [dateRangeUpdate, setDateRangeUpdate] = useState([null, null]) // Estado para el filtro de fechas de actualizacion
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [searchTerm, setSearchTerm] = useState('')
@@ -81,32 +85,29 @@ const UserListTable = () => {
   }, [])
 
   useEffect(() => {
-    let filtered = usuarios
-
+    let filtered = usuarios;
+  
     if (selectedRole) {
-      filtered = filtered.filter(user => user.role?.description === selectedRole)
+      filtered = filtered.filter(user => user.role?.description === selectedRole);
     }
-
-    if (selectedDateCreate) {
-      const selected = parseISO(selectedDateCreate)
-
+  
+    if (dateRangeCreate[0] && dateRangeCreate[1]) {
       filtered = filtered.filter(user => {
-        const userDate = parseISO(user.create_at)
+        const userDateCreate = parseISO(user.create_at);
 
-        return userDate.toDateString() === selected.toDateString()
-      })
+        return isWithinInterval(userDateCreate, { start: dateRangeCreate[0], end: dateRangeCreate[1] });
+      });
     }
-
-    if (selectedDateUpdate) {
-      const selected = parseISO(selectedDateUpdate)
-
+  
+    if (dateRangeUpdate[0] && dateRangeUpdate[1]) {
       filtered = filtered.filter(user => {
-        const userDate = parseISO(user.updated_at)
-
-        return userDate.toDateString() === selected.toDateString()
-      })
+        if (!user.updated_at) return false; // Asegúrate de que user.updated_at no es undefined
+        const userDateUpdate = parseISO(user.updated_at); // Aquí se corrige el error
+        
+        return isWithinInterval(userDateUpdate, { start: dateRangeUpdate[0], end: dateRangeUpdate[1] });
+      });
     }
-
+  
     // Filtro por término de búsqueda
     if (searchTerm) {
       filtered = filtered.filter(
@@ -115,11 +116,11 @@ const UserListTable = () => {
           user.last_nameF.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.last_nameS.toLowerCase().includes(searchTerm.toLowerCase()) ||
           user.email.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+      );
     }
-
-    setFilteredUsuarios(filtered)
-  }, [selectedRole, selectedDateCreate, selectedDateUpdate, searchTerm, usuarios])
+  
+    setFilteredUsuarios(filtered);
+  }, [selectedRole, dateRangeCreate, dateRangeUpdate, searchTerm, usuarios]);  
 
   const handleUserAdded = async newUser => {
     try {
@@ -233,27 +234,31 @@ const UserListTable = () => {
           </Select>
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3}>
-          <TextField
-            label='Fecha de Creación'
-            type='date'
-            value={selectedDateCreate}
-            onChange={e => setSelectedDateCreate(e.target.value)}
-            InputLabelProps={{
-              shrink: true
-            }}
-            fullWidth
+          <DatePicker
+            selected={dateRangeCreate[0]}
+            onChange={dates => setDateRangeCreate(dates)}
+            startDate={dateRangeCreate[0]}
+            endDate={dateRangeCreate[1]}
+            selectsRange
+            dateFormat='dd/MM/yyyy'
+            locale={es}
+            placeholderText='Seleccionar rango de fechas'
+            className='form-control'
+            isClearable
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3}>
-          <TextField
-            label='Fecha de Actualización'
-            type='date'
-            value={selectedDateUpdate}
-            onChange={e => setSelectedDateUpdate(e.target.value)}
-            InputLabelProps={{
-              shrink: true
-            }}
-            fullWidth
+          <DatePicker
+            selected={dateRangeUpdate[0]}
+            onChange={dates => setDateRangeUpdate(dates)}
+            startDate={dateRangeUpdate[0]}
+            endDate={dateRangeUpdate[1]}
+            selectsRange
+            dateFormat='dd/MM/yyyy'
+            locale={es}
+            placeholderText='Seleccione rango de fechas'
+            className='form-control'
+            isClearable
           />
         </Grid>
         <Grid item xs={12}>
