@@ -42,15 +42,8 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   const [paises, setPaises] = useState([])
   const [Doc, setDoc] = useState([])
   const [formData, setFormData] = useState(initialData)
-<<<<<<< HEAD
-<<<<<<< HEAD
   const [maxDocLength, setMaxDocLength] = useState(Infinity)
-=======
   const [isDocNumEnabled, setIsDocNumEnabled] = useState(false)
->>>>>>> 35e163d (cambios 1)
-=======
-  const [maxDocLength, setMaxDocLength] = useState(Infinity)
->>>>>>> 143f046 (interaccion numdoc DNI por pais)
 
   const theme = useTheme()
 
@@ -166,10 +159,6 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
   }, [])
 
   useEffect(() => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 143f046 (interaccion numdoc DNI por pais)
     if (formData.country) {
       switch (formData.country) {
         case 1: // Bolivia
@@ -188,27 +177,17 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
     }
   }, [formData.country])
 
+  useEffect(() => {
+    setIsDocNumEnabled(formData.type_doc && formData.country)
+  }, [formData.type_doc, formData.country])
+
   const handleDocNumChange = e => {
     const newValue = e.target.value
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    // Asegurarse de que el valor no exceda maxDocLength y solo sea numérico
->>>>>>> 143f046 (interaccion numdoc DNI por pais)
-=======
->>>>>>> c2dfb90 (cambios borrar un comentario)
     if (/^\d*$/.test(newValue) && newValue.length <= maxDocLength) {
       setFormData({ ...formData, doc_num: newValue })
     }
   }
-<<<<<<< HEAD
-=======
-    setIsDocNumEnabled(formData.type_doc && formData.country)
-  }, [formData.type_doc, formData.country])
->>>>>>> 35e163d (cambios 1)
-=======
->>>>>>> 143f046 (interaccion numdoc DNI por pais)
 
   return (
     <Dialog
@@ -271,68 +250,40 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
 
                   setFormData({ ...formData, type_doc: selectedDoc })
                 }}
-                label='Seleccionar Tipo de Documento'
+                label='Tipo de Documento'
               >
-                {Doc.map(Doc => (
-                  <MenuItem key={Doc.value} value={Doc.value}>
-                    {Doc.display_name}
+                {Doc.map((tipo) => (
+                  <MenuItem key={tipo.id} value={tipo.id}>
+                    {tipo.descripcion}
                   </MenuItem>
                 ))}
               </CustomTextField>
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                label='Número de Documento'
-                type='text'
-                fullWidth
-                value={formData.doc_num}
                 disabled={!isDocNumEnabled}
-                onChange={e => {
-                  const newValue = e.target.value
-
-                  if (/^\d*$/.test(newValue)) {
-                    setFormData({ ...formData, doc_num: newValue })
-                  }
-                }}
-                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }} // Permite valores numericos en dispositivos moviles
+                fullWidth
+                label='Número de Documento'
+                value={formData.doc_num}
+                onChange={handleDocNumChange}
+                inputProps={{ maxLength: maxDocLength }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
->>>>>>> 35e163d (cambios 1)
-=======
->>>>>>> 143f046 (interaccion numdoc DNI por pais)
                 select
                 fullWidth
-                id='select-pais'
+                id='select-country'
                 value={formData.country}
-                onChange={e => {
-                  const selectedCountry = e.target.value
-
-                  setFormData({ ...formData, country: selectedCountry })
-                }}
-                label='Seleccionar País'
+                onChange={e => setFormData({ ...formData, country: e.target.value })}
+                label='País'
               >
-                {paises.map(country => (
-                  <MenuItem key={country.value} value={country.value}>
-                    {country.display_name}
+                {paises.map((pais) => (
+                  <MenuItem key={pais.id} value={pais.id}>
+                    {pais.descripcion}
                   </MenuItem>
                 ))}
               </CustomTextField>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <CustomTextField
-                label='Número de Documento'
-                type='text'
-                fullWidth
-                value={formData.doc_num}
-                disabled={!formData.type_doc || !formData.country}
-                onChange={handleDocNumChange}
-                inputProps={{ inputMode: 'numeric' }}
-              />
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
@@ -341,25 +292,31 @@ const AddUserDrawer = ({ open, setOpen, handleClose, handleUserAdded, data }) =>
                 id='select-role'
                 value={formData.role}
                 onChange={e => setFormData({ ...formData, role: e.target.value })}
-                label='Seleccionar rol'
+                label='Rol'
               >
-                {roles.map(role => (
-                  <MenuItem key={role.id} value={role.id}>
-                    {role.description}
+                {roles.map((rol) => (
+                  <MenuItem key={rol.id} value={rol.id}>
+                    {rol.descripcion}
                   </MenuItem>
                 ))}
               </CustomTextField>
             </Grid>
-            {error && <Typography color='error'>{error}</Typography>}
           </Grid>
         </DialogContent>
-
-        <DialogActions className='justify-center pbs-0 sm:pbe-16 sm:pli-16'>
-          <Button variant='contained' type='submit'>
-            Guardar
-          </Button>
-          <Button variant='tonal' color='error' type='reset' onClick={handleReset}>
+        <DialogActions>
+          <Button
+            color='secondary'
+            onClick={handleReset}
+            variant='contained'
+          >
             Cancelar
+          </Button>
+          <Button
+            type='submit'
+            color='primary'
+            variant='contained'
+          >
+            Crear Usuario
           </Button>
         </DialogActions>
       </form>
