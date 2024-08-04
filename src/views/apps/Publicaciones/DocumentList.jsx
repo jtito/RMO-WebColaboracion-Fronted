@@ -191,41 +191,39 @@ const DocumentList = ({ type }) => {
   }
 
   return (
-    <Grid container spacing={6}>
+    <Grid container spacing={2}>
       <Grid item xs={12}>
         <Grid container spacing={2} alignItems='center'>
-          <Grid item xs={12} md={8} container spacing={2}>
-            <Grid item xs={12} sm={4}>
-              <TextField fullWidth variant='outlined' label='Buscar...' placeholder='Buscar...' />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <DatePicker
-                selected={dateRangeCreate[0]}
-                onChange={dates => setDateRangeCreate(dates)}
-                startDate={dateRangeCreate[0]}
-                endDate={dateRangeCreate[1]}
-                selectsRange
-                dateFormat='dd/MM/yyyy'
-                locale={es}
-                placeholderText='Fecha de Creación'
-                className='custom-datepicker'
-                isClearable
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <DatePicker
-                selected={dateRangeUpdate[0]}
-                onChange={dates => setDateRangeUpdate(dates)}
-                startDate={dateRangeUpdate[0]}
-                endDate={dateRangeUpdate[1]}
-                selectsRange
-                dateFormat='dd/MM/yyyy'
-                locale={es}
-                placeholderText='Fecha de Actualización'
-                className='custom-datepicker'
-                isClearable
-              />
-            </Grid>
+          <Grid item xs={12} md={2.5} style={{ paddingRight: '8px' }}>
+            <TextField fullWidth variant='outlined' label='Buscar...' placeholder='Buscar...' />
+          </Grid>
+          <Grid item xs={12} md={2.5} style={{ paddingRight: '8px' }}>
+            <DatePicker
+              selected={dateRangeCreate[0]}
+              onChange={dates => setDateRangeCreate(dates)}
+              startDate={dateRangeCreate[0]}
+              endDate={dateRangeCreate[1]}
+              selectsRange
+              dateFormat='dd/MM/yyyy'
+              locale={es}
+              placeholderText='Fecha de Creación'
+              className='custom-datepicker'
+              isClearable
+            />
+          </Grid>
+          <Grid item xs={12} md={3} style={{ paddingLeft: '8px' }}>
+            <DatePicker
+              selected={dateRangeUpdate[0]}
+              onChange={dates => setDateRangeUpdate(dates)}
+              startDate={dateRangeUpdate[0]}
+              endDate={dateRangeUpdate[1]}
+              selectsRange
+              dateFormat='dd/MM/yyyy'
+              locale={es}
+              placeholderText='Fecha de Actualización'
+              className='custom-datepicker'
+              isClearable
+            />
           </Grid>
         </Grid>
 
@@ -295,8 +293,8 @@ const DocumentList = ({ type }) => {
                 </Grid>
               </CardContent>
               {/*<CardActions className='card-actions-dense'>
-                <Button>Acción</Button>
-              </CardActions>*/}
+            <Button>Acción</Button>
+          </CardActions>*/}
             </Card>
           ))
         ) : (
