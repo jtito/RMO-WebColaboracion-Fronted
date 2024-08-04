@@ -28,6 +28,7 @@ import AddIcon from '@mui/icons-material/Add'
 
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import './custom-datepicker.css'
 
 import { useSession } from 'next-auth/react'
 
@@ -96,7 +97,7 @@ const DocumentList = ({ type }) => {
   useEffect(() => {
     obtenerperfildoc()
 
-    // obtenerDocumentosperf(idrol);
+    // ¿obtenerDocumentosperf(idrol);
   }, [type])
 
   useEffect(() => {
@@ -192,12 +193,12 @@ const DocumentList = ({ type }) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <Grid container spacing={8} alignItems='center'>
-          <Grid item xs={12} md={8} container spacing={12}>
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth variant='outlined' label='Buscar' placeholder='Buscar...' />
+        <Grid container spacing={2} alignItems='center'>
+          <Grid item xs={12} md={8} container spacing={2}>
+            <Grid item xs={12} sm={4}>
+              <TextField fullWidth variant='outlined' label='Buscar...' placeholder='Buscar...' />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={4}>
               <DatePicker
                 selected={dateRangeCreate[0]}
                 onChange={dates => setDateRangeCreate(dates)}
@@ -206,12 +207,12 @@ const DocumentList = ({ type }) => {
                 selectsRange
                 dateFormat='dd/MM/yyyy'
                 locale={es}
-                placeholderText='Seleccionar rango de fechas'
-                className='form-control'
+                placeholderText='Fecha de Creación'
+                className='custom-datepicker'
                 isClearable
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={4}>
               <DatePicker
                 selected={dateRangeUpdate[0]}
                 onChange={dates => setDateRangeUpdate(dates)}
@@ -220,8 +221,8 @@ const DocumentList = ({ type }) => {
                 selectsRange
                 dateFormat='dd/MM/yyyy'
                 locale={es}
-                placeholderText='Seleccione rango de fechas'
-                className='form-control'
+                placeholderText='Fecha de Actualización'
+                className='custom-datepicker'
                 isClearable
               />
             </Grid>
