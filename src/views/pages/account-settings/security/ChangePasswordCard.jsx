@@ -15,115 +15,97 @@ import Button from '@mui/material/Button'
 
 //Component Imports
 import CustomTextField from '@core/components/mui/TextField'
+import TokenVerificationModal from './TokenVerificationModal'
 
 const ChangePasswordCard = () => {
   // States
   const [isCurrentPasswordShown, setIsCurrentPasswordShown] = useState(false)
-  const [isConfirmPasswordShown, setIsConfirmPasswordShown] = useState(false)
-  const [isNewPasswordShown, setIsNewPasswordShown] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [isValidCurrentPassword, setIsValidCurrentPassword] = useState(false)
+  const [passwordError, setPasswordError] = useState('')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  
+  // Handlers
+  const handleClickShowCurrentPassword = () => setIsCurrentPasswordShown(!isCurrentPasswordShown)
 
-  const handleClickShowCurrentPassword = () => {
-    setIsCurrentPasswordShown(!isCurrentPasswordShown)
+  const handleValidateCurrentPassword = async () => {
+    try {
+      const storedPassword = await fetchCurrentPassword()
+
+      if (currentPassword === storedPassword) {
+        setIsValidCurrentPassword(true)
+        setPasswordError('')
+        
+      } else {
+        setIsValidCurrentPassword(false)
+        setPasswordError('La contraseña actual es incorrecta')
+      }
+    } catch (error) {
+      setPasswordError('Error al validar la contraseña')
+    }
   }
 
+  const handleOpenModal = () => setIsModalOpen(true)
+  const handleCloseModal = () => setIsModalOpen(false)
+
   return (
-    <Card>
-      <CardHeader title='Change Password' />
-      <CardContent>
-        <form>
-          <Grid container spacing={6}>
-            <Grid item xs={12} sm={6}>
-              <CustomTextField
-                fullWidth
-                label='Current Password'
-                type={isCurrentPasswordShown ? 'text' : 'password'}
-                placeholder='············'
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <IconButton
-                        edge='end'
-                        onClick={handleClickShowCurrentPassword}
-                        onMouseDown={e => e.preventDefault()}
-                      >
-                        <i className={isCurrentPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
-              />
-            </Grid>
-          </Grid>
-          <Grid container className='mbs-0' spacing={6}>
-            <Grid item xs={12} sm={6}>
-              <CustomTextField
-                fullWidth
-                label='New Password'
-                type={isNewPasswordShown ? 'text' : 'password'}
-                placeholder='············'
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <IconButton
-                        edge='end'
-                        onClick={() => setIsNewPasswordShown(!isNewPasswordShown)}
-                        onMouseDown={e => e.preventDefault()}
-                      >
-                        <i className={isNewPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <CustomTextField
-                fullWidth
-                label='Confirm New Password'
-                type={isConfirmPasswordShown ? 'text' : 'password'}
-                placeholder='············'
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position='end'>
-                      <IconButton
-                        edge='end'
-                        onClick={() => setIsConfirmPasswordShown(!isConfirmPasswordShown)}
-                        onMouseDown={e => e.preventDefault()}
-                      >
-                        <i className={isConfirmPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
-              />
-            </Grid>
+    <>
+      <Card>
+        <CardHeader title='Cambiar Contraseña' />
+        <CardContent>
+          <form>
             <Grid item xs={12} className='flex flex-col gap-4'>
-              <Typography variant='h6'>Password Requirements:</Typography>
+              <Typography variant='h6'>Pasos para cambiar su contraseña:</Typography>
               <div className='flex flex-col gap-4'>
+                <div className='flex items-center gap-2.5'>1. Validar su contraseña actual.</div>
                 <div className='flex items-center gap-2.5'>
-                  <i className='tabler-circle-filled text-[8px]' />
-                  Minimum 8 characters long - the more, the better
+                  2. Digitar su email registrado en su cuenta y solicitar el envío del token.
                 </div>
                 <div className='flex items-center gap-2.5'>
-                  <i className='tabler-circle-filled text-[8px]' />
-                  At least one lowercase & one uppercase character
-                </div>
-                <div className='flex items-center gap-2.5'>
-                  <i className='tabler-circle-filled text-[8px]' />
-                  At least one number, symbol, or whitespace character
+                  3. Revisar su correo y colocar el Token para permitir cambiar a una nueva contraseña.
                 </div>
               </div>
             </Grid>
-            <Grid item xs={12} className='flex gap-4'>
-              <Button variant='contained'>Save Changes</Button>
-              <Button variant='tonal' type='reset' color='secondary'>
-                Reset
-              </Button>
+            <Grid container spacing={6} className='mbs-5'>
+              <Grid item xs={12} sm={3}>
+                <CustomTextField
+                  InputLabelProps={{
+                    style: { fontSize: '1.15rem' }
+                  }}
+                  fullWidth
+                  label='Contraseña Actual'
+                  type={isCurrentPasswordShown ? 'text' : 'password'}
+                  placeholder='Ingrese su contraseña actual'
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        <IconButton
+                          edge='end'
+                          onClick={handleClickShowCurrentPassword}
+                          onMouseDown={e => e.preventDefault()}
+                        >
+                          <i className={isCurrentPasswordShown ? 'tabler-eye-off' : 'tabler-eye'} />
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </CardContent>
-    </Card>
+            {passwordError && <Typography color='error'>{passwordError}</Typography>}
+            <Grid item xs={12} className='flex gap-4' style={{ marginTop: '20px' }}>
+              <Button variant='contained' onClick={handleValidateCurrentPassword}>Validar Contraseña</Button>
+              <Button variant='contained' onClick={handleOpenModal}>Verificar Token</Button>
+            </Grid>
+          </form>
+        </CardContent>
+      </Card>
+
+      {/* Modal Component */}
+      <TokenVerificationModal open={isModalOpen} onClose={handleCloseModal} />
+    </>
   )
 }
 
