@@ -16,7 +16,7 @@ import Chip from '@mui/material/Chip'
 import CustomTextField from '@core/components/mui/TextField'
 
 // Vars
-const initialData = {
+/*const initialData = {
   firstName: 'John',
   lastName: 'Doe',
   email: 'john.doe@example.com',
@@ -29,13 +29,13 @@ const initialData = {
   language: 'english',
   timezone: 'gmt-12',
   currency: 'usd'
-}
+}*/
 
 const languageData = ['English', 'Arabic', 'French', 'German', 'Portuguese']
 
 const AccountDetails = () => {
   // States
-  const [formData, setFormData] = useState(initialData)
+  const [formData, setFormData] = useState('')
   const [fileInput, setFileInput] = useState('')
   const [imgSrc, setImgSrc] = useState('/images/avatars/1.png')
   const [language, setLanguage] = useState(['English'])
@@ -79,7 +79,7 @@ const AccountDetails = () => {
           <div className='flex flex-grow flex-col gap-4'>
             <div className='flex flex-col sm:flex-row gap-4'>
               <Button component='label' variant='contained' htmlFor='account-settings-upload-image'>
-                Upload New Photo
+                Subir Nueva Foto
                 <input
                   hidden
                   type='file'
@@ -90,10 +90,10 @@ const AccountDetails = () => {
                 />
               </Button>
               <Button variant='tonal' color='secondary' onClick={handleFileInputReset}>
-                Reset
+              Reestablecer
               </Button>
             </div>
-            <Typography>Allowed JPG, GIF or PNG. Max size of 800K</Typography>
+            <Typography>Permitido el formato JPG o PNG. Tamaño máximo 800Kb</Typography>
           </div>
         </div>
       </CardContent>
@@ -103,18 +103,24 @@ const AccountDetails = () => {
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
-                label='First Name'
-                value={formData.firstName}
-                placeholder='John'
+                label='Primer Apellido'
+                value={formData.last_nameF}
                 onChange={e => handleFormChange('firstName', e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
-                label='Last Name'
+                label='Segundo Apellido'
                 value={formData.lastName}
-                placeholder='Doe'
+                onChange={e => handleFormChange('lastName', e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <CustomTextField
+                fullWidth
+                label='Nombre'
+                value={formData.lastName}
                 onChange={e => handleFormChange('lastName', e.target.value)}
               />
             </Grid>
@@ -123,61 +129,71 @@ const AccountDetails = () => {
                 fullWidth
                 label='Email'
                 value={formData.email}
-                placeholder='john.doe@gmail.com'
                 onChange={e => handleFormChange('email', e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
-                label='Organization'
-                value={formData.organization}
-                placeholder='Pixinvent'
-                onChange={e => handleFormChange('organization', e.target.value)}
+                label='Seleccionar Tipo de Documento'
+                value={formData.lastName}
+                onChange={e => handleFormChange('lastName', e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
+              <CustomTextField
+                fullWidth
+                label='Número de Documento'
+                value={formData.lastName}
+                onChange={e => handleFormChange('lastName', e.target.value)}
+              />
+            </Grid>
+            {/* {<Grid item xs={12} sm={6}>
+              <CustomTextField
+                fullWidth
+                label='Organization'
+                value={formData.organization}
+                onChange={e => handleFormChange('organization', e.target.value)}
+              />
+            </Grid>} */}
+            {/* {<Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
                 label='Phone Number'
                 value={formData.phoneNumber}
-                placeholder='+1 (234) 567-8901'
                 onChange={e => handleFormChange('phoneNumber', e.target.value)}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Grid>} */}
+            {/* {<Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
                 label='Address'
                 value={formData.address}
-                placeholder='Address'
                 onChange={e => handleFormChange('address', e.target.value)}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Grid>} */}
+            {/* {<Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
                 label='State'
                 value={formData.state}
-                placeholder='New York'
                 onChange={e => handleFormChange('state', e.target.value)}
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Grid>} */}
+            {/* {<Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
                 type='number'
                 label='Zip Code'
                 value={formData.zipCode}
-                placeholder='123456'
                 onChange={e => handleFormChange('zipCode', e.target.value)}
               />
-            </Grid>
+            </Grid>} */}
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 select
                 fullWidth
-                label='Country'
+                label='País'
                 value={formData.country}
                 onChange={e => handleFormChange('country', e.target.value)}
               >
@@ -187,7 +203,7 @@ const AccountDetails = () => {
                 <MenuItem value='germany'>Germany</MenuItem>
               </CustomTextField>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* {<Grid item xs={12} sm={6}>
               <CustomTextField
                 select
                 fullWidth
@@ -218,8 +234,8 @@ const AccountDetails = () => {
                   </MenuItem>
                 ))}
               </CustomTextField>
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Grid>} */}
+            {/* {<Grid item xs={12} sm={6}>
               <CustomTextField
                 select
                 fullWidth
@@ -246,8 +262,8 @@ const AccountDetails = () => {
                 <MenuItem value='gmt-04'>(GMT-04:00) Atlantic Time (Canada)</MenuItem>
                 <MenuItem value='gmt-04-clp'>(GMT-04:00) Caracas, La Paz</MenuItem>
               </CustomTextField>
-            </Grid>
-            <Grid item xs={12} sm={6}>
+            </Grid>} */}
+            {/* {<Grid item xs={12} sm={6}>
               <CustomTextField
                 select
                 fullWidth
@@ -260,13 +276,13 @@ const AccountDetails = () => {
                 <MenuItem value='pound'>Pound</MenuItem>
                 <MenuItem value='bitcoin'>Bitcoin</MenuItem>
               </CustomTextField>
-            </Grid>
+            </Grid>} */}
             <Grid item xs={12} className='flex gap-4 flex-wrap'>
               <Button variant='contained' type='submit'>
-                Save Changes
+                Guardar Cambios
               </Button>
               <Button variant='tonal' type='reset' color='secondary' onClick={() => setFormData(initialData)}>
-                Reset
+                Reestablecer cambios anteriores
               </Button>
             </Grid>
           </Grid>

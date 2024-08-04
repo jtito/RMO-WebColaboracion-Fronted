@@ -40,7 +40,7 @@ const AccountDelete = () => {
 
   return (
     <Card>
-      <CardHeader title='Delete Account' />
+      <CardHeader title='Eliminar Cuenta' />
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormControl error={Boolean(errors.checkbox)} className='is-full mbe-6'>
@@ -52,10 +52,10 @@ const AccountDelete = () => {
                 <FormControlLabel control={<Checkbox {...field} />} label='I confirm my account deactivation' />
               )}
             />
-            {errors.checkbox && <FormHelperText error>Please confirm you want to delete account</FormHelperText>}
+            {errors.checkbox && <FormHelperText error>Por favor confirma si deseas eliminar tu cuenta</FormHelperText>}
           </FormControl>
           <Button variant='contained' color='error' type='submit' disabled={!checkboxValue}>
-            Deactivate Account
+            Eliminar Cuenta
           </Button>
           <ConfirmationDialog open={open} setOpen={setOpen} type='delete-account' />
         </form>
