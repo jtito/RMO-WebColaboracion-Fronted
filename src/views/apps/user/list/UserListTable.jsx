@@ -188,7 +188,7 @@ const UserListTable = () => {
 
   return (
     <>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} alignItems='center'>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <TextField
             label='Buscar'
@@ -196,6 +196,34 @@ const UserListTable = () => {
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
             fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} md={2.5} style={{ paddingRight: '8px' }}>
+          <DatePicker
+            selected={dateRangeCreate[0]}
+            onChange={dates => setDateRangeCreate(dates)}
+            startDate={dateRangeCreate[0]}
+            endDate={dateRangeCreate[1]}
+            selectsRange
+            dateFormat='dd/MM/yyyy'
+            locale={es}
+            placeholderText='Fecha de Creación'
+            className='custom-datepicker'
+            isClearable
+          />
+        </Grid>
+        <Grid item xs={12} md={3} style={{ paddingLeft: '8px' }}>
+          <DatePicker
+            selected={dateRangeUpdate[0]}
+            onChange={dates => setDateRangeUpdate(dates)}
+            startDate={dateRangeUpdate[0]}
+            endDate={dateRangeUpdate[1]}
+            selectsRange
+            dateFormat='dd/MM/yyyy'
+            locale={es}
+            placeholderText='Fecha de Actualización'
+            className='custom-datepicker'
+            isClearable
           />
         </Grid>
         <Grid item xs={12}>
@@ -220,7 +248,7 @@ const UserListTable = () => {
             Agregar Usuario
           </Button>
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
+        {/*<Grid item xs={12} sm={6} md={4} lg={3}>
           <Select
             value={selectedRole}
             onChange={e => setSelectedRole(e.target.value)}
@@ -233,35 +261,7 @@ const UserListTable = () => {
             <MenuItem value='Administrador del sistema'>Administrador del sistema</MenuItem>
             <MenuItem value='Secretaria Técnica (SGCAN)'>Secretaria Técnica (SGCAN)</MenuItem>
           </Select>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <DatePicker
-            selected={dateRangeCreate[0]}
-            onChange={dates => setDateRangeCreate(dates)}
-            startDate={dateRangeCreate[0]}
-            endDate={dateRangeCreate[1]}
-            selectsRange
-            dateFormat='dd/MM/yyyy'
-            locale={es}
-            placeholderText='Fecha de creación'
-            className='custom-datepicker'
-            isClearable
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <DatePicker
-            selected={dateRangeUpdate[0]}
-            onChange={dates => setDateRangeUpdate(dates)}
-            startDate={dateRangeUpdate[0]}
-            endDate={dateRangeUpdate[1]}
-            selectsRange
-            dateFormat='dd/MM/yyyy'
-            locale={es}
-            placeholderText='Fecha de actualización'
-            className='custom-datepicker'
-            isClearable
-          />
-        </Grid>
+        </Grid>*/}
         <Grid item xs={12}>
           <TableContainer component={Paper} sx={{ marginTop: 2 }}>
             <Table>
