@@ -15,7 +15,8 @@ import Button from '@mui/material/Button'
 
 //Component Imports
 import CustomTextField from '@core/components/mui/TextField'
-import TokenVerificationModal from './TokenVerificationModal'
+import SendTokenEmail from './SendTokenEmail'
+import ValidateToken from './ValidateToken'
 
 const ChangePasswordCard = () => {
   // States
@@ -23,7 +24,8 @@ const ChangePasswordCard = () => {
   const [currentPassword, setCurrentPassword] = useState('')
   const [isValidCurrentPassword, setIsValidCurrentPassword] = useState(false)
   const [passwordError, setPasswordError] = useState('')
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isSendTokenModalOpen, setIsSendTokenModalOpen] = useState(false)
+  const [isValidateTokenModalOpen, setIsValidateTokenModalOpen] = useState(false)
   
   // Handlers
   const handleClickShowCurrentPassword = () => setIsCurrentPasswordShown(!isCurrentPasswordShown)
@@ -35,7 +37,6 @@ const ChangePasswordCard = () => {
       if (currentPassword === storedPassword) {
         setIsValidCurrentPassword(true)
         setPasswordError('')
-        
       } else {
         setIsValidCurrentPassword(false)
         setPasswordError('La contraseña actual es incorrecta')
@@ -45,8 +46,11 @@ const ChangePasswordCard = () => {
     }
   }
 
-  const handleOpenModal = () => setIsModalOpen(true)
-  const handleCloseModal = () => setIsModalOpen(false)
+  const handleOpenSendTokenModal  = () => setIsSendTokenModalOpen(true)
+  const handleCloseSendTokenModal  = () => setIsSendTokenModalOpen(false)
+
+  const handleOpenValidateTokenModal = () => setIsValidateTokenModalOpen(true)
+  const handleCloseValidateTokenModal = () => setIsValidateTokenModalOpen(false)
 
   return (
     <>
@@ -55,7 +59,7 @@ const ChangePasswordCard = () => {
         <CardContent>
           <form>
             <Grid item xs={12} className='flex flex-col gap-4'>
-              <Typography variant='h6'>Pasos para cambiar su contraseña:</Typography>
+              <Typography variant='h5'>Pasos para cambiar su contraseña:</Typography>
               <div className='flex flex-col gap-4'>
                 <div className='flex items-center gap-2.5'>1. Validar su contraseña actual.</div>
                 <div className='flex items-center gap-2.5'>
@@ -66,18 +70,19 @@ const ChangePasswordCard = () => {
                 </div>
               </div>
             </Grid>
-            <Grid container spacing={6} className='mbs-5'>
+            <Grid item xs={12} className='flex gap-4' style={{ marginTop: '20px' }}>
+              <Typography variant='h5'>Contraseña Actual</Typography>
+            </Grid>
+            <Grid container className='mbs-5'>
               <Grid item xs={12} sm={3}>
                 <CustomTextField
                   InputLabelProps={{
-                    style: { fontSize: '1.15rem' }
+                    style: { fontSize: '1.10rem' }
                   }}
                   fullWidth
-                  label='Contraseña Actual'
                   type={isCurrentPasswordShown ? 'text' : 'password'}
-                  placeholder='Ingrese su contraseña actual'
                   value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  onChange={e => setCurrentPassword(e.target.value)}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position='end'>
@@ -93,18 +98,44 @@ const ChangePasswordCard = () => {
                   }}
                 />
               </Grid>
+              <Button variant='contained' onClick={handleValidateCurrentPassword} style={{ marginLeft: '5vw' }}>
+                Validar Contraseña
+              </Button>
             </Grid>
             {passwordError && <Typography color='error'>{passwordError}</Typography>}
             <Grid item xs={12} className='flex gap-4' style={{ marginTop: '20px' }}>
-              <Button variant='contained' onClick={handleValidateCurrentPassword}>Validar Contraseña</Button>
-              <Button variant='contained' onClick={handleOpenModal}>Verificar Token</Button>
+              <Button variant='contained' onClick={handleOpenSendTokenModal}>
+                Solicitar Token
+              </Button>
+            </Grid>
+            <Grid item xs={12} className='flex gap-4' style={{ marginTop: '20px' }}>
+              <Typography variant='h5'>Inserte el token enviado aquí</Typography>
+            </Grid>
+            <Grid container className='mbs-5'>
+              <Grid item xs={12} sm={3}>
+                <CustomTextField
+                  InputLabelProps={{
+                    style: { fontSize: '1.10rem' }
+                  }}
+                  fullWidth
+                  InputProps={{
+                    endAdornment: <InputAdornment position='end'></InputAdornment>
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12} className='flex gap-4' style={{ marginTop: '20px' }}>
+                <Button variant='contained' onClick={handleOpenValidateTokenModal}>
+                  Verificar Token
+                </Button>
+              </Grid>
             </Grid>
           </form>
         </CardContent>
       </Card>
 
       {/* Modal Component */}
-      <TokenVerificationModal open={isModalOpen} onClose={handleCloseModal} />
+      <SendTokenEmail open={isSendTokenModalOpen} onClose={handleCloseSendTokenModal} />
+      <ValidateToken open={isValidateTokenModalOpen} onClose={handleCloseValidateTokenModal} />
     </>
   )
 }

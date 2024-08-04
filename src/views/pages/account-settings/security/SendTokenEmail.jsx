@@ -8,7 +8,7 @@ import Button from '@mui/material/Button'
 
 import CustomTextField from '@core/components/mui/TextField'
 
-const TokenVerificationModal = ({ open, onClose }) => {
+const SendTokenEmail = ({ open, onClose }) => {
   return (
     <Dialog
       fullWidth
@@ -44,4 +44,4 @@ const TokenVerificationModal = ({ open, onClose }) => {
   )
 }
 
-export default TokenVerificationModal
+export default SendTokenEmail
