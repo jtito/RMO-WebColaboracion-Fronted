@@ -79,7 +79,7 @@ const DocumentList = ({ type }) => {
     console.log('rolid', idrol)
 
     try {
-      const response = await obtenerDocumentosid(idrol)
+      const response = await obtenerDocumentos()
 
       console.log('rolid', idrol)
 
