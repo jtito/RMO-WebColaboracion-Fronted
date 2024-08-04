@@ -30,6 +30,7 @@ import { TextField } from '@mui/material'
 //Importar DatePicker
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import './custom-datepicker.css'
 
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
@@ -242,8 +243,8 @@ const UserListTable = () => {
             selectsRange
             dateFormat='dd/MM/yyyy'
             locale={es}
-            placeholderText='Seleccionar rango de fechas'
-            className='form-control'
+            placeholderText='Fecha de creación'
+            className='custom-datepicker'
             isClearable
           />
         </Grid>
@@ -256,8 +257,8 @@ const UserListTable = () => {
             selectsRange
             dateFormat='dd/MM/yyyy'
             locale={es}
-            placeholderText='Seleccione rango de fechas'
-            className='form-control'
+            placeholderText='Fecha de actualización'
+            className='custom-datepicker'
             isClearable
           />
         </Grid>
