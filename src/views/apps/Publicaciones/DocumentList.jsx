@@ -1,11 +1,9 @@
 'use client'
-
 import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
 
 import IconButton from '@mui/material/IconButton'
-
 import {
   Button,
   Card,
@@ -23,69 +21,59 @@ import {
   Dialog,
   Fab
 } from '@mui/material'
-
 import AddIcon from '@mui/icons-material/Add'
-
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import './custom-datepicker.css'
-
 import { useSession } from 'next-auth/react'
-
 import { isWithinInterval, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
 
+import Swal from 'sweetalert2'
+
+import { useSnackbar } from 'notistack'
+
 import AddDoc from './AddDoc'
 import SelectUsers from './SelectUsers'
-import { obtenerDocumentos, obtenerDocumentosid, obtenerperfil } from '@/Service/axios.services'
+import { eliminarDocumentoPorId, obtenerDocumentos, obtenerDocumentosid, obtenerperfil } from '@/Service/axios.services'
 
 const DocumentList = ({ type }) => {
   const [openAddDoc, setOpenAddDoc] = useState(false)
   const [openSelectUsers, setOpenSelectUsers] = useState(false)
   const [coverImage, setCoverImage] = useState(null)
   const [openImageDialog, setOpenImageDialog] = useState(false)
-  const [perfiles, setPerfiles] = useState([])
+
   const [docperf, setdocperf] = useState([])
   const [filteredDocs, setFilteredDocs] = useState([])
-  const [dateRangeCreate, setDateRangeCreate] = useState([null, null]) // Estado para el filtro de fechas de creacion
-  const [dateRangeUpdate, setDateRangeUpdate] = useState([null, null]) // Estado para el filtro de fechas de actualizacion
+  const [dateRangeCreate, setDateRangeCreate] = useState([null, null])
+  const [dateRangeUpdate, setDateRangeUpdate] = useState([null, null])
   const [endDate, setEndDate] = useState('')
 
   const router = useRouter()
-
   const { data: session, status } = useSession()
-
   const idrol = session?.user?.id.id
+  const { enqueueSnackbar } = useSnackbar()
 
-  console.log('lgorol', idrol)
+  // const obtenerperfildoc = async () => {
+  //   try {
+  //     const response = await obtenerperfil()
 
-  const obtenerperfildoc = async () => {
-    try {
-      const response = await obtenerperfil()
-
-      console.log(response)
-
-      if (response.status === 200) {
-        setperfil(response.data)
-      } else {
-        console.error('Error al obtener los perfiles:', response.status)
-      }
-    } catch (error) {
-      console.error('Error en la solicitud:', error)
-    }
-  }
+  //     if (response.status === 200) {
+  //       setPerfiles(response.data) // Cambié setperfil por setPerfiles
+  //     } else {
+  //       console.error('Error al obtener los perfiles:', response.status)
+  //     }
+  //   } catch (error) {
+  //     console.error('Error en la solicitud:', error)
+  //   }
+  // }
 
   const obtenerDocumentosperf = async idrol => {
-    console.log('rolid', idrol)
-
     try {
       const response = await obtenerDocumentos()
 
-      console.log('rolid', idrol)
-
       if (response.status === 200) {
         setdocperf(response.data)
-        console.log('documentos', response.data)
       } else {
         console.error('Error al obtener los documentos:', response.status)
       }
@@ -94,11 +82,9 @@ const DocumentList = ({ type }) => {
     }
   }
 
-  useEffect(() => {
-    obtenerperfildoc()
-
-    // ¿obtenerDocumentosperf(idrol);
-  }, [type])
+  // useEffect(() => {
+  //   obtenerperfildoc()
+  // }, [type])
 
   useEffect(() => {
     if (idrol) {
@@ -109,7 +95,6 @@ const DocumentList = ({ type }) => {
   useEffect(() => {
     const filterDocs = () => {
       let documentsArray = Array.isArray(docperf) ? docperf : [docperf]
-
       let filtered = []
 
       if (type === 'publicados') {
@@ -149,22 +134,6 @@ const DocumentList = ({ type }) => {
     setOpenAddDoc(false)
   }
 
-  useEffect(() => {
-    const fetchPerfiles = async () => {
-      try {
-        const response = await obtenerperfil()
-
-        if (response.status === 200) {
-          setPerfiles(response.data)
-        }
-      } catch (error) {
-        console.error('Error al obtener perfiles', error)
-      }
-    }
-
-    fetchPerfiles()
-  }, [])
-
   const handleNext = docData => {
     setCoverImage(docData.file)
     setOpenSelectUsers(true)
@@ -190,16 +159,32 @@ const DocumentList = ({ type }) => {
     router.push(`${type}/${id}`)
   }
 
-  const DocumentoItem = ({ id }) => {
-    const handleDelete = async () => {
+  const handleDelete = async (event, documento) => {
+    event.stopPropagation()
+
+    // Confirmar la eliminación con SweetAlert
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    })
+
+    if (result.isConfirmed) {
       try {
-        await eliminarDocumentoPorId(id);
-        console.log('Documento eliminado con éxito');
-        // Aquí puedes agregar cualquier lógica adicional, como actualizar el estado o mostrar un mensaje al usuario
+        await eliminarDocumentoPorId(documento.id)
+        setdocperf(prevDocs => prevDocs.filter(doc => doc.id !== documento.id))
+        enqueueSnackbar('Documento eliminado con éxito', { variant: 'success' })
       } catch (error) {
-        console.error('Error al eliminar el documento:', error);
+        console.error('Error al eliminar el documento:', error)
+        enqueueSnackbar('Error al eliminar el documento', { variant: 'error' })
       }
-    };
+    }
+  }
 
   return (
     <Grid container spacing={2}>
@@ -261,11 +246,9 @@ const DocumentList = ({ type }) => {
                           {documento.title}
                         </Typography>
                       </Grid>
-                      <Grid item>
-                        <IconButton onClick={handleDelete}>
-                          <i className='tabler-trash text-[26px] text-textSecondary' />
-                        </IconButton>
-                      </Grid>
+                      <IconButton onClick={event => handleDelete(event, documento)}>
+                        <i className='tabler-trash text-[26px] text-textSecondary' />
+                      </IconButton>
                     </Grid>
                     <Typography variant='body2' color='text.secondary' sx={{ maxWidth: '35vw' }}>
                       {documento.description}
@@ -290,39 +273,42 @@ const DocumentList = ({ type }) => {
                         <Button
                           variant='contained'
                           color='primary'
-                          startIcon={<i className='bi bi-send' />}
-                          sx={{ padding: '2px 10px', fontSize: '0.9rem' }}
+                          startIcon={<i className='bi bi-send' />} // Usa un ícono relacionado con publicar
+                          sx={{ width: 'auto', px: 2 }} // Ajusta el tamaño del botón
                         >
                           Publicar
-                          <IconButton>
-                            <i className='tabler-send text-[22px] text-textSecondary' />
-                          </IconButton>
                         </Button>
                       )}
                     </Grid>
                   </Grid>
                 </Grid>
               </CardContent>
-              {/*<CardActions className='card-actions-dense'>
-            <Button>Acción</Button>
-          </CardActions>*/}
+              <CardActions>
+                <Button size='small' color='primary' onClick={() => handleCardClick(documento.id)}>
+                  Ver más
+                </Button>
+              </CardActions>
             </Card>
           ))
         ) : (
-          <Typography variant='body2' color='text.secondary'>
-            No se encontraron documentos.
-          </Typography>
+          <Typography variant='body1'>No hay documentos disponibles</Typography>
         )}
-        <Fab
-          color='primary'
-          aria-label='add'
-          sx={{ position: 'absolute', bottom: 16, right: 16 }}
-          onClick={handleClickOpenAddDoc}
-        >
-          <AddIcon />
-        </Fab>
+        {type === 'borradores' && (
+          <Fab
+            color='primary'
+            aria-label='add'
+            onClick={handleClickOpenAddDoc}
+            sx={{
+              position: 'fixed',
+              bottom: 16,
+              right: 16
+            }}
+          >
+            <AddIcon />
+          </Fab>
+        )}
 
-        <AddDoc open={openAddDoc} handleClose={handleCloseAddDoc} perfiles={perfiles} />
+        <AddDoc open={openAddDoc} handleClose={handleCloseAddDoc} />
 
         <Dialog open={openImageDialog} onClose={handleCloseImageDialog}>
           <CardMedia

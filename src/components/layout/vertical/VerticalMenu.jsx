@@ -88,11 +88,12 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
               </MenuItem>
 
               <SubMenu label={dictionary['navigation'].GestiónPublicación} icon={<i className='tabler-checkup-list' />}>
-                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/publicados`}>
-                  {dictionary['navigation'].Publicados}
-                </MenuItem>
                 <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/borradores`}>
                   {dictionary['navigation'].Borradores}
+                </MenuItem>
+
+                <MenuItem href={`/${locale}/Colaboraciones/GestionPublicaciones/publicados`}>
+                  {dictionary['navigation'].Publicados}
                 </MenuItem>
               </SubMenu>
             </>
