@@ -232,3 +232,20 @@ export const eliminarDocumentoPorId = async userId => {
     }
   })
 }
+
+export const solicitarTokenEmail = async (email) => {
+  try {
+    const response = await API.post('/user/password-reset-request/', {
+      email: email,
+    }, {
+      validateStatus: function (status) {
+        return status < 500;
+      }
+    });
+    
+    return response;
+  } catch (error) {
+    console.error('Error al solicitar el token:', error);
+    throw error;
+  }
+}

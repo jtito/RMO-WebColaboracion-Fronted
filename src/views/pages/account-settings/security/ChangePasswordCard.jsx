@@ -18,6 +18,8 @@ import CustomTextField from '@core/components/mui/TextField'
 import SendTokenEmail from './SendTokenEmail'
 import ValidateToken from './ValidateToken'
 
+import { solicitarTokenEmail } from '@/Service/axios.services'
+
 const ChangePasswordCard = () => {
   // States
   const [isCurrentPasswordShown, setIsCurrentPasswordShown] = useState(false)
