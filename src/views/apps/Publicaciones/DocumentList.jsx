@@ -190,6 +190,17 @@ const DocumentList = ({ type }) => {
     router.push(`${type}/${id}`)
   }
 
+  const DocumentoItem = ({ id }) => {
+    const handleDelete = async () => {
+      try {
+        await eliminarDocumentoPorId(id);
+        console.log('Documento eliminado con éxito');
+        // Aquí puedes agregar cualquier lógica adicional, como actualizar el estado o mostrar un mensaje al usuario
+      } catch (error) {
+        console.error('Error al eliminar el documento:', error);
+      }
+    };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -251,7 +262,7 @@ const DocumentList = ({ type }) => {
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <IconButton>
+                        <IconButton onClick={handleDelete}>
                           <i className='tabler-trash text-[26px] text-textSecondary' />
                         </IconButton>
                       </Grid>
