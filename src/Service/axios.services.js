@@ -224,3 +224,11 @@ export const crearDocumento = async data => {
     }
   })
 }
+
+export const eliminarDocumentoPorId = async userId => {
+  return await API.delete(`docs/docs/${docId}`, {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
