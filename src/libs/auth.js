@@ -31,7 +31,9 @@ export const authOptions = {
               ...data,
               user: {
                 id: data.user.id,
-                name: `${data.user.name} ${data.user.last_nameF} ${data.user.last_nameS}`,
+                name: data.user.name,
+                last_nameF: data.user.last_nameF,
+                last_nameS: data.user.last_nameS,
                 role: data.user.role.id,
                 email: data.user.email,
                 is_active: data.user.is_active,
@@ -69,6 +71,9 @@ export const authOptions = {
         token.role = user.user.role
         token.userId = user.user
         token.name = user.user.name
+        token.last_nameF = user.user.last_nameF
+        token.last_nameS = user.user.last_nameS
+
         token.email = user.user.email
         token.is_active = user.user.is_active
         token.create_at = user.user.create_at
@@ -86,6 +91,8 @@ export const authOptions = {
       if (session.user) {
         session.user.id = token.userId
         session.user.name = token.name
+        session.user.last_nameF = token.last_nameF
+        session.user.last_nameS = token.last_nameS
         session.user.role = token.role
         session.user.email = token.email
         session.user.is_active = token.is_active

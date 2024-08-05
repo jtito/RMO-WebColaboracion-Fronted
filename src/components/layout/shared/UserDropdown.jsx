@@ -87,6 +87,8 @@ const UserDropdown = () => {
     return <div>Cargando...</div>
   }
 
+  console.log(session?.user.id.last_nameF)
+
   return (
     <>
       <Badge
@@ -125,7 +127,7 @@ const UserDropdown = () => {
                     <Avatar alt={session?.user?.name || ''} src={session?.user?.image || ''} />
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
-                        {session?.user?.name || ''}
+                        {`${session?.user?.name || ''} ${session?.user?.last_nameF || ''}`}
                       </Typography>
                       <Typography variant='caption'>{session?.user?.email || ''}</Typography>
                     </div>
@@ -133,11 +135,11 @@ const UserDropdown = () => {
                   <Divider className='mlb-1' />
                   <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/pages/user-profile')}>
                     <i className='tabler-user text-[22px]' />
-                    <Typography color='text.primary'>My Profile</Typography>
+                    <Typography color='text.primary'>Mi Perfil</Typography>
                   </MenuItem>
                   <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/pages/account-settings')}>
                     <i className='tabler-settings text-[22px]' />
-                    <Typography color='text.primary'>Settings</Typography>
+                    <Typography color='text.primary'>Configuración</Typography>
                   </MenuItem>
                   {/* <MenuItem className='mli-2 gap-3' onClick={e => handleDropdownClose(e, '/pages/pricing')}>
                     <i className='tabler-currency-dollar text-[22px]' />

@@ -22,16 +22,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import AddIcon from '@mui/icons-material/Add'
 import Swal from 'sweetalert2'
 
-import { obtnerUsuarios } from '@/Service/axios.services'
-
-// Método para agregar perfil de usuario
-const agregarPerfilUsuario = async data => {
-  return axios.post('http://127.0.0.1:8000/docs/perfil/user/', data, {
-    validateStatus: function (status) {
-      return status < 500
-    }
-  })
-}
+import { obtnerUsuarios, agregarPerfilUsuario } from '@/Service/axios.services'
 
 const SelectUsers = ({ open, handleClose, handleConfirm, perfiles, iduser }) => {
   const [searchTerm, setSearchTerm] = useState('')
