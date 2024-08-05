@@ -1,55 +1,41 @@
-import React, { useEffect, useState } from 'react'
+// ValidateToken.jsx
+import React, { useEffect, useState } from 'react';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+import CustomTextField from '@core/components/mui/TextField';
+import { reseteoContraseña } from '@/Service/axios.services';
 
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import Button from '@mui/material/Button'
-
-import { useTheme } from '@emotion/react'
-
-//SweetAlert
-import Swal from 'sweetalert2'
-
-import CustomTextField from '@core/components/mui/TextField'
-
-// Importar Servicio
-import { reseteoContraseña } from '@/Service/axios.services'
-
-const ValidateTokenModal = ({ open, onClose }) => {
-  //Estados del Modal Cambiar Contraseña
-  const [email, setEmail] = useState('')
-  const [token, setToken] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState('')
-
-  const theme = useTheme()
+const ValidateTokenModal = ({ open, onClose, email }) => {
+  const [token, setToken] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (open) {
-      setEmail('')
-      setToken('')
-      setNewPassword('')
-      setConfirmPassword('')
-      setError('')
+      setToken('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setError('');
     }
-  }, [open])
+  }, [open]);
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
       setError('Las contraseñas no coinciden');
-
-      return
+      return;
     }
-    
+
     try {
       await reseteoContraseña(email, token, newPassword);
       onClose();
     } catch (error) {
-      setError('Error al cambiar contraseña')
+      setError('Error al cambiar contraseña');
     }
-  }
+  };
 
   return (
     <Dialog
@@ -65,20 +51,7 @@ const ValidateTokenModal = ({ open, onClose }) => {
       </DialogTitle>
       <DialogContent>
         <CustomTextField
-          InputLabelProps={{
-            style: { fontSize: '1rem' }
-          }}
-          fullWidth
-          label='Correo electrónico'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          error={!!error}
-          helperText={error}
-        />
-        <CustomTextField
-          InputLabelProps={{
-            style: { fontSize: '1rem', marginTop: '2vw' }
-          }}
+          InputLabelProps={{ style: { fontSize: '1rem' } }}
           fullWidth
           label='Código de confirmación'
           value={token}
@@ -87,9 +60,7 @@ const ValidateTokenModal = ({ open, onClose }) => {
           helperText={error}
         />
         <CustomTextField
-          InputLabelProps={{
-            style: { fontSize: '1rem', marginTop: '2vw' }
-          }}
+          InputLabelProps={{ style: { fontSize: '1rem', marginTop: '2vw' } }}
           fullWidth
           type='password'
           label='Nueva clave'
@@ -99,9 +70,7 @@ const ValidateTokenModal = ({ open, onClose }) => {
           helperText={error}
         />
         <CustomTextField
-          InputLabelProps={{
-            style: { fontSize: '1rem', marginTop: '2vw' }
-          }}
+          InputLabelProps={{ style: { fontSize: '1rem', marginTop: '2vw' } }}
           fullWidth
           type='password'
           label='Confirmar nueva clave'
@@ -120,7 +89,7 @@ const ValidateTokenModal = ({ open, onClose }) => {
         </Button>
       </DialogActions>
     </Dialog>
-  )
-}
+  );
+};
 
-export default ValidateTokenModal
+export default ValidateTokenModal;

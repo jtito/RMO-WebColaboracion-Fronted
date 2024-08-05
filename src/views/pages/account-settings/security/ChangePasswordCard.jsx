@@ -29,7 +29,7 @@ import { solicitarTokenEmail, reseteoContraseña } from '@/Service/axios.service
 
 const ChangePasswordCard = () => {
   // Estados del componente
-  const { data: session, status } = useSession() // Obtener Sesión
+  const { data: session } = useSession() // Obtener Sesión
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [isValidateTokenModalOpen, setIsValidateTokenModalOpen] = useState(false);
@@ -39,8 +39,8 @@ const ChangePasswordCard = () => {
   useEffect(() => {
     if (session?.user?.email) {
       setEmail(session.user.email);
-      console.log('Data de la sesion: ', session);
-      console.log('User Email: ', session.user?.email);
+      // console.log('Data de la sesion: ', session);
+      // console.log('User Email: ', session.user?.email);
     }
     
   }, [session]);
@@ -157,7 +157,11 @@ const ChangePasswordCard = () => {
       </Card>
 
       {/* Modal Component */}
-      <ValidateToken open={isValidateTokenModalOpen} onClose={handleCloseValidateTokenModal} />
+      <ValidateToken 
+        open={isValidateTokenModalOpen} 
+        onClose={handleCloseValidateTokenModal} 
+        email={email}
+      />
     </>
   )
 }
