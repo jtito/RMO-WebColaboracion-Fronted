@@ -1,9 +1,16 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+import { useSession } from 'next-auth/react'
+
+import Swal from 'sweetalert2'
+
+import { useTheme } from '@emotion/react'
 
 // MUI Imports
+import { CircularProgress } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
@@ -15,42 +22,95 @@ import Button from '@mui/material/Button'
 
 //Component Imports
 import CustomTextField from '@core/components/mui/TextField'
-import SendTokenEmail from './SendTokenEmail'
 import ValidateToken from './ValidateToken'
 
 import { solicitarTokenEmail, reseteoContraseña } from '@/Service/axios.services'
 
+
 const ChangePasswordCard = () => {
   // Estados del componente
+  const { data: session, status } = useSession() // Obtener Sesión
   const [email, setEmail] = useState('');
-  const [token, setToken] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [isTokenValid, setIsTokenValid] = useState(false);
-  const [isSendTokenModalOpen, setIsSendTokenModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [isValidateTokenModalOpen, setIsValidateTokenModalOpen] = useState(false);
-  const [tokenError, setTokenError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
   
+  const theme = useTheme();
+
+  useEffect(() => {
+    if (session?.user?.email) {
+      setEmail(session.user.email);
+      console.log('Data de la sesion: ', session);
+      console.log('User Email: ', session.user?.email);
+    }
+    
+  }, [session]);
+
   // Handlers
+  const handleRequestToken = async () => {
+    const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
+    const backgroundColor = theme.palette.background.paper
+    const confirmButtonColor = theme.palette.primary.main
 
-  const handleValidateCurrentPassword = async () => {
+    if (!email) {
+      Swal.fire({
+        title: 'Error',
+        text: 'No se encontró el correo electrónico del usuario.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: confirmButtonColor,
+      });
+      return;
+    }
+  
+    setLoading(true);
+  
+    Swal.fire({
+      title: 'Solicitando código...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+  
     try {
-      const storedPassword = await fetchCurrentPassword()
-
-      if (currentPassword === storedPassword) {
-        setIsValidCurrentPassword(true)
-        setPasswordError('')
+      const response = await solicitarTokenEmail(email);
+  
+      Swal.close();
+  
+      if (response && response.status >= 200 && response.status < 300) {
+        Swal.fire({
+          html: `<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">Código enviado</span>`,
+          icon: 'success',
+          showConfirmButton: true,
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: confirmButtonColor,
+          timer: 6000,
+          background: backgroundColor
+        });
       } else {
-        setIsValidCurrentPassword(false)
-        setPasswordError('La contraseña actual es incorrecta')
+        Swal.fire({
+          html: `<span style="font-family: Arial, sans-serif; font-size: 20px; color: ${titleColor};">Correo inválido</span>`,
+          icon: 'error',
+          showConfirmButton: true,
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: confirmButtonColor,
+        });
       }
     } catch (error) {
-      setPasswordError('Error al validar la contraseña')
+      console.error('Error al solicitar el token:', error); // Agregar más información del error para depuración
+      Swal.close();
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al solicitar el token, por favor intenta nuevamente.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: confirmButtonColor,
+      });
+    } finally {
+      setLoading(false);
     }
-  }
-
-  const handleOpenSendTokenModal  = () => setIsSendTokenModalOpen(true)
-  const handleCloseSendTokenModal  = () => setIsSendTokenModalOpen(false)
+  };
+  
 
   const handleOpenValidateTokenModal = () => setIsValidateTokenModalOpen(true)
   const handleCloseValidateTokenModal = () => setIsValidateTokenModalOpen(false)
@@ -68,10 +128,7 @@ const ChangePasswordCard = () => {
                   SOLICITAR CÓDIGO
                 </div>
                 <div className='flex items-center gap-2.5'>
-                  1. Dar clic en Solicitar Aprobación.
-                </div>
-                <div className='flex items-center gap-2.5'>
-                  2. Ingresar el email y solicitar el envío del código.
+                  1. Dar clic en Solicitar Aprobación (se enviará el código al correo registrado por el usuario).
                 </div>
                 <div style={{ marginTop: '20px' }} className='flex items-center gap-2.5'>
                   ACTUALIZAR CONTRASEÑA
@@ -88,8 +145,8 @@ const ChangePasswordCard = () => {
               </div>
             </Grid>
             <Grid item xs={12} className='flex gap-4' style={{ marginTop: '20px' }}>
-              <Button variant='contained' onClick={handleOpenSendTokenModal}>
-                Solicitar Código
+              <Button variant='contained' onClick={handleRequestToken} disabled={loading}>
+                {loading ? <CircularProgress size={24} /> : 'Solicitar Código'}
               </Button>
               <Button variant='contained' onClick={handleOpenValidateTokenModal}>
                 Actualizar Contraseña
@@ -100,7 +157,6 @@ const ChangePasswordCard = () => {
       </Card>
 
       {/* Modal Component */}
-      <SendTokenEmail open={isSendTokenModalOpen} onClose={handleCloseSendTokenModal} />
       <ValidateToken open={isValidateTokenModalOpen} onClose={handleCloseValidateTokenModal} />
     </>
   )
