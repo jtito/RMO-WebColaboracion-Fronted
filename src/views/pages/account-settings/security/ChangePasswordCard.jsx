@@ -53,11 +53,11 @@ const ChangePasswordCard = () => {
 
     if (!email) {
       Swal.fire({
-        title: 'Error',
-        text: 'No se encontró el correo electrónico del usuario.',
+        html: `<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">No se encontró el correo electrónico del usuario</span>`,
         icon: 'error',
         confirmButtonText: 'Aceptar',
         confirmButtonColor: confirmButtonColor,
+        background: backgroundColor
       });
       return;
     }
