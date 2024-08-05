@@ -249,3 +249,22 @@ export const solicitarTokenEmail = async (email) => {
     throw error;
   }
 }
+
+export const reseteoContraseña = async (email, token, newPassword) => {
+  try {
+    const response = await API.post('/user/password-reset/', {
+      email: email,
+      token: token,
+      new_password: newPassword,
+    }, {
+      validateStatus: function (status) {
+        return status < 500;
+      }
+    });
+    
+    return response;
+  } catch (error) {
+    console.error('Error al cambiar la contraseña:', error);
+    throw error;
+  }
+}
