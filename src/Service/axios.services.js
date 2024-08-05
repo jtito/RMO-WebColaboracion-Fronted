@@ -244,3 +244,39 @@ export const updateUser = async (id, userData) => {
     }
   })
 }
+
+export const solicitarTokenEmail = async (email) => {
+  try {
+    const response = await API.post('/user/password-reset-request/', {
+      email: email,
+    }, {
+      validateStatus: function (status) {
+        return status < 500;
+      }
+    });
+    
+    return response;
+  } catch (error) {
+    console.error('Error al solicitar el token:', error);
+    throw error;
+  }
+}
+
+export const reseteoContraseña = async (email, token, newPassword) => {
+  try {
+    const response = await API.post('/user/password-reset/', {
+      email: email,
+      token: token,
+      new_password: newPassword,
+    }, {
+      validateStatus: function (status) {
+        return status < 500;
+      }
+    });
+    
+    return response;
+  } catch (error) {
+    console.error('Error al cambiar la contraseña:', error);
+    throw error;
+  }
+}
