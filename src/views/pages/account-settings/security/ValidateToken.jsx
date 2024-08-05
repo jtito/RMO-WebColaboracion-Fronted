@@ -6,6 +6,11 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 
+import { useTheme } from '@emotion/react'
+
+//SweetAlert
+import Swal from 'sweetalert2'
+
 import CustomTextField from '@core/components/mui/TextField'
 
 // Importar Servicio
@@ -18,6 +23,8 @@ const ValidateTokenModal = ({ open, onClose }) => {
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
+
+  const theme = useTheme()
 
   useEffect(() => {
     if (open) {

@@ -6,34 +6,86 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import Button from '@mui/material/Button'
 
+import { useTheme } from '@emotion/react'
+
+//SweetAlert
+import Swal from 'sweetalert2'
+
+import { CircularProgress } from '@mui/material'
+
 import CustomTextField from '@core/components/mui/TextField'
 
 // Importar servicio
 import { solicitarTokenEmail } from '@/Service/axios.services'
 
 const SendTokenEmail = ({ open, onClose }) => {
+  //Estados del Modal Envio del Token
   const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const theme = useTheme();
+
+  const mostrarAlertaEnvioToken = () => {
+    const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
+    const backgroundColor = theme.palette.background.paper
+    const confirmButtonColor = theme.palette.primary.main
+
+    Swal.fire({
+      html: `<span style="font-family: Arial, sans-serif; font-size: 28px; color: ${titleColor};">Código enviado</span>`,
+      icon: 'success',
+      showConfirmButton: true,
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: confirmButtonColor,
+      timer: 6000,
+      background: backgroundColor
+    })
+  }
+
+  const mostrarAlertaCorreoInvalido = () => {
+    const titleColor = theme.palette.mode === 'dark' ? '#FFFFFF' : '#000000'
+    const backgroundColor = theme.palette.background.paper
+    const confirmButtonColor = theme.palette.primary.main
+
+    Swal.fire({
+      html: `<span style="font-family: Arial, sans-serif; font-size: 20px; color: ${titleColor};">Correo inválido</span>`,
+      icon: 'error',
+      showConfirmButton: true,
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: confirmButtonColor,
+      background: backgroundColor
+    })
+  }
 
   useEffect(() => {
     if (open) {
       setEmail('')
-      setMessage('')
-      setError('')
     }
   }, [open])
 
   const handleSubmit = async () => {
+    setLoading(true)
+
+    Swal.fire({
+      title: 'Solicitando código...',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading()
+      }
+    })
+
     try {
       const response = await solicitarTokenEmail(email)
 
+      Swal.close()
+
       if (response.status >= 200 && response.status < 300) {
-        setMessage(response.data.message)
-        setError('')
+        setLoading(false)
+        onClose()
+        mostrarAlertaEnvioToken()
       } else {
-        setMessage('')
-        setError(`Error: ${response.statusText}`)
+        setLoading(false)
+        onClose()
+        mostrarAlertaCorreoInvalido()
       }
     } catch (error) {
       setMessage('')
@@ -64,15 +116,15 @@ const SendTokenEmail = ({ open, onClose }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
 				/>
-        {message && <p style={{ color: 'green' }}>{message}</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {/* {message && <p style={{ color: 'green' }}>{message}</p>} */}
+        {/* {error && <p style={{ color: 'red' }}>{error}</p>} */}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} variant='secondary'>
+        <Button onClick={onClose} variant='secondary' disabled={loading}>
           Cancelar
         </Button>
-        <Button onClick={handleSubmit} color='primary' variant='contained'>
-          Solicitar Código
+        <Button onClick={handleSubmit} color='primary' variant='contained' disabled={loading}>
+        {loading ? <CircularProgress size={24} /> : 'Solicitar Código'}
         </Button>
       </DialogActions>
     </Dialog>
