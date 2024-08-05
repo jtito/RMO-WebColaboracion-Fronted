@@ -9,6 +9,9 @@ import AboutOverview from './AboutOverview'
 
 const ProfileTab = () => {
   const { data: session } = useSession()
+  
+  console.log(session.user);
+  
 
   if (status === 'loading') {
     return <div>Loading...</div>

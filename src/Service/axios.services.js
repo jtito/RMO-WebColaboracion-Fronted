@@ -232,17 +232,3 @@ export const eliminarDocumentoPorId = async id => {
     }
   })
 }
-
-// Mock API function
-export const updateUser = async (id, userData) => {
-  console.log(userData)
-
-  return await API.put(`user/usuarios/${id}/`, userData, {
-    validateStatus: function (status) {
-      console.log(userData)
-      console.log(status)
-
-      return status < 500
-    }
-  })
-}
