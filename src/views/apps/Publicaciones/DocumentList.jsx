@@ -35,7 +35,13 @@ import { useSnackbar } from 'notistack'
 
 import AddDoc from './AddDoc'
 import SelectUsers from './SelectUsers'
-import { eliminarDocumentoPorId, obtenerDocumentos, obtenerDocumentosid, obtenerperfil } from '@/Service/axios.services'
+import {
+  eliminarDocumentoPorId,
+  obtenerDocumentos,
+  obtenerDocumentosid,
+  obtenerperfil,
+  publicarDocumentoPorId
+} from '@/Service/axios.services'
 
 const DocumentList = ({ type }) => {
   const [openAddDoc, setOpenAddDoc] = useState(false)
@@ -51,7 +57,7 @@ const DocumentList = ({ type }) => {
 
   const router = useRouter()
   const { data: session, status } = useSession()
-  const idrol = session?.user?.id.id
+  const iduser = session?.user?.id.id
   const { enqueueSnackbar } = useSnackbar()
 
   // const obtenerperfildoc = async () => {
@@ -68,12 +74,28 @@ const DocumentList = ({ type }) => {
   //   }
   // }
 
-  const obtenerDocumentosperf = async idrol => {
+  const obtenerDocumentosperf = async iduser => {
     try {
       const response = await obtenerDocumentos()
 
       if (response.status === 200) {
-        setdocperf(response.data)
+        // Asumimos que `setdocperf` es una función que guarda los documentos en el estado
+        const documentos = response.data
+
+        setdocperf(documentos)
+
+        // Buscar el documento específico por `iduser` (ajusta esta lógica según tu estructura de datos)
+        const documento = documentos.find(doc => doc.id === iduser)
+
+        if (documento) {
+          const documentoId = documento.id // Obtener el ID del documento
+
+          console.log('ID del documento:', documentoId)
+
+          // Puedes realizar otras operaciones con `documentoId` aquí
+        } else {
+          console.log('Documento no encontrado para el ID de usuario:', iduser)
+        }
       } else {
         console.error('Error al obtener los documentos:', response.status)
       }
@@ -87,10 +109,10 @@ const DocumentList = ({ type }) => {
   // }, [type])
 
   useEffect(() => {
-    if (idrol) {
-      obtenerDocumentosperf(idrol)
+    if (iduser) {
+      obtenerDocumentosperf(iduser)
     }
-  }, [idrol])
+  }, [iduser])
 
   useEffect(() => {
     const filterDocs = () => {
@@ -134,9 +156,9 @@ const DocumentList = ({ type }) => {
     setOpenAddDoc(false)
   }
 
-  const handleNext = docData => {
-    setCoverImage(docData.file)
-    setOpenSelectUsers(true)
+  const handleAddDocNext = id => {
+    setOpenAddDoc(false)
+    handleCardClick(id)
   }
 
   const handleCloseSelectUsers = () => {
@@ -162,7 +184,6 @@ const DocumentList = ({ type }) => {
   const handleDelete = async (event, documento) => {
     event.stopPropagation()
 
-    // Confirmar la eliminación con SweetAlert
     const result = await Swal.fire({
       title: '¿Estás seguro?',
       text: 'Esta acción no se puede deshacer',
@@ -182,6 +203,53 @@ const DocumentList = ({ type }) => {
       } catch (error) {
         console.error('Error al eliminar el documento:', error)
         enqueueSnackbar('Error al eliminar el documento', { variant: 'error' })
+      }
+    }
+  }
+
+  const typeColors = {
+    Desiciones: 'rgba(173, 216, 233, 0.5)', // Light blue with transparency
+    Resoluciones: 'rgba(144, 238, 148, 0.5)', // Light green with transparency
+    'Documentos Técnicos': 'rgba(211, 211, 211, 0.5)' // Light grey with transparency
+  }
+
+  const handlePublicar = async documento => {
+    // Mostrar alerta de confirmación
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción publicará el documento.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, publicar',
+      cancelButtonText: 'Cancelar'
+    })
+
+    if (result.isConfirmed) {
+      const loadingSnack = enqueueSnackbar('Publicando...', { variant: 'info', persist: true })
+
+      try {
+        const data = { state: 2 }
+
+        const response = await publicarDocumentoPorId(documento.id, data)
+
+        console.log(data)
+
+        if (response.status === 200) {
+          setdocperf(prevDocs => prevDocs.map(doc => (doc.id === documento.id ? { ...doc, state: 2 } : doc)))
+          enqueueSnackbar('Documento publicado con éxito', { variant: 'success' })
+        } else {
+          console.error('Error al publicar el documento:', response.status)
+          enqueueSnackbar('Error al publicar el documento', { variant: 'error' })
+        }
+      } catch (error) {
+        console.error('Error al publicar el documento:', error)
+        enqueueSnackbar('Error al publicar el documento', { variant: 'error' })
+      } finally {
+        if (loadingSnack) {
+          loadingSnack.dismiss()
+        }
       }
     }
   }
@@ -227,7 +295,17 @@ const DocumentList = ({ type }) => {
 
         {filteredDocs.length > 0 ? (
           filteredDocs.map(documento => (
-            <Card key={documento.id} sx={{ mb: 2, cursor: 'pointer' }} onClick={() => handleCardClick(documento.id)}>
+            <Card
+              key={documento.id}
+              sx={{
+                mb: 2,
+                cursor: 'pointer',
+                backgroundColor: typeColors[documento.typeDoc.description] || 'inherit',
+                borderRadius: '8px', // Optional: For rounded corners
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+              }}
+              onClick={() => handleCardClick(documento.id)}
+            >
               <CardContent>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={2}>
@@ -246,7 +324,12 @@ const DocumentList = ({ type }) => {
                           {documento.title}
                         </Typography>
                       </Grid>
-                      <IconButton onClick={event => handleDelete(event, documento)}>
+                      <IconButton
+                        onClick={event => {
+                          event.stopPropagation()
+                          handleDelete(event, documento)
+                        }}
+                      >
                         <i className='tabler-trash text-[26px] text-textSecondary' />
                       </IconButton>
                     </Grid>
@@ -265,7 +348,11 @@ const DocumentList = ({ type }) => {
                         </Typography>
                       </Grid>
                     </Grid>
-                    <Typography variant='body2' color='text.secondary'>
+                    <Typography
+                      variant='body2'
+                      color='text.secondary'
+                      sx={{ color: typeColors[documento.typeDoc.description] || 'inherit' }}
+                    >
                       {documento.typeDoc.description}
                     </Typography>
                     <Grid item xs={12} sx={{ mt: 2 }}>
@@ -274,7 +361,11 @@ const DocumentList = ({ type }) => {
                           variant='contained'
                           color='primary'
                           startIcon={<i className='bi bi-send' />} // Usa un ícono relacionado con publicar
-                          sx={{ width: 'auto', px: 2 }} // Ajusta el tamaño del botón
+                          sx={{ width: 'auto', px: 2 }}
+                          onClick={event => {
+                            event.stopPropagation()
+                            handlePublicar(documento)
+                          }}
                         >
                           Publicar
                           <IconButton>
@@ -311,7 +402,7 @@ const DocumentList = ({ type }) => {
           </Fab>
         )}
 
-        <AddDoc open={openAddDoc} handleClose={handleCloseAddDoc} />
+        <AddDoc open={openAddDoc} handleClose={handleCloseAddDoc} handleNext={handleAddDocNext} />
 
         <Dialog open={openImageDialog} onClose={handleCloseImageDialog}>
           <CardMedia

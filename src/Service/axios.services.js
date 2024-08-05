@@ -245,38 +245,73 @@ export const updateUser = async (id, userData) => {
   })
 }
 
-export const solicitarTokenEmail = async (email) => {
+export const solicitarTokenEmail = async email => {
   try {
-    const response = await API.post('/user/password-reset-request/', {
-      email: email,
-    }, {
-      validateStatus: function (status) {
-        return status < 500;
+    const response = await API.post(
+      '/user/password-reset-request/',
+      {
+        email: email
+      },
+      {
+        validateStatus: function (status) {
+          return status < 500
+        }
       }
-    });
-    
-    return response;
+    )
+
+    return response
   } catch (error) {
-    console.error('Error al solicitar el token:', error);
-    throw error;
+    console.error('Error al solicitar el token:', error)
+    throw error
   }
 }
 
 export const reseteoContraseña = async (email, token, newPassword) => {
   try {
-    const response = await API.post('/user/password-reset/', {
-      email: email,
-      token: token,
-      new_password: newPassword,
-    }, {
-      validateStatus: function (status) {
-        return status < 500;
+    const response = await API.post(
+      '/user/password-reset/',
+      {
+        email: email,
+        token: token,
+        new_password: newPassword
+      },
+      {
+        validateStatus: function (status) {
+          return status < 500
+        }
       }
-    });
-    
-    return response;
+    )
+
+    return response
   } catch (error) {
-    console.error('Error al cambiar la contraseña:', error);
-    throw error;
+    console.error('Error al cambiar la contraseña:', error)
+    throw error
   }
 }
+
+export const publicarDocumentoPorId = async (id, data) => {
+  return await API.patch(`docs/docs/${id}/`, data, {
+    validateStatus: function (status) {
+      console.log(data)
+
+      return status < 500
+    }
+  })
+}
+
+// export const publicarDocumentoPorId = async (id, data) => {
+
+//     const response = await API.put(`docs/docs/${id}/`, data, {
+//       validateStatus: function (status) {
+//         console.log(data)
+
+//         return status < 500
+//       }
+//     })
+
+//     return response
+//   } catch (error) {
+//     console.error('Error al publicar el documento:', error)
+//     throw error
+//   }
+// }
