@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -15,6 +15,14 @@ const SendTokenEmail = ({ open, onClose }) => {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (open) {
+      setEmail('')
+      setMessage('')
+      setError('')
+    }
+  }, [open])
 
   const handleSubmit = async () => {
     try {

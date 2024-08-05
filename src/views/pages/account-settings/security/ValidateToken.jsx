@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -18,6 +18,16 @@ const ValidateTokenModal = ({ open, onClose }) => {
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (open) {
+      setEmail('')
+      setToken('')
+      setNewPassword('')
+      setConfirmPassword('')
+      setError('')
+    }
+  }, [open])
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
