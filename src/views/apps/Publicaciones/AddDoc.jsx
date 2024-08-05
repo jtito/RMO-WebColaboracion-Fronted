@@ -27,7 +27,7 @@ import { useSession } from 'next-auth/react'
 import SelectUsers from './SelectUsers'
 import { crearDocumento, obtenerperfil, obtenertiposDoc, obtnerUsuarios } from '@/Service/axios.services'
 
-const AddDoc = ({ perfiles, open, handleClose, handleNext }) => {
+const AddDoc = ({ open, handleClose, handleNext }) => {
   const { data: session } = useSession() // Obtener datos de la sesión
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -40,6 +40,7 @@ const AddDoc = ({ perfiles, open, handleClose, handleNext }) => {
   const [selectedUsers, setSelectedUsers] = useState(new Set())
   const [error, setError] = useState('') // Estado para el mensaje de error
 
+  const [perfiles, setPerfiles] = useState([])
   const iduser = session?.user?.id.id
 
   console.log(iduser)
@@ -88,7 +89,7 @@ const AddDoc = ({ perfiles, open, handleClose, handleNext }) => {
       const response = await obtenerperfil()
 
       if (response.status === 200) {
-        setPerfil(response.data)
+        setPerfiles(response.data)
       } else {
         console.error('Error al obtener los perfiles:', response.status)
       }
@@ -227,7 +228,7 @@ const AddDoc = ({ perfiles, open, handleClose, handleNext }) => {
         searchResults={searchResults}
         selectedUsers={selectedUsers}
         onUserSelect={handleUserSelect}
-        iduser={iduser} 
+        iduser={iduser}
       />
     </Dialog>
   )

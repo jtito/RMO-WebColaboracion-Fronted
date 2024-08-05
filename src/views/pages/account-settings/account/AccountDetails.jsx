@@ -1,55 +1,40 @@
 'use client'
 
 // React Imports
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 // MUI Imports
+import { useParams, useRouter } from 'next/navigation'
+
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import MenuItem from '@mui/material/MenuItem'
-import Chip from '@mui/material/Chip'
 
 // Component Imports
+import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
+
+import { signOut } from 'next-auth/react' // Asegúrate de que `next-auth` esté configurado
+
 import CustomTextField from '@core/components/mui/TextField'
+import { updateUser } from '@/Service/axios.services'
+import { getLocalizedUrl } from '@/utils/i18n'
 
-// Vars
-/*const initialData = {
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'john.doe@example.com',
-  organization: 'Pixinvent',
-  phoneNumber: '+1 (917) 543-9876',
-  address: '123 Main St, New York, NY 10001',
-  state: 'New York',
-  zipCode: '634880',
-  country: 'usa',
-  language: 'english',
-  timezone: 'gmt-12',
-  currency: 'usd'
-}*/
-
-const languageData = ['English', 'Arabic', 'French', 'German', 'Portuguese']
-
-const AccountDetails = () => {
-  // States
-  const [formData, setFormData] = useState('')
-  const [fileInput, setFileInput] = useState('')
+const AccountDetails = ({ data }) => {
+  const [formData, setFormData] = useState(data.id)
   const [imgSrc, setImgSrc] = useState('/images/avatars/1.png')
-  const [language, setLanguage] = useState(['English'])
+  const [error, setError] = useState(null)
+  const router = useRouter()
+  const { lang: locale } = useParams()
 
-  const handleDelete = value => {
-    setLanguage(current => current.filter(item => item !== value))
-  }
-
-  const handleChange = event => {
-    setLanguage(event.target.value)
-  }
+  useEffect(() => {
+    setFormData(data.id)
+  }, [data.id])
 
   const handleFormChange = (field, value) => {
-    setFormData({ ...formData, [field]: value })
+    setFormData(prevState => ({ ...prevState, [field]: value }))
   }
 
   const handleFileInputChange = file => {
@@ -60,8 +45,10 @@ const AccountDetails = () => {
       reader.onload = () => setImgSrc(reader.result)
       reader.readAsDataURL(files[0])
 
-      if (reader.result !== null) {
-        setFileInput(reader.result)
+      reader.onloadend = () => {
+        if (reader.result !== null) {
+          setFileInput(reader.result)
+        }
       }
     }
   }
@@ -71,221 +58,158 @@ const AccountDetails = () => {
     setImgSrc('/images/avatars/1.png')
   }
 
+  const handleSubmit = async e => {
+    e.preventDefault()
+
+    const iduser = data.id.id
+
+    if (!iduser) {
+      setError('No user ID found')
+
+      return
+    }
+
+    // Mostrar alerta de confirmación antes de proceder
+    const result = await Swal.fire({
+      title: 'Confirmación',
+      text: 'Para aplicar los cambios, tendrás que volver a iniciar sesión. ¿Deseas continuar?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, continuar',
+      cancelButtonText: 'No, cancelar'
+    })
+
+    if (result.isConfirmed) {
+      // Mostrar mensaje de carga
+      Swal.fire({
+        title: 'Actualizando...',
+        text: 'Por favor espera mientras se actualizan los datos.',
+        didOpen: () => {
+          Swal.showLoading()
+        }
+      })
+
+      try {
+        const updatedData = {
+          ...formData
+        }
+
+        const response = await updateUser(iduser, updatedData)
+
+        if (response.status === 200) {
+          // Esperar un breve periodo antes de redirigir para asegurarse de que el cierre de sesión se complete
+          setTimeout(() => {
+            Swal.fire({
+              title: 'Éxito',
+              text: 'Usuario Actualizado',
+              icon: 'success',
+              confirmButtonText: 'Aceptar'
+            }).then(() => {
+              signOut({ redirect: false }).then(() => {
+                router.replace(getLocalizedUrl('/login', locale)) // Cambia '/login' según la ruta de tu página de inicio de sesión
+              })
+            })
+          }, 500) // Esperar medio segundo antes de redirigir
+        } else {
+          if (
+            response.data &&
+            response.data.doc_num &&
+            Array.isArray(response.data.doc_num) &&
+            response.data.doc_num.length > 0
+          ) {
+            setError(response.data.doc_num[0])
+          } else {
+            setError('Error al actualizar el usuario')
+          }
+        }
+      } catch (error) {
+        console.error('Error al actualizar el usuario:', error)
+        setError('Error al actualizar el usuario')
+      }
+    } else {
+      // Si el usuario cancela, no realizar ninguna acción
+      console.log('Actualización cancelada por el usuario')
+    }
+  }
+
   return (
     <Card>
       <CardContent className='mbe-4'>
         <div className='flex max-sm:flex-col items-center gap-6'>
           <img height={100} width={100} className='rounded' src={imgSrc} alt='Profile' />
-          <div className='flex flex-grow flex-col gap-4'>
+          {/* <div className='flex flex-grow flex-col gap-4'>
             <div className='flex flex-col sm:flex-row gap-4'>
               <Button component='label' variant='contained' htmlFor='account-settings-upload-image'>
                 Subir Nueva Foto
                 <input
                   hidden
                   type='file'
-                  value={fileInput}
                   accept='image/png, image/jpeg'
                   onChange={handleFileInputChange}
                   id='account-settings-upload-image'
                 />
               </Button>
               <Button variant='tonal' color='secondary' onClick={handleFileInputReset}>
-              Reestablecer
+                Reestablecer
               </Button>
             </div>
             <Typography>Permitido el formato JPG o PNG. Tamaño máximo 800Kb</Typography>
-          </div>
+          </div> */}
         </div>
       </CardContent>
       <CardContent>
-        <form onSubmit={e => e.preventDefault()}>
+        <form onSubmit={handleSubmit}>
           <Grid container spacing={6}>
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
                 label='Primer Apellido'
                 value={formData.last_nameF}
-                onChange={e => handleFormChange('firstName', e.target.value)}
+                onChange={e => handleFormChange('last_nameF', e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
                 label='Segundo Apellido'
-                value={formData.lastName}
-                onChange={e => handleFormChange('lastName', e.target.value)}
+                value={formData.last_nameS || ''}
+                onChange={e => handleFormChange('last_nameS', e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
                 label='Nombre'
-                value={formData.lastName}
-                onChange={e => handleFormChange('lastName', e.target.value)}
+                value={formData.name}
+                onChange={e => handleFormChange('name', e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
                 label='Email'
-                value={formData.email}
+                value={formData.email || ''}
                 onChange={e => handleFormChange('email', e.target.value)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <CustomTextField
                 fullWidth
-                label='Seleccionar Tipo de Documento'
-                value={formData.lastName}
-                onChange={e => handleFormChange('lastName', e.target.value)}
+                label={formData.type_doc_display}
+                value={formData.doc_num || ''}
+                onChange={e => handleFormChange('doc_num', e.target.value)}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <CustomTextField
-                fullWidth
-                label='Número de Documento'
-                value={formData.lastName}
-                onChange={e => handleFormChange('lastName', e.target.value)}
-              />
-            </Grid>
-            {/* {<Grid item xs={12} sm={6}>
-              <CustomTextField
-                fullWidth
-                label='Organization'
-                value={formData.organization}
-                onChange={e => handleFormChange('organization', e.target.value)}
-              />
-            </Grid>} */}
-            {/* {<Grid item xs={12} sm={6}>
-              <CustomTextField
-                fullWidth
-                label='Phone Number'
-                value={formData.phoneNumber}
-                onChange={e => handleFormChange('phoneNumber', e.target.value)}
-              />
-            </Grid>} */}
-            {/* {<Grid item xs={12} sm={6}>
-              <CustomTextField
-                fullWidth
-                label='Address'
-                value={formData.address}
-                onChange={e => handleFormChange('address', e.target.value)}
-              />
-            </Grid>} */}
-            {/* {<Grid item xs={12} sm={6}>
-              <CustomTextField
-                fullWidth
-                label='State'
-                value={formData.state}
-                onChange={e => handleFormChange('state', e.target.value)}
-              />
-            </Grid>} */}
-            {/* {<Grid item xs={12} sm={6}>
-              <CustomTextField
-                fullWidth
-                type='number'
-                label='Zip Code'
-                value={formData.zipCode}
-                onChange={e => handleFormChange('zipCode', e.target.value)}
-              />
-            </Grid>} */}
-            <Grid item xs={12} sm={6}>
-              <CustomTextField
-                select
-                fullWidth
-                label='País'
-                value={formData.country}
-                onChange={e => handleFormChange('country', e.target.value)}
-              >
-                <MenuItem value='usa'>USA</MenuItem>
-                <MenuItem value='uk'>UK</MenuItem>
-                <MenuItem value='australia'>Australia</MenuItem>
-                <MenuItem value='germany'>Germany</MenuItem>
-              </CustomTextField>
-            </Grid>
-            {/* {<Grid item xs={12} sm={6}>
-              <CustomTextField
-                select
-                fullWidth
-                label='Language'
-                value={language}
-                SelectProps={{
-                  multiple: true, // @ts-ignore
-                  onChange: handleChange,
-                  renderValue: selected => (
-                    <div className='flex flex-wrap gap-2'>
-                      {selected.map(value => (
-                        <Chip
-                          key={value}
-                          clickable
-                          onMouseDown={event => event.stopPropagation()}
-                          size='small'
-                          label={value}
-                          onDelete={() => handleDelete(value)}
-                        />
-                      ))}
-                    </div>
-                  )
-                }}
-              >
-                {languageData.map(name => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </CustomTextField>
-            </Grid>} */}
-            {/* {<Grid item xs={12} sm={6}>
-              <CustomTextField
-                select
-                fullWidth
-                label='TimeZone'
-                value={formData.timezone}
-                onChange={e => handleFormChange('timezone', e.target.value)}
-                SelectProps={{ MenuProps: { PaperProps: { style: { maxHeight: 250 } } } }}
-              >
-                <MenuItem value='gmt-12'>(GMT-12:00) International Date Line West</MenuItem>
-                <MenuItem value='gmt-11'>(GMT-11:00) Midway Island, Samoa</MenuItem>
-                <MenuItem value='gmt-10'>(GMT-10:00) Hawaii</MenuItem>
-                <MenuItem value='gmt-09'>(GMT-09:00) Alaska</MenuItem>
-                <MenuItem value='gmt-08'>(GMT-08:00) Pacific Time (US & Canada)</MenuItem>
-                <MenuItem value='gmt-08-baja'>(GMT-08:00) Tijuana, Baja California</MenuItem>
-                <MenuItem value='gmt-07'>(GMT-07:00) Chihuahua, La Paz, Mazatlan</MenuItem>
-                <MenuItem value='gmt-07-mt'>(GMT-07:00) Mountain Time (US & Canada)</MenuItem>
-                <MenuItem value='gmt-06'>(GMT-06:00) Central America</MenuItem>
-                <MenuItem value='gmt-06-ct'>(GMT-06:00) Central Time (US & Canada)</MenuItem>
-                <MenuItem value='gmt-06-mc'>(GMT-06:00) Guadalajara, Mexico City, Monterrey</MenuItem>
-                <MenuItem value='gmt-06-sk'>(GMT-06:00) Saskatchewan</MenuItem>
-                <MenuItem value='gmt-05'>(GMT-05:00) Bogota, Lima, Quito, Rio Branco</MenuItem>
-                <MenuItem value='gmt-05-et'>(GMT-05:00) Eastern Time (US & Canada)</MenuItem>
-                <MenuItem value='gmt-05-ind'>(GMT-05:00) Indiana (East)</MenuItem>
-                <MenuItem value='gmt-04'>(GMT-04:00) Atlantic Time (Canada)</MenuItem>
-                <MenuItem value='gmt-04-clp'>(GMT-04:00) Caracas, La Paz</MenuItem>
-              </CustomTextField>
-            </Grid>} */}
-            {/* {<Grid item xs={12} sm={6}>
-              <CustomTextField
-                select
-                fullWidth
-                label='Currency'
-                value={formData.currency}
-                onChange={e => handleFormChange('currency', e.target.value)}
-              >
-                <MenuItem value='usd'>USD</MenuItem>
-                <MenuItem value='euro'>EUR</MenuItem>
-                <MenuItem value='pound'>Pound</MenuItem>
-                <MenuItem value='bitcoin'>Bitcoin</MenuItem>
-              </CustomTextField>
-            </Grid>} */}
             <Grid item xs={12} className='flex gap-4 flex-wrap'>
               <Button variant='contained' type='submit'>
                 Guardar Cambios
               </Button>
-              <Button variant='tonal' type='reset' color='secondary' onClick={() => setFormData(initialData)}>
+              {/* <Button variant='tonal' type='reset' color='secondary' onClick={() => setFormData(data.id)}>
                 Reestablecer cambios anteriores
-              </Button>
+              </Button> */}
             </Grid>
           </Grid>
+          {error && <Typography color='error'>{error}</Typography>}
         </form>
       </CardContent>
     </Card>
