@@ -14,7 +14,7 @@ import { obtenerperfil, obtenertiposDoc, obtenerDocumentosid } from '@/Service/a
 
 const CustomEditor = dynamic(() => import('./CustomEditor'), { ssr: false });
 
-const VistaDocumento = () => {
+const VistaDocumento = ({ idDoc }) => {
   const [doc, setDoc] = useState();
   const [showUserList, setShowUserList] = useState(false);
   const theme = useTheme();
@@ -91,7 +91,7 @@ const VistaDocumento = () => {
             borderRadius: '1px',
           }}
         >
-          <CustomEditor documentId={id} />
+          <CustomEditor  idDoc={idDoc}/>
         </div>
       </Grid>
 
