@@ -193,6 +193,19 @@ export default function CustomEditor({ idDoc }) {
     setIsLayoutReady(true);
     
     // Fetch document content by ID
+    const fetchDocument = async () => {
+      try {
+        const response = await editarDocumentoPorId(idDoc);
+        setDocumentContent(response.data.contenido || '<h2> </h2>'); // Ajusta según la estructura de tu respuesta
+      } catch (error) {
+        console.error('Error al obtener el documento:', error);
+      }
+    };
+
+    fetchDocument();
+
+    return () => setIsLayoutReady(false);
+    // Fetch document content by ID
     // const fetchDocument = async () => {
     //   try {
     //     const response = await editarDocumentoPorId(documentId);
@@ -205,7 +218,22 @@ export default function CustomEditor({ idDoc }) {
     // fetchDocument();
 
     // return () => setIsLayoutReady(false);
-  }, []);
+  }, [idDoc]);
+
+  const handleSave = async (data) => {
+    try {
+      await editarDocumentoPorId(idDoc, { contenido: data });
+      console.log('Documento guardado con éxito');
+    } catch (error) {
+      console.error('Error al guardar el documento:', error);
+    }
+  };
+
+  const handleEditorChange = (event, editor) => {
+    const data = editor.getData();
+    setDocumentContent(data);
+    handleSave(data);
+  };
 
   const editorConfig = {
     toolbar: {
@@ -365,7 +393,7 @@ export default function CustomEditor({ idDoc }) {
       webSocketUrl: CLOUD_SERVICES_WEBSOCKET_URL
     },
     collaboration: {
-      channelId: UNIQUE_CHANNEL_PER_DOCUMENT
+      channelId: `document-${idDoc}`
     },
     comments: {
       editorConfig: {
@@ -498,7 +526,7 @@ export default function CustomEditor({ idDoc }) {
         'ckboxImageEdit'
       ]
     },
-    initialData: documentContent || '<h2> </h2>',
+    initialData: documentContent,
     language: 'es',
     licenseKey: LICENSE_KEY,
     link: {
@@ -630,6 +658,8 @@ export default function CustomEditor({ idDoc }) {
                     }}
                     editor={DecoupledEditor}
                     config={editorConfig}
+                    data={documentContent}
+                    onChange={handleEditorChange}
                   />
                 )}
               </div>
