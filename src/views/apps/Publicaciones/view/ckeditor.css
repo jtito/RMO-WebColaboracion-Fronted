@@ -36,7 +36,7 @@
 .editor-container_document-editor .editor-container__toolbar {
   display: flex;
   position: relative;
-  box-shadow: 0 2px 3px hsla(0, 0%, 0%, 0.078);
+  box-shadow: 0 2px 3px hsla(0, 0%, 0%, 0.973);
 }
 
 .editor-container_document-editor .editor-container__toolbar > .ck.ck-toolbar {

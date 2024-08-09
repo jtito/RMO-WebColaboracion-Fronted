@@ -60,19 +60,6 @@ const DocumentList = ({ type }) => {
   const iduser = session?.user?.id.id
   const { enqueueSnackbar } = useSnackbar()
 
-  // const obtenerperfildoc = async () => {
-  //   try {
-  //     const response = await obtenerperfil()
-
-  //     if (response.status === 200) {
-  //       setPerfiles(response.data) // Cambié setperfil por setPerfiles
-  //     } else {
-  //       console.error('Error al obtener los perfiles:', response.status)
-  //     }
-  //   } catch (error) {
-  //     console.error('Error en la solicitud:', error)
-  //   }
-  // }
 
   const obtenerDocumentosperf = async iduser => {
     try {
@@ -338,7 +325,7 @@ const DocumentList = ({ type }) => {
                     </Typography>
                     <Grid container spacing={2}>
                       <Grid item xs={12} sm={6}>
-                        <Typography variant='body2' color='text.secondary'>
+                        <Typography variant='body2' c olor='text.secondary'>
                           Fecha de creación: {new Date(documento.create_at).toLocaleDateString()}
                         </Typography>
                       </Grid>

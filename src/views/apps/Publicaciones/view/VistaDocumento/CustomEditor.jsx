@@ -172,7 +172,7 @@ class AnnotationsSidebarToggler extends Plugin {
   }
 }
 
-export default function App() {
+export default function CustomEditor() {
   const editorPresenceRef = useRef(null)
   const editorContainerRef = useRef(null)
   const editorMenuBarRef = useRef(null)
@@ -369,7 +369,7 @@ export default function App() {
       stylesheets: [
         /* This path should point to application stylesheets. */
         /* See: https://ckeditor.com/docs/ckeditor5/latest/features/converters/export-pdf.html */
-        './App.css',
+        './ckeditor5.css',
 
         /* Export PDF needs access to stylesheets that style the content. */
         'https://cdn.ckeditor.com/ckeditor5/42.0.2/ckeditor5.css',
@@ -389,7 +389,7 @@ export default function App() {
       stylesheets: [
         /* This path should point to application stylesheets. */
         /* See: https://ckeditor.com/docs/ckeditor5/latest/features/converters/export-word.html */
-        './App.css',
+        './ckeditor5.css',
 
         /* Export Word needs access to stylesheets that style the content. */
         'https://cdn.ckeditor.com/ckeditor5/42.0.2/ckeditor5.css',
