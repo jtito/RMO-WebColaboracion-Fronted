@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 import dynamic from 'next/dynamic';
 
@@ -8,22 +9,19 @@ import { Button, Grid, useTheme, Modal, Box, IconButton, Divider } from '@mui/ma
 import CloseIcon from '@mui/icons-material/Close';
 
 import UserList from './UserList'; // Ajusta la ruta de importación según sea necesario
-import { obtenertiposDoc } from '@/Service/axios.services';
+import { obtenertiposDoc, obtenerDocumentosid } from '@/Service/axios.services';
 
 const CustomEditor = dynamic(() => import('./CustomEditor'), { ssr: false });
 
 const VistaDocumento = () => {
+  const [doc, setDoc] = useState();
   const [showUserList, setShowUserList] = useState(false);
   const theme = useTheme();
-  const [tipodoc, settipodoc] = useState([])
+  const [tipodoc, settipodoc] = useState([]);
 
   const toggleUserList = () => {
     setShowUserList(!showUserList);
   };
-
-  useEffect(() => {
-    obtenerTypDoc()
-  }, [])
 
   const obtenerTypDoc = async () => {
     try {
@@ -38,6 +36,30 @@ const VistaDocumento = () => {
       console.error('Error en la solicitud:', error)
     }
   }
+
+  const obtenerDocPorId = async id => {
+    console.log('docID: ', id)
+
+    try {
+      const response = await obtenerDocumentosid(id);
+
+      if (response.status === 200) {
+        setDoc(response.data);
+      } else {
+        console.error('Error al obtener doc: ',response.status)
+        setIsLoading(false)
+      }
+    } catch (error) {
+      console.error('Error en la solicitud: ', error)
+    }
+  }
+
+  useEffect(() => {
+    obtenerTypDoc()
+    if (id) {
+      obtenerDocPorId(id)
+    }
+  }, [id]);
 
   return (
     <Grid container sx={{ paddingTop: 1, backgroundColor: theme.palette.background.default }}>
@@ -67,7 +89,7 @@ const VistaDocumento = () => {
             borderRadius: '1px',
           }}
         >
-          <CustomEditor />
+          <CustomEditor documentId={id} />
         </div>
       </Grid>
 
