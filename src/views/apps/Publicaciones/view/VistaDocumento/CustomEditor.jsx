@@ -174,7 +174,7 @@ class AnnotationsSidebarToggler extends Plugin {
   }
 }
 
-export default function CustomEditor({ documentId }) {
+export default function CustomEditor({ idDoc }) {
   const editorPresenceRef = useRef(null)
   const editorContainerRef = useRef(null)
   const editorMenuBarRef = useRef(null)
@@ -187,25 +187,25 @@ export default function CustomEditor({ documentId }) {
   const [isLayoutReady, setIsLayoutReady] = useState(false)
   const [documentContent, setDocumentContent] = useState('');
 
-
+  console.log('idDoc: ', idDoc)
 
   useEffect(() => {
     setIsLayoutReady(true);
     
     // Fetch document content by ID
-    const fetchDocument = async () => {
-      try {
-        const response = await editarDocumentoPorId(documentId);
-        setDocumentContent(response.data.contenido); // Asume que el contenido del documento está en 'contenido'
-      } catch (error) {
-        console.error('Error al obtener el documento:', error);
-      }
-    };
+    // const fetchDocument = async () => {
+    //   try {
+    //     const response = await editarDocumentoPorId(documentId);
+    //     setDocumentContent(response.data.contenido); // Asume que el contenido del documento está en 'contenido'
+    //   } catch (error) {
+    //     console.error('Error al obtener el documento:', error);
+    //   }
+    // };
 
-    fetchDocument();
+    // fetchDocument();
 
-    return () => setIsLayoutReady(false);
-  }, [documentId]);
+    // return () => setIsLayoutReady(false);
+  }, []);
 
   const editorConfig = {
     toolbar: {
@@ -365,7 +365,7 @@ export default function CustomEditor({ documentId }) {
       webSocketUrl: CLOUD_SERVICES_WEBSOCKET_URL
     },
     collaboration: {
-      channelId: documentId
+      channelId: UNIQUE_CHANNEL_PER_DOCUMENT
     },
     comments: {
       editorConfig: {
