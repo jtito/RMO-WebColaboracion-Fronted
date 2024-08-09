@@ -1,8 +1,11 @@
 'use client'
 
-import { Grid } from '@mui/material'
-import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+
+import { useRouter } from 'next/navigation'
+
+import { Grid } from '@mui/material'
+
 import VistaDocumento from '../../../../../../../views/apps/Publicaciones/view/VistaDocumento'
 
 const EditPage = ({ params }) => {

@@ -24,7 +24,7 @@ const VistaDocumento = ({ idDoc }) => {
     setShowUserList(!showUserList);
   };
 
-  const obtenerTypDoc = async () => {
+  const obtenerTyperfil = async () => {
     try {
       const response = await obtenerperfil()
 
@@ -47,7 +47,7 @@ const VistaDocumento = ({ idDoc }) => {
       if (response.status === 200) {
         setDoc(response.data);
       } else {
-        console.error('Error al obtener doc: ',response.status)
+        console.error('Error al obtener doc: ', response.status)
         setIsLoading(false)
       }
     } catch (error) {
@@ -56,12 +56,12 @@ const VistaDocumento = ({ idDoc }) => {
   }
 
   useEffect(() => {
-    obtenerTypDoc()
+    obtenerTyperfil()
 
-    if (id) {
-      obtenerDocPorId(id)
+    if (idDoc) {
+      obtenerDocPorId(idDoc)
     }
-  }, [id]);
+  }, [idDoc]);
 
   return (
     <Grid container sx={{ paddingTop: 1, backgroundColor: theme.palette.background.default }}>
@@ -91,7 +91,7 @@ const VistaDocumento = ({ idDoc }) => {
             borderRadius: '1px',
           }}
         >
-          <CustomEditor  idDoc={idDoc}/>
+          <CustomEditor idDoc={idDoc} />
         </div>
       </Grid>
 
@@ -129,7 +129,7 @@ const VistaDocumento = ({ idDoc }) => {
             <CloseIcon />
           </IconButton>
           <UserList perfiles={tipodoc} />
-         
+
         </Box>
       </Modal>
     </Grid>
