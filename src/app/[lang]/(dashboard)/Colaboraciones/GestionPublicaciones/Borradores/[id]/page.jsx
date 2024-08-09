@@ -1,15 +1,32 @@
-import { Grid } from '@mui/material'
+'use client'
 
+import { Grid } from '@mui/material'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import VistaDocumento from '../../../../../../../views/apps/Publicaciones/view/VistaDocumento'
 
-const editpage = () => {
+const EditPage = () => {
+  const router = useRouter();
+  const [id, setId] = useState(null);
+
+  useEffect(() => {
+    const documentId = router.query?.id;
+    if (documentId) {
+      setId(documentId);
+    }
+  }, [router.query]);
+
+  if (!id) {
+    return null; // O muestra un indicador de carga mientras se obtiene el ID
+  }
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12} lg={4} md={5}>
-        <VistaDocumento></VistaDocumento>
+        <VistaDocumento id={id} />
       </Grid>
     </Grid>
   )
 }
 
-export default editpage
+export default EditPage

@@ -104,11 +104,13 @@ import 'ckeditor5-premium-features/ckeditor5-premium-features.css'
 
 import './ckeditor5.css'
 
+import { editarDocumentoPorId } from '@/Service/axios.services'
+
 const LICENSE_KEY =
   'ZW9wS2hzUmQwV09FcHJJY3pnVWFUOGhENjY4SkpNRXJNaXBlUHhRcGhILyt2L2F2ZDNVYWxGNkhNbnlaNkE9PS1NakF5TkRBNE1qVT0='
 
 const CKBOX_TOKEN_URL = 'https://114666.cke-cs.com/token/dev/ZNcm34IqxLhLJJbjtPlQR4K4TKxYmu3KMO9m?limit=10'
-const UNIQUE_CHANNEL_PER_DOCUMENT = '22'
+const UNIQUE_CHANNEL_PER_DOCUMENT = '23'
 const CLOUD_SERVICES_TOKEN_URL = 'https://114666.cke-cs.com/token/dev/ZNcm34IqxLhLJJbjtPlQR4K4TKxYmu3KMO9m?limit=10'
 const CLOUD_SERVICES_WEBSOCKET_URL = 'wss://114666.cke-cs.com/ws'
 
@@ -172,7 +174,7 @@ class AnnotationsSidebarToggler extends Plugin {
   }
 }
 
-export default function CustomEditor() {
+export default function CustomEditor({ documentId }) {
   const editorPresenceRef = useRef(null)
   const editorContainerRef = useRef(null)
   const editorMenuBarRef = useRef(null)
@@ -183,12 +185,27 @@ export default function CustomEditor() {
   const editorRevisionHistoryEditorRef = useRef(null)
   const editorRevisionHistorySidebarRef = useRef(null)
   const [isLayoutReady, setIsLayoutReady] = useState(false)
+  const [documentContent, setDocumentContent] = useState('');
+
+
 
   useEffect(() => {
-    setIsLayoutReady(true)
+    setIsLayoutReady(true);
+    
+    // Fetch document content by ID
+    const fetchDocument = async () => {
+      try {
+        const response = await editarDocumentoPorId(documentId);
+        setDocumentContent(response.data.contenido); // Asume que el contenido del documento está en 'contenido'
+      } catch (error) {
+        console.error('Error al obtener el documento:', error);
+      }
+    };
 
-    return () => setIsLayoutReady(false)
-  }, [])
+    fetchDocument();
+
+    return () => setIsLayoutReady(false);
+  }, [documentId]);
 
   const editorConfig = {
     toolbar: {
@@ -348,7 +365,7 @@ export default function CustomEditor() {
       webSocketUrl: CLOUD_SERVICES_WEBSOCKET_URL
     },
     collaboration: {
-      channelId: UNIQUE_CHANNEL_PER_DOCUMENT
+      channelId: documentId
     },
     comments: {
       editorConfig: {
@@ -481,7 +498,7 @@ export default function CustomEditor() {
         'ckboxImageEdit'
       ]
     },
-    initialData: '<h2> </h2>',
+    initialData: documentContent || '<h2> </h2>',
     language: 'es',
     licenseKey: LICENSE_KEY,
     link: {
