@@ -119,15 +119,15 @@ export const ActualizarUsuarioEstados = async (id, datosActualizados) => {
     })
 
     if (response.status >= 200 && response.status < 300) {
-      // La actualización fue exitosa
+
       return response.data
     } else {
-      // Manejar errores específicos del servidor
+
       console.error('Error al actualizar el estado:', response.status, response.statusText)
       throw new Error(`Error ${response.status}: ${response.statusText}`)
     }
   } catch (error) {
-    // Manejar errores de la solicitud
+
     console.error('Error en la solicitud:', error)
     throw error
   }
@@ -299,6 +299,30 @@ export const publicarDocumentoPorId = async (id, data) => {
   })
 }
 
+export const createPerfil = async (data) => {
+
+  return await API.post('/docs/perfil/user/',data, {
+    validateStatus: function (status) {
+      console.log(data)
+
+      return status < 500
+    }
+
+  });
+
+
+
+};
+
+
+export const usuariosAsignados = id => {
+  return API.get(`/docs/perfil/user/${id}/`, {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
 // export const publicarDocumentoPorId = async (id, data) => {
 
 //     const response = await API.put(`docs/docs/${id}/`, data, {
@@ -315,3 +339,6 @@ export const publicarDocumentoPorId = async (id, data) => {
 //     throw error
 //   }
 // }
+
+
+

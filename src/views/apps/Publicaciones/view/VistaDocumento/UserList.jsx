@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
-import { TextField, List, ListItem, Typography, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
+import { TextField, List, ListItem, Typography, FormControl, InputLabel, Select, MenuItem, Button, Divider } from '@mui/material';
 
-import { obtnerUsuarios } from '@/Service/axios.services';
+import AddIcon from '@mui/icons-material/Add';
+
+import { createPerfil, obtnerUsuarios, usuariosAsignados } from '@/Service/axios.services';
 
 
 const UserList = ({ perfiles }) => {
@@ -11,9 +13,9 @@ const UserList = ({ perfiles }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedProfile, setSelectedProfile] = useState({});
-
-
-
+  const [perfilIds, setPerfilIds] = useState([]);
+  const [asigUsuarios, setAsigUsuarios] = useState([]);
+  const [addedProfiles, setAddedProfiles] = useState(new Set());
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -54,11 +56,97 @@ const UserList = ({ perfiles }) => {
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleButtonClick = (userId) => () => {
-    console.log(`Botón clickeado para el usuario con ID: ${userId}`);
 
-    // Aquí puedes implementar la funcionalidad deseada
+
+
+
+  const handleButtonClick = (userId, perfilId) => async () => {
+
+    console.log(`Datos enviados: userId=${userId}, perfilId=${perfilId}`);
+
+    // const data = (userId, perfilId)
+    const data = {
+      user: userId,
+      perfil: perfilId
+
+    }
+
+    console.log(data)
+
+    try {
+
+      const response = await createPerfil(data);
+
+      console.log(data);
+
+      if (response.status === 201) {
+
+        const newPerfilId = response.data.id;
+
+        console.log('Perfil creado con éxito:', response.data);
+
+        setPerfilIds(prevIds => [...prevIds, newPerfilId]);
+        setAddedProfiles(prevSet => new Set(prevSet.add(userId)));
+
+        console.log('IDs guardados:', perfilIds);
+
+        alert('Perfil creado con éxito');
+      } else {
+        console.error('Error al crear perfil:', response.data);
+        alert('Error al crear perfil');
+      }
+    } catch (error) {
+      console.error('Error al crear perfil:', error);
+      alert('Error al crear perfil');
+    }
   };
+
+  console.log(perfilIds)
+
+
+
+  const ListarUsuariosAsignados = async (ids) => {
+    const nuevosUsuariosAsignados = [];
+
+    for (const id of ids) {
+      try {
+        const response = await usuariosAsignados(id);
+
+        if (response.status === 200) {
+          // Verifica si response.data es un array
+          const usuarios = Array.isArray(response.data) ? response.data : [response.data];
+
+          // Agrega usuarios al array si no están ya presentes
+          for (const usuario of usuarios) {
+            if (!asigUsuarios.some(u => u.id === usuario.id)) {
+              nuevosUsuariosAsignados.push({
+                ...usuario,
+                perfilDescription: perfiles.find(perfil => perfil.id === usuario.perfilId)?.description || 'Sin descripción'
+              });
+            }
+          }
+
+          console.log('Usuarios asignados para perfil ID:', id, usuarios);
+
+        } else {
+          console.error('Error en la solicitud para ID:', id, 'Estado:', response.status);
+        }
+      } catch (error) {
+        console.error('Error en la solicitud para ID:', id, error);
+      }
+    }
+
+    setAsigUsuarios(prevUsuarios => [...prevUsuarios, ...nuevosUsuariosAsignados]);
+
+    console.log(setAsigUsuarios);
+  };
+
+  useEffect(() => {
+    if (perfilIds.length > 0) {
+      ListarUsuariosAsignados(perfilIds);
+    }
+  }, [perfilIds]);
+
 
   return (
     <div style={{ borderRadius: '4px', padding: '1rem' }}>
@@ -79,7 +167,7 @@ const UserList = ({ perfiles }) => {
       <List>
         {filteredUsers.length > 0 ? (
           filteredUsers.map(user => (
-            <ListItem key={user.id} sx={{ padding: '0.5rem 0', borderBottom: '1px solid #ddd' }}>
+            <ListItem key={user.id} sx={{ padding: '0.5rem 0' }}>
               <Typography>{user.name} {user.last_nameF} {user.last_nameS}</Typography>
               <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
                 <InputLabel>Tipo de perfil</InputLabel>
@@ -97,18 +185,34 @@ const UserList = ({ perfiles }) => {
 
               </FormControl>
               <Button
-                variant="contained"
+
+                variant="outlined"
+
                 color="primary"
-                size="small"
-                onClick={handleButtonClick(user.id)}
+
+                // size="small"
+                onClick={handleButtonClick(user.id, selectedProfile[user.id])}
+                disabled={addedProfiles.has(user.id)}
               >
-                Acción
+                <AddIcon />
               </Button>
             </ListItem>
           ))
         ) : (
           !loading && <Typography>No se encontraron usuarios</Typography>
         )}
+      </List>
+      <Divider />
+      <Typography variant="h6" gutterBottom>
+        Usuarios Asignados
+      </Typography>
+      <List>
+        {asigUsuarios.map(usuario => (
+          <ListItem key={usuario.id} sx={{ padding: '0.5rem 0' }}>
+            <Typography>{usuario.user.name} {usuario.user.last_nameF} {usuario.user.last_nameS}</Typography>
+            <Typography>{usuario.perfil.description}</Typography>
+          </ListItem>
+        ))}
       </List>
     </div>
   );

@@ -9,7 +9,7 @@
 
 .custom-datepicker .react-datepicker__header {
   background-color: var(--header-background-color);
-  border-bottom: 1px solid var(--primary-color);
+  border-block-end: 1px solid var(--primary-color);
 }
 
 .custom-datepicker .react-datepicker__day--selected,
@@ -24,12 +24,13 @@
 }
 
 .custom-datepicker .react-datepicker__input-container {
-  width: 100%;
+  inline-size: 100%;
 }
 
 .custom-datepicker .react-datepicker__input-container input {
-  width: 100%;
-  padding: 12px 8px; /* Ajusta el padding para cambiar la altura */
+  inline-size: 100%;
+  padding-block: 12px;
+  padding-inline: 8px; /* Ajusta el padding para cambiar la altura */
   border: 1px solid var(--primary-color);
   border-radius: 4px;
   font-size: 16px; /* Ajusta el tamaño de la fuente si es necesario */
@@ -42,8 +43,9 @@
 }
 
 .custom-datepicker input {
-  width: 100%;
-  padding: 12px 8px; /* Ajusta el padding para cambiar la altura */
+  inline-size: 100%;
+  padding-block: 12px;
+  padding-inline: 8px; /* Ajusta el padding para cambiar la altura */
   border: 1px solid var(--primary-color);
   border-radius: 4px;
   box-sizing: border-box;
