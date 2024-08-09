@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
-import { TextField, List, ListItem, Typography, FormControl, InputLabel, Select, MenuItem, Button, Divider } from '@mui/material';
+
+import {
+  TextField, List, ListItem, Typography, FormControl, InputLabel, Select, MenuItem, Button, Divider, Grid
+} from '@mui/material';
+import ListSubheader from '@mui/material/ListSubheader';
+
 
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { createPerfil, obtnerUsuarios, usuariosAsignados } from '@/Service/axios.services';
 
@@ -16,6 +22,9 @@ const UserList = ({ perfiles }) => {
   const [perfilIds, setPerfilIds] = useState([]);
   const [asigUsuarios, setAsigUsuarios] = useState([]);
   const [addedProfiles, setAddedProfiles] = useState(new Set());
+  const [maxUsersToShow, setMaxUsersToShow] = useState(3);
+  const [maxAsigUsuariosToShow, setMaxAsigUsuariosToShow] = useState(2);
+
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -164,55 +173,99 @@ const UserList = ({ perfiles }) => {
       />
       {loading && <Typography>Cargando usuarios...</Typography>}
       {error && <Typography color="error">{error}</Typography>}
-      <List>
-        {filteredUsers.length > 0 ? (
-          filteredUsers.map(user => (
-            <ListItem key={user.id} sx={{ padding: '0.5rem 0' }}>
-              <Typography>{user.name} {user.last_nameF} {user.last_nameS}</Typography>
-              <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
-                <InputLabel>Tipo de perfil</InputLabel>
-                <Select
-                  value={selectedProfile[user.id] || ''}
-                  onChange={handleProfileChange(user.id)}
-                  label='Perfil'
-                >
-                  {perfiles.map(perfil => (
-                    <MenuItem key={perfil.id} value={perfil.id}>
-                      {perfil.description}
-                    </MenuItem>
-                  ))}
-                </Select>
-
-              </FormControl>
-              <Button
-
-                variant="outlined"
-
-                color="primary"
-
-                // size="small"
-                onClick={handleButtonClick(user.id, selectedProfile[user.id])}
-                disabled={addedProfiles.has(user.id)}
+      <List
+        sx={{
+          width: '100%',
+          maxWidth: 360,
+          bgcolor: 'background.paper',
+          position: 'relative',
+          overflow: 'auto',
+          maxHeight: 300,
+          '& ul': { padding: 0 },
+        }}
+        subheader={<li />}
+      >
+        <ListSubheader>Usuarios Filtrados</ListSubheader>
+        {filteredUsers.slice(0, maxUsersToShow).map(user => (
+          <ListItem key={user.id} sx={{ padding: '0.5rem 0' }}>
+            <Typography>{user.name} {user.last_nameF} {user.last_nameS}</Typography>
+            <FormControl variant="outlined" size="small" sx={{ minWidth: 150 }}>
+              <InputLabel>Tipo de perfil</InputLabel>
+              <Select
+                value={selectedProfile[user.id] || ''}
+                onChange={handleProfileChange(user.id)}
+                label='Perfil'
               >
-                <AddIcon />
-              </Button>
-            </ListItem>
-          ))
-        ) : (
-          !loading && <Typography>No se encontraron usuarios</Typography>
+                {perfiles.map(perfil => (
+                  <MenuItem key={perfil.id} value={perfil.id}>
+                    {perfil.description}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={handleButtonClick(user.id, selectedProfile[user.id])}
+              disabled={addedProfiles.has(user.id)}
+            >
+              <AddIcon />
+            </Button>
+          </ListItem>
+        ))}
+        {filteredUsers.length > maxUsersToShow && (
+          <ListItem>
+            <Button
+              variant="outlined"
+              onClick={() => setMaxUsersToShow(prev => prev + 5)}
+            >
+              Mostrar más
+            </Button>
+          </ListItem>
         )}
       </List>
       <Divider />
-      <Typography variant="h6" gutterBottom>
+      {/* <Typography variant="h6" gutterBottom>
         Usuarios Asignados
-      </Typography>
-      <List>
-        {asigUsuarios.map(usuario => (
-          <ListItem key={usuario.id} sx={{ padding: '0.5rem 0' }}>
+      </Typography> */}
+      <List
+        sx={{
+          width: '100%',
+          maxWidth: 360,
+          bgcolor: 'background.paper',
+          position: 'relative',
+          overflow: 'auto',
+          maxHeight: 300,
+          '& ul': { padding: 0 },
+        }}
+        subheader={<li />}
+      >
+        <ListSubheader>Usuarios Asignados</ListSubheader>
+        {asigUsuarios.slice(0, maxUsersToShow).map(usuario => (
+          <ListItem disablePadding key={usuario.id} sx={{ padding: '0.5rem 0' }}>
             <Typography>{usuario.user.name} {usuario.user.last_nameF} {usuario.user.last_nameS}</Typography>
             <Typography>{usuario.perfil.description}</Typography>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => console.log(`Eliminar usuario con ID: ${usuario.id}`)}
+            >
+              <DeleteIcon style={{ color: "#ff0000" }} />
+            </Button>
           </ListItem>
         ))}
+        {asigUsuarios.length > maxUsersToShow && (
+          <ListItem>
+            <Button
+
+              // variant="outlined"
+
+              onClick={() => setMaxUsersToShow(prev => prev + 5)}
+            >
+              Mostrar más
+            </Button>
+          </ListItem>
+        )}
       </List>
     </div>
   );
