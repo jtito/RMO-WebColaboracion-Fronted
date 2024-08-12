@@ -174,7 +174,7 @@ class AnnotationsSidebarToggler extends Plugin {
   }
 }
 
-export default function CustomEditor({ idDoc }) {
+export default function CustomEditor({ idDoc, userRolePermissions, permissionsDescriptions, escenarioDescription, roleDescription }) {
   const editorPresenceRef = useRef(null)
   const editorContainerRef = useRef(null)
   const editorMenuBarRef = useRef(null)
@@ -196,6 +196,7 @@ export default function CustomEditor({ idDoc }) {
     const fetchDocument = async () => {
       try {
         const response = await editarDocumentoPorId(idDoc);
+
         setDocumentContent(response.data.contenido || '<h2> </h2>'); // Ajusta según la estructura de tu respuesta
       } catch (error) {
         console.error('Error al obtener el documento:', error);
@@ -205,6 +206,7 @@ export default function CustomEditor({ idDoc }) {
     fetchDocument();
 
     return () => setIsLayoutReady(false);
+
     // Fetch document content by ID
     // const fetchDocument = async () => {
     //   try {
@@ -231,6 +233,7 @@ export default function CustomEditor({ idDoc }) {
 
   const handleEditorChange = (event, editor) => {
     const data = editor.getData();
+
     setDocumentContent(data);
     handleSave(data);
   };
@@ -403,10 +406,16 @@ export default function CustomEditor({ idDoc }) {
             {
               marker: '@',
               feed: [
-                /* See: https://ckeditor.com/docs/ckeditor5/latest/features/mentions.html#comments-with-mentions */
+                /* Configuración de menciones */
               ]
             }
           ]
+        }
+      },
+      permissions: {
+        [userRolePermissions]: {
+          write: false, // Esto previene la escritura de comentarios para "País Miembro"
+          read: true,
         }
       }
     },
@@ -632,6 +641,11 @@ export default function CustomEditor({ idDoc }) {
   }
 
   configUpdateAlert(editorConfig)
+
+  if (roleDescription === 'País Miembro (PPMM)') {
+    editorConfig.toolbar.items = editorConfig.toolbar.items.filter(item => item !== 'comment');
+    editorConfig.balloonToolbar = editorConfig.balloonToolbar.filter(item => item !== 'comment');
+  }
 
   return (
     <div>
