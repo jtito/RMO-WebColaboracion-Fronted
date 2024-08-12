@@ -142,7 +142,7 @@ export const ActualizarUsuarioEstados = async (id, datosActualizados) => {
 }
 
 export const obtenerTodosLosPermisos = () => {
-  return API.get('permisos/permiso/', {
+  return API.get('/permisos/permiso/', {
     validateStatus: function (status) {
       return status < 500
     }
@@ -150,7 +150,7 @@ export const obtenerTodosLosPermisos = () => {
 }
 
 export const obtenerPermisosPorEscenario = () => {
-  return API.get('permisos/escenario/', {
+  return API.get('/permisos/escenario/', {
     validateStatus: function (status) {
       return status < 500
     }

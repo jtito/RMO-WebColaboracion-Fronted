@@ -23,8 +23,11 @@ const VistaDocumento = ({ idDoc }) => {
   const [tipodoc, settipodoc] = useState([]);
   const { data: session, status } = useSession();
   const [roles, setRoles] = useState([]);
-  const [userRolePermissions, setUserRolePermissions] = useState([]);
 
+  // const [permisos, setPermisos] = useState([]);
+  const [userRolePermissions, setUserRolePermissions] = useState([]);
+  const [escenarioDescription, setEscenarioDescription] = useState('');
+  const [permissionsDescriptions, setPermissionsDescriptions] = useState([]);
 
   const toggleUserList = () => {
     setShowUserList(!showUserList);
@@ -66,7 +69,7 @@ const VistaDocumento = ({ idDoc }) => {
       const response = await obtenerRolesMasivo();
 
       console.log("Roles: ", response.data);
-      
+
       if (response.status === 200) {
         setRoles(response.data);
       }
@@ -75,13 +78,38 @@ const VistaDocumento = ({ idDoc }) => {
     }
   }
 
+  // const matchPermisosEscenarioRoles = async () => {
+  //   try {
+  //     const response = await obtenerPermisosPorEscenario();
+
+  //     console.log("Data: ", response.data);
+
+  //     if (response.status === 200) {
+  //       setPermisos(response.data);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error en la solicitud:', error);
+  //   }
+  // }
+
   const filtroUsuarioRolPermisos = (userRoleId) => {
     return roles.find(role => role.id === userRoleId)?.detail_permisos || [];
   }
 
+  // const filtrarPermisos = (permisos, userPermissions) => {
+  //   return permisos.filter(permiso =>
+  //     userPermissions.some(userPermiso =>
+  //       permiso.escenario_id.id === userPermiso.escenario_id.id &&
+  //       permiso.permission_id.id === userPermiso.permission_id.id
+  //     )
+  //   );
+  // };
+
   useEffect(() => {
     obtenerTyperfil();
     obtenerRoles();
+
+    // matchPermisosEscenarioRoles();
 
     if (idDoc) {
       obtenerDocPorId(idDoc)
@@ -90,14 +118,49 @@ const VistaDocumento = ({ idDoc }) => {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      console.log('Usuario logueado:', session.user);
       const userRoleId = session.user.role;
       const permissions = filtroUsuarioRolPermisos(userRoleId);
-      
+
       setUserRolePermissions(permissions);
       console.log('Permisos del rol del usuario:', permissions);
+
+      // console.log("permisos: ", userRolePermissions);
     }
   }, [status, session, roles]);
+
+  useEffect(() => {
+    if (userRolePermissions.length > 0) {
+      // Obtener el id del escenario a partir de la descripción
+      const escenarioId = userRolePermissions[0].escenario_id.id;
+      
+      console.log('ID del escenario:', escenarioId);
+
+      // Filtrar permisos para ese escenario
+      const filteredPermissions = userRolePermissions.filter(permission => permission.escenario_id.id === escenarioId);
+      
+      console.log('Permisos filtrados para el escenario:', filteredPermissions);
+      
+      // Extraer descripciones de permisos
+      const descriptions = filteredPermissions.map(permission => permission.permission_id.description);
+
+      console.log('Descripciones de permisos:', descriptions);
+      setPermissionsDescriptions(descriptions);
+      
+      // Extraer la descripción del escenario
+      const description = userRolePermissions.find(permission => permission.escenario_id.id === escenarioId)?.escenario_id.description;
+
+      setEscenarioDescription(description);
+      console.log('Descripción del escenario:', description);
+    }
+  }, [userRolePermissions]);
+
+  // useEffect(() => {
+  //   if (permisos.length > 0 && userRolePermissions.length > 0) {
+  //     const filteredPermissions = filtrarPermisos(permisos, userRolePermissions);
+      
+  //     setUserRolePermissions(filteredPermissions);
+  //   }
+  // }, [permisos, userRolePermissions]);
 
   return (
     <Grid container sx={{ paddingTop: 1, backgroundColor: theme.palette.background.default }}>
@@ -127,7 +190,7 @@ const VistaDocumento = ({ idDoc }) => {
             borderRadius: '1px',
           }}
         >
-          <CustomEditor idDoc={idDoc} />
+          <CustomEditor idDoc={idDoc} permissions={userRolePermissions} />
         </div>
       </Grid>
 
