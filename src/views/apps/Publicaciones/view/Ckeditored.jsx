@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 
+import { useSession } from 'next-auth/react'
+
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import {
   DecoupledEditor,
@@ -100,6 +102,15 @@ import 'ckeditor5/ckeditor5.css'
 import 'ckeditor5-premium-features/ckeditor5-premium-features.css'
 
 import './ckeditor.css'
+
+// IMPORTACION DE SERVICIOS
+import { 
+  obtenerUsuarioPorId,
+  obtenerRoles,
+  obtenerEscenarios,
+  obtenerPermisosPorEscenario,
+  ObteneridRol
+} from '@/Service/axios.services'
 
 const LICENSE_KEY =
   'ZW9wS2hzUmQwV09FcHJJY3pnVWFUOGhENjY4SkpNRXJNaXBlUHhRcGhILyt2L2F2ZDNVYWxGNkhNbnlaNkE9PS1NakF5TkRBNE1qVT0='
@@ -229,18 +240,22 @@ export default function Ckeditored() {
           console.error('Error saving document:', error);
       }
   }; */
+  const { data: session } = useSession();
+  const [userRole, setUserRole] = useState('');
+  const [permissions, setPermissions] = useState([]);
+  const [editorConfigu, setEditorConfigu] = useState({});
 
-  const editorPresenceRef = useRef(null)
-  const editorContainerRef = useRef(null)
-  const editorMenuBarRef = useRef(null)
-  const editorToolbarRef = useRef(null)
-  const editorOutlineRef = useRef(null)
-  const editorRef = useRef(null)
-  const editorAnnotationsRef = useRef(null)
-  const editorRevisionHistoryRef = useRef(null)
-  const editorRevisionHistoryEditorRef = useRef(null)
-  const editorRevisionHistorySidebarRef = useRef(null)
-  const [isLayoutReady, setIsLayoutReady] = useState(false)
+  const editorPresenceRef = useRef(null);
+  const editorContainerRef = useRef(null);
+  const editorMenuBarRef = useRef(null);
+  const editorToolbarRef = useRef(null);
+  const editorOutlineRef = useRef(null);
+  const editorRef = useRef(null);
+  const editorAnnotationsRef = useRef(null);
+  const editorRevisionHistoryRef = useRef(null);
+  const editorRevisionHistoryEditorRef = useRef(null);
+  const editorRevisionHistorySidebarRef = useRef(null);
+  const [isLayoutReady, setIsLayoutReady] = useState(false);
 
   useEffect(() => {
     setIsLayoutReady(true)

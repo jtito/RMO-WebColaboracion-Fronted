@@ -40,7 +40,10 @@ import {
   obtenerDocumentos,
   obtenerDocumentosid,
   obtenerperfil,
-  publicarDocumentoPorId
+  publicarDocumentoPorId, 
+  obtenerUsuarioPorId, 
+  obtenerRoles, 
+  obtenerEscenarios
 } from '@/Service/axios.services'
 
 const DocumentList = ({ type }) => {
@@ -57,7 +60,7 @@ const DocumentList = ({ type }) => {
 
   const router = useRouter()
   const { data: session, status } = useSession()
-  const iduser = session?.user?.id.id
+  const iduser = session?.user?.id
   const { enqueueSnackbar } = useSnackbar()
 
 
@@ -66,12 +69,10 @@ const DocumentList = ({ type }) => {
       const response = await obtenerDocumentos()
 
       if (response.status === 200) {
-        // Asumimos que `setdocperf` es una función que guarda los documentos en el estado
         const documentos = response.data
 
         setdocperf(documentos)
 
-        // Buscar el documento específico por `iduser` (ajusta esta lógica según tu estructura de datos)
         const documento = documentos.find(doc => doc.id === iduser)
 
         if (documento) {
@@ -79,7 +80,6 @@ const DocumentList = ({ type }) => {
 
           console.log('ID del documento:', documentoId)
 
-          // Puedes realizar otras operaciones con `documentoId` aquí
         } else {
           console.log('Documento no encontrado para el ID de usuario:', iduser)
         }
@@ -99,7 +99,9 @@ const DocumentList = ({ type }) => {
     if (iduser) {
       obtenerDocumentosperf(iduser)
     }
-  }, [iduser])
+
+    console.log("datos de user: ", session?.user);
+  }, [iduser, session])
 
   useEffect(() => {
     const filterDocs = () => {

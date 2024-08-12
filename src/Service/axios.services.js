@@ -63,6 +63,14 @@ export const obtenerRoles = () => {
   })
 }
 
+export const obtenerRolesMasivo = () => {
+  return API.get(`/roles/role/`, {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
 export const obtenerPaises = () => {
   return API.get(`user/countries/`, {
     validateStatus: function (status) {
@@ -87,8 +95,8 @@ export const EditarUsuario = async id => {
   })
 }
 
-export const ObteneridRol = async idRol => {
-  return API.get(`roles/role/${idRol}/`, {
+export const ObteneridRol = async id => {
+  return API.get(`/roles/role/${id}/`, {
     validateStatus: function (status) {
       return status < 500
     }
@@ -135,6 +143,14 @@ export const ActualizarUsuarioEstados = async (id, datosActualizados) => {
 
 export const obtenerTodosLosPermisos = () => {
   return API.get('permisos/permiso/', {
+    validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
+export const obtenerPermisosPorEscenario = () => {
+  return API.get('permisos/escenario/', {
     validateStatus: function (status) {
       return status < 500
     }

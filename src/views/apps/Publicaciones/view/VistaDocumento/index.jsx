@@ -6,11 +6,13 @@ import { useRouter } from 'next/router';
 
 import dynamic from 'next/dynamic';
 
+import { useSession } from 'next-auth/react';
+
 import { Button, Grid, useTheme, Modal, Box, IconButton, Divider } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 import UserList from './UserList'; // Ajusta la ruta de importación según sea necesario
-import { obtenerperfil, obtenertiposDoc, obtenerDocumentosid } from '@/Service/axios.services';
+import { obtenerperfil, obtenertiposDoc, obtenerDocumentosid, obtenerRolesMasivo } from '@/Service/axios.services';
 
 const CustomEditor = dynamic(() => import('./CustomEditor'), { ssr: false });
 
@@ -19,6 +21,10 @@ const VistaDocumento = ({ idDoc }) => {
   const [showUserList, setShowUserList] = useState(false);
   const theme = useTheme();
   const [tipodoc, settipodoc] = useState([]);
+  const { data: session, status } = useSession();
+  const [roles, setRoles] = useState([]);
+  const [userRolePermissions, setUserRolePermissions] = useState([]);
+
 
   const toggleUserList = () => {
     setShowUserList(!showUserList);
@@ -55,13 +61,43 @@ const VistaDocumento = ({ idDoc }) => {
     }
   }
 
+  const obtenerRoles = async () => {
+    try {
+      const response = await obtenerRolesMasivo();
+
+      console.log("Roles: ", response.data);
+      
+      if (response.status === 200) {
+        setRoles(response.data);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+  }
+
+  const filtroUsuarioRolPermisos = (userRoleId) => {
+    return roles.find(role => role.id === userRoleId)?.detail_permisos || [];
+  }
+
   useEffect(() => {
-    obtenerTyperfil()
+    obtenerTyperfil();
+    obtenerRoles();
 
     if (idDoc) {
       obtenerDocPorId(idDoc)
     }
   }, [idDoc]);
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      console.log('Usuario logueado:', session.user);
+      const userRoleId = session.user.role;
+      const permissions = filtroUsuarioRolPermisos(userRoleId);
+      
+      setUserRolePermissions(permissions);
+      console.log('Permisos del rol del usuario:', permissions);
+    }
+  }, [status, session, roles]);
 
   return (
     <Grid container sx={{ paddingTop: 1, backgroundColor: theme.palette.background.default }}>
