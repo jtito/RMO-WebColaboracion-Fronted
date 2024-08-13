@@ -1,13 +1,5 @@
 import API from './axios.config'
 
-/*export const IniciarSesion = body => {
-  return API.post('/login/', body, {
-    validateStatus: function (status) {
-      return status < 500
-    }
-  })
-}*/
-
 export const IniciarSesion = async body => {
   try {
     const response = await API.post('user/login/', body, {
@@ -111,6 +103,7 @@ export const ActualizarUsuario = async (id, body) => {
 }
 
 export const ActualizarUsuarioEstados = async (id, datosActualizados) => {
+
   try {
     const response = await API.put(`user/usuarios/${id}/`, datosActualizados, {
       validateStatus: function (status) {
@@ -119,15 +112,12 @@ export const ActualizarUsuarioEstados = async (id, datosActualizados) => {
     })
 
     if (response.status >= 200 && response.status < 300) {
-
       return response.data
     } else {
-
       console.error('Error al actualizar el estado:', response.status, response.statusText)
       throw new Error(`Error ${response.status}: ${response.statusText}`)
     }
   } catch (error) {
-
     console.error('Error en la solicitud:', error)
     throw error
   }
@@ -233,9 +223,21 @@ export const eliminarDocumentoPorId = async id => {
   })
 }
 
+// revicion --
+
 export const editarDocumentoPorId = async id => {
   return await API.put(`docs/docs/${id}/`, {
     validateStatus: function (status) {
+      return status < 500
+    }
+  })
+}
+
+export const ActualisarDocuemento = async (id, data) => {
+  return await API.put(`/docs/docs/${id}/`, data, {
+    validateStatus: function (status) {
+      console.log(data)
+
       return status < 500
     }
   })
@@ -247,7 +249,6 @@ export const updateUser = async (id, userData) => {
 
   return await API.put(`user/usuarios/${id}/`, userData, {
     validateStatus: function (status) {
-
       return status < 500
     }
   })
@@ -307,21 +308,15 @@ export const publicarDocumentoPorId = async (id, data) => {
   })
 }
 
-export const createPerfil = async (data) => {
-
-  return await API.post('/docs/perfil/user/',data, {
+export const createPerfil = async data => {
+  return await API.post('/docs/perfil/user/', data, {
     validateStatus: function (status) {
       console.log(data)
 
       return status < 500
     }
-
-  });
-
-
-
-};
-
+  })
+}
 
 export const usuariosAsignados = id => {
   return API.get(`/docs/perfil/user/${id}/`, {
@@ -347,6 +342,3 @@ export const usuariosAsignados = id => {
 //     throw error
 //   }
 // }
-
-
-

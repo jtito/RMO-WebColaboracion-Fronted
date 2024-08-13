@@ -185,26 +185,28 @@ export default function CustomEditor({ idDoc }) {
   const editorRevisionHistoryEditorRef = useRef(null)
   const editorRevisionHistorySidebarRef = useRef(null)
   const [isLayoutReady, setIsLayoutReady] = useState(false)
-  const [documentContent, setDocumentContent] = useState('');
+  const [documentContent, setDocumentContent] = useState('')
 
   console.log('idDoc: ', idDoc)
 
   useEffect(() => {
-    setIsLayoutReady(true);
-    
+    setIsLayoutReady(true)
+
     // Fetch document content by ID
     const fetchDocument = async () => {
       try {
-        const response = await editarDocumentoPorId(idDoc);
-        setDocumentContent(response.data.contenido || '<h2> </h2>'); // Ajusta según la estructura de tu respuesta
+        const response = await editarDocumentoPorId(idDoc)
+
+        setDocumentContent(response.data.contenido || '<h2> </h2>') // Ajusta según la estructura de tu respuesta
       } catch (error) {
-        console.error('Error al obtener el documento:', error);
+        console.error('Error al obtener el documento:', error)
       }
-    };
+    }
 
-    fetchDocument();
+    fetchDocument()
 
-    return () => setIsLayoutReady(false);
+    return () => setIsLayoutReady(false)
+
     // Fetch document content by ID
     // const fetchDocument = async () => {
     //   try {
@@ -218,22 +220,23 @@ export default function CustomEditor({ idDoc }) {
     // fetchDocument();
 
     // return () => setIsLayoutReady(false);
-  }, [idDoc]);
+  }, [idDoc])
 
-  const handleSave = async (data) => {
+  const handleSave = async data => {
     try {
-      await editarDocumentoPorId(idDoc, { contenido: data });
-      console.log('Documento guardado con éxito');
+      await editarDocumentoPorId(idDoc, { contenido: data })
+      console.log('Documento guardado con éxito')
     } catch (error) {
-      console.error('Error al guardar el documento:', error);
+      console.error('Error al guardar el documento:', error)
     }
-  };
+  }
 
   const handleEditorChange = (event, editor) => {
-    const data = editor.getData();
-    setDocumentContent(data);
-    handleSave(data);
-  };
+    const data = editor.getData()
+
+    setDocumentContent(data)
+    handleSave(data)
+  }
 
   const editorConfig = {
     toolbar: {

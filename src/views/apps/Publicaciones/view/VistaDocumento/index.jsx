@@ -63,6 +63,11 @@ const VistaDocumento = ({ idDoc }) => {
     }
   }, [idDoc]);
 
+
+
+
+
+
   return (
     <Grid container sx={{ paddingTop: 1, backgroundColor: theme.palette.background.default }}>
       <Grid sx={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -128,7 +133,7 @@ const VistaDocumento = ({ idDoc }) => {
           >
             <CloseIcon />
           </IconButton>
-          <UserList perfiles={tipodoc} />
+          <UserList perfiles={tipodoc} idDoc ={idDoc}/>
 
         </Box>
       </Modal>
