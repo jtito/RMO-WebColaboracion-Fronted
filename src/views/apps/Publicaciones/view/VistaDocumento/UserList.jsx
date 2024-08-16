@@ -18,11 +18,12 @@ import {
   DialogContentText,
   DialogTitle
 } from '@mui/material'
-import ListSubheader from '@mui/material/ListSubheader'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import { toast } from 'react-toastify'
+
+import { useSession } from 'next-auth/react'
 
 import {
   ActualisarDocuemento,
@@ -33,10 +34,8 @@ import {
   usuariosAsignados
 } from '@/Service/axios.services'
 
-const UserList = ({ perfiles, idDoc }) => {
-  console.log(idDoc)
+const UserList = ({ perfiles, idDoc, typeDoc, state }) => {
 
-  const id = idDoc
 
   const [users, setUsers] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
@@ -50,7 +49,10 @@ const UserList = ({ perfiles, idDoc }) => {
   const [maxAsigUsuariosToShow, setMaxAsigUsuariosToShow] = useState(2)
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false)
   const [userToDelete, setUserToDelete] = useState(null)
-  const [showMore, setShowMore] = useState(true)
+  const [showMore, setShowMore] = useState(false)
+  const [showForm, setShowForm] = useState(true) // Nuevo estado
+  const { data: session, status } = useSession()
+  const iduser = session?.user?.id.id
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -90,7 +92,10 @@ const UserList = ({ perfiles, idDoc }) => {
   }
 
   const handleButtonClick = (userId, perfilId) => async () => {
-    const data = { user: userId, perfil: perfilId }
+    const data = {
+      user: userId,
+      perfil: perfilId
+    }
 
     try {
       const response = await createPerfil(data)
@@ -192,25 +197,24 @@ const UserList = ({ perfiles, idDoc }) => {
     return null
   }
 
-  const udatehandleConfirmperfil = async e => {
-
+  const udatehandleConfirmperfil = async () => {
     const user_perfil = asigUsuarios.map(usuario => usuario.id)
-    
-    const data = { user_perfil: user_perfil }
 
-    const validationError = validateData(data)
-
-    if (validationError) {
-      console.error('Error de validación:', validationError)
-
-      return
+    const data = {
+      user_perfil: user_perfil,
+      typeDoc: typeDoc,
+      state: state,
+      usuario_creador: iduser
     }
 
     try {
       const response = await ActualisarDocuemento(idDoc, data)
 
+      console.log(idDoc)
+
       if (response.status === 200) {
         toast('Documento actualizado con éxito')
+        setShowForm(false) // Oculta el formulario después de la actualización
       } else {
         console.error('Error al actualizar documento:', response.data)
         alert('Error al actualizar documento')
@@ -223,124 +227,124 @@ const UserList = ({ perfiles, idDoc }) => {
 
   return (
     <div style={{ borderRadius: '4px', padding: '1rem' }}>
-      <Typography variant='h6' gutterBottom>
-        Usuarios
-      </Typography>
-      <TextField
-        fullWidth
-        variant='outlined'
-        size='small'
-        placeholder='Buscar ...'
-        value={searchTerm}
-        onChange={handleSearchChange}
-        sx={{ marginBottom: '1rem' }}
-      />
-      {loading && <Typography>Cargando usuarios...</Typography>}
-      {error && <Typography color='error'>{error}</Typography>}
-      <List
-        sx={{
-          width: '100%',
-          maxWidth: 500,
-          bgcolor: 'background.paper',
-          position: 'relative',
-          overflow: 'auto',
-          maxHeight: 400,
-          '& ul': { padding: 0 }
-        }}
-      >
-        {filteredUsers.slice(0, maxUsersToShow).map(user => (
-          <ListItem key={user.id} sx={{ padding: '0.5rem 0' }}>
-            <Typography style={{ marginRight: '1rem' }}>
-              {user.name} {user.last_nameF} {user.last_nameS}
-            </Typography>
-            <FormControl variant='outlined' size='small' sx={{ minWidth: 150, marginRight: '1rem' }}>
-              <InputLabel>Tipo de perfil</InputLabel>
-              <Select value={selectedProfile[user.id] || ''} onChange={handleProfileChange(user.id)} label='Perfil'>
-                {perfiles.map(perfil => (
-                  <MenuItem key={perfil.id} value={perfil.id}>
-                    {perfil.description}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <Button
-              variant='outlined'
-              color='primary'
-              onClick={handleButtonClick(user.id, selectedProfile[user.id])}
-              disabled={addedProfiles.has(user.id)}
-            >
-              <AddIcon />
-            </Button>
-          </ListItem>
-        ))}
-        {filteredUsers.length > maxUsersToShow && (
-          <ListItem>
-            {' '}
-            <Button onClick={() => setMaxUsersToShow(prev => prev + 3)}>Mostrar más</Button>
-          </ListItem>
-        )}
-      </List>
-      <Divider sx={{ margin: '1rem 0' }} />
-      <Typography variant='h6' gutterBottom>
-        Usuarios Asignados
-      </Typography>
-      <List
-        sx={{
-          width: '100%',
-          maxWidth: 360,
-          bgcolor: 'background.paper',
-          position: 'relative',
-          overflow: 'auto',
-          maxHeight: 300,
-          '& ul': { padding: 0 }
-        }}
+      {showForm && (
+        <>
+          <Typography variant='h6' gutterBottom>
+            Usuarios
+          </Typography>
+          <TextField
+            fullWidth
+            variant='outlined'
+            size='small'
+            placeholder='Buscar ...'
+            value={searchTerm}
+            onChange={handleSearchChange}
+            sx={{ marginBottom: '1rem' }}
+          />
+          {loading && <Typography>Cargando usuarios...</Typography>}
+          {error && <Typography color='error'>{error}</Typography>}
+          <List
+            sx={{
+              width: '100%',
+              maxWidth: 500,
+              bgcolor: 'background.paper',
+              position: 'relative',
+              overflow: 'auto',
+              maxHeight: 400,
+              '& ul': { padding: 0 }
+            }}
+          >
+            {filteredUsers.slice(0, maxUsersToShow).map(user => (
+              <ListItem key={user.id} sx={{ padding: '0.5rem 0' }}>
+                <Typography style={{ marginRight: '1rem' }}>
+                  {user.name} {user.last_nameF} {user.last_nameS}
+                </Typography>
+                <FormControl variant='outlined' size='small' sx={{ minWidth: 150, marginRight: '1rem' }}>
+                  <InputLabel>Tipo de perfil</InputLabel>
+                  <Select value={selectedProfile[user.id] || ''} onChange={handleProfileChange(user.id)} label='Perfil'>
+                    {perfiles.map(perfil => (
+                      <MenuItem key={perfil.id} value={perfil.id}>
+                        {perfil.description}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <Button
+                  variant='outlined'
+                  // color='primary'
+                  // startIcon={<AddIcon />}
 
-        // subheader={<ListSubheader>Usuarios Asignados</ListSubheader>}
-      >
-        {asigUsuarios.slice(0, maxAsigUsuariosToShow).map(usuario => (
-          <ListItem disablePadding key={usuario.id} sx={{ padding: '0.5rem 0' }}>
-            <Typography style={{ marginRight: '1rem' }}>
-              {usuario.user.name} {usuario.user.last_nameF} {usuario.user.last_nameS}
-            </Typography>
-            <Typography style={{ marginRight: '1rem' }}>{usuario.perfil.description}</Typography>
-            <Button variant='outlined' color='error' onClick={() => openDeleteConfirmDialog(usuario.id)}>
-              <DeleteIcon style={{ color: '#ff0000' }} />
-            </Button>
-          </ListItem>
-        ))}
-        {asigUsuarios.length > maxAsigUsuariosToShow && (
-          <ListItem>
-            <Button onClick={handleShowMoreClick}>{showMore ? 'Mostrar menos' : 'Mostrar más'}</Button>
-          </ListItem>
-        )}
-      </List>
-      <Dialog
-        open={openConfirmDialog}
-        onClose={closeDeleteConfirmDialog}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <DialogTitle id='alert-dialog-title'>{'Confirmar eliminación'}</DialogTitle>
+                  onClick={handleButtonClick(user.id, selectedProfile[user.id])}
+                  disabled={!selectedProfile[user.id] || addedProfiles.has(user.id)}
+                >
+                  <AddIcon />
+                </Button>
+              </ListItem>
+            ))}
+          </List>
+          {filteredUsers.length > maxUsersToShow && (
+            <Button onClick={() => setMaxUsersToShow(prev => prev + 3)}>Mostrar más</Button>
+          )}
+          <Typography variant='h6' gutterBottom sx={{ marginTop: '2rem' }}>
+            Usuarios asignados
+          </Typography>
+          <List
+            sx={{
+              width: '100%',
+              maxWidth: 500,
+              bgcolor: 'background.paper',
+              position: 'relative',
+              overflow: 'auto',
+              maxHeight: 400,
+              '& ul': { padding: 0 }
+            }}
+          >
+            {sortedAsigUsuarios.slice(0, maxAsigUsuariosToShow).map(usuario => (
+              <ListItem key={usuario.id} sx={{ padding: '0.5rem 0' }}>
+                <Typography>
+                  {usuario.user.name} {usuario.user.last_nameF} {usuario.user.last_nameS}
+                </Typography>
+                <Typography style={{ marginRight: '1rem' }}>{usuario.perfil.description}</Typography>
+                <Button
+                  variant='outlined'
+                  color='error'
+                  startIcon={<DeleteIcon />}
+                  onClick={() => openDeleteConfirmDialog(usuario.id)}
+                  sx={{ marginLeft: 'auto' }}
+                >
+                  Eliminar
+                </Button>
+              </ListItem>
+            ))}
+          </List>
+          {sortedAsigUsuarios.length > maxAsigUsuariosToShow && (
+            <Button onClick={handleShowMoreClick}>{showMore ? 'Mostrar más' : 'Mostrar menos'}</Button>
+          )}
+          <Divider sx={{ margin: '2rem 0' }} />
+          <Button variant='contained' color='primary' onClick={udatehandleConfirmperfil}>
+            Confirmar
+          </Button>
+        </>
+      )}
+      {!showForm && (
+        <Typography variant='h6' gutterBottom>
+          El formulario ha sido enviado correctamente.
+        </Typography>
+      )}
+      <Dialog open={openConfirmDialog} onClose={closeDeleteConfirmDialog}>
+        <DialogTitle>Confirmar eliminación</DialogTitle>
         <DialogContent>
-          <DialogContentText id='alert-dialog-description'>
-            ¿Estás seguro de que deseas eliminar este usuario?
-          </DialogContentText>
+          <DialogContentText>¿Estás seguro de que deseas eliminar este usuario asignado?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDeleteConfirmDialog} color='primary'>
             Cancelar
           </Button>
-          <Button onClick={handleDeleteUser} color='error' autoFocus>
+          <Button onClick={handleDeleteUser} color='error'>
             Eliminar
           </Button>
         </DialogActions>
       </Dialog>
-      <Divider sx={{ margin: '1rem 0' }} />
-      <Grid container justifyContent='flex-end'>
-        <Button variant='contained' color='primary' onClick={udatehandleConfirmperfil} sx={{ marginTop: '1rem' }}>
-          Confirmar Actualización
-        </Button>
-      </Grid>
     </div>
   )
 }

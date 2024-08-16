@@ -1,4 +1,5 @@
 'use client'
+
 import { useEffect, useState } from 'react'
 
 import { useRouter } from 'next/navigation'
@@ -19,7 +20,8 @@ import {
   TextField,
   Typography,
   Dialog,
-  Fab
+  Fab,
+  CardActionArea
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import DatePicker from 'react-datepicker'
@@ -59,7 +61,6 @@ const DocumentList = ({ type }) => {
   const { data: session, status } = useSession()
   const iduser = session?.user?.id.id
   const { enqueueSnackbar } = useSnackbar()
-
 
   const obtenerDocumentosperf = async iduser => {
     try {
@@ -285,90 +286,91 @@ const DocumentList = ({ type }) => {
             <Card
               key={documento.id}
               sx={{
-                mb: 2,
+                mb: 3,
                 cursor: 'pointer',
                 backgroundColor: typeColors[documento.typeDoc.description] || 'inherit',
                 borderRadius: '8px', // Optional: For rounded corners
                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
               }}
-              onClick={() => handleCardClick(documento.id)}
             >
-              <CardContent>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={2}>
-                    <CardMedia
-                      component='img'
-                      image='https://via.placeholder.com/150'
-                      alt='Descripción de la imagen'
-                      style={{ width: '50%', height: 'auto', cursor: 'pointer' }}
-                      onClick={handleImageClick}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={10}>
-                    <Grid container alignItems='center'>
-                      <Grid item xs>
-                        <Typography variant='h4' component='div'>
-                          {documento.title}
-                        </Typography>
-                      </Grid>
-                      <IconButton
-                        onClick={event => {
-                          event.stopPropagation()
-                          handleDelete(event, documento)
-                        }}
-                      >
-                        <i className='tabler-trash text-[26px] text-textSecondary' />
-                      </IconButton>
+              <CardActionArea>
+                <CardContent onClick={() => handleCardClick(documento.id)}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={2}>
+                      <CardMedia
+                        component='img'
+                        sx={{ width: 130, height: 200, cursor: 'pointer' }}
+                        image='https://via.placeholder.com/150'
+                        alt='Live from space album cover'
+                      />
                     </Grid>
-                    <Typography variant='body2' color='text.secondary' sx={{ maxWidth: '35vw' }}>
-                      {documento.description}
-                    </Typography>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={6}>
-                        <Typography variant='body2' c olor='text.secondary'>
-                          Fecha de creación: {new Date(documento.create_at).toLocaleDateString()}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <Typography variant='body2' color='text.secondary' textAlign='right'>
-                          Última modificación: {new Date(documento.updated_at).toLocaleDateString()}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Typography
-                      variant='body2'
-                      color='text.secondary'
-                      sx={{ color: typeColors[documento.typeDoc.description] || 'inherit' }}
-                    >
-                      {documento.typeDoc.description}
-                    </Typography>
-                    <Grid item xs={12} sx={{ mt: 2 }}>
-                      {documento.state.description === 'Borrador' && (
-                        <Button
-                          variant='contained'
-                          color='primary'
-                          startIcon={<i className='bi bi-send' />} // Usa un ícono relacionado con publicar
-                          sx={{ width: 'auto', px: 2 }}
+                    <Grid item xs={12} sm={10}>
+                      <Grid container alignItems='center'>
+                        <Grid item xs>
+                          <Typography variant='h4' component='div'>
+                            {documento.title}
+                          </Typography>
+                        </Grid>
+                        <IconButton
                           onClick={event => {
                             event.stopPropagation()
-                            handlePublicar(documento)
+                            handleDelete(event, documento)
                           }}
                         >
-                          Publicar
-                          <IconButton>
-                            <i className='tabler-send text-[22px] text-textSecondary' />
-                          </IconButton>
-                        </Button>
-                      )}
+                          <i className='tabler-trash text-[26px] text-textSecondary' />
+                        </IconButton>
+                      </Grid>
+                      <Typography variant='body2' color='text.secondary' sx={{ maxWidth: '35vw' }}>
+                        {documento.description}
+                      </Typography>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                          <Typography variant='body2' c olor='text.secondary'>
+                            Fecha de creación: {new Date(documento.create_at).toLocaleDateString()}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <Typography variant='body2' color='text.secondary' textAlign='right'>
+                            Última modificación: {new Date(documento.updated_at).toLocaleDateString()}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                      <Typography
+                        variant='body2'
+                        color='text.secondary'
+
+                        // sx={{ color: typeColors[documento.typeDoc.description] || 'inherit' }}
+                      >
+                        {documento.typeDoc.description}
+                      </Typography>
+                      <Grid item xs={12} sx={{ mt: 2 }}>
+                        {documento.state.description === 'Borrador' && (
+                          <Button
+                            variant='contained'
+                            startIcon={<i className='bi bi-send' />} // Usa un ícono relacionado con publicar
+                            sx={{ width: 'auto', px: 2 }}
+                            onClick={event => {
+                              event.stopPropagation()
+                              handlePublicar(documento)
+                            }}
+                          >
+                            Publicar
+                            <IconButton>
+                              <i className='tabler-send text-[22px] text-textSecondary' />
+                            </IconButton>
+                          </Button>
+                        )}
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-              </CardContent>
-              <CardActions>
+                </CardContent>
+              </CardActionArea>
+
+              {/* <CardActions>
                 <Button size='small' color='primary' onClick={() => handleCardClick(documento.id)}>
                   Ver más
                 </Button>
-              </CardActions>
+              </CardActions> */}
             </Card>
           ))
         ) : (

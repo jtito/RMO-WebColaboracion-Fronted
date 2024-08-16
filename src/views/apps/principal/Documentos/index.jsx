@@ -1,12 +1,25 @@
 import { useState } from 'react'
 
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Divider, Typography } from '@mui/material'
+import { useRouter } from 'next/navigation'
+
+import {
+  Box,
+  Button,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Divider,
+  Typography
+} from '@mui/material'
 
 import Grid from '@mui/material/Grid'
 
 import LinkIcon from '@mui/icons-material/Link'
 
 import LikeButton from '../LikeButton'
+import DislikeButton from '../DislikeButton'
 
 // Función para agrupar documentos por categoría
 const groupByCategory = documents => {
@@ -35,8 +48,17 @@ const getImageByCategory = category => {
 }
 
 const Documentos = ({ lisdoc }) => {
+  const router = useRouter()
+
+  const handleCardClick = id => {
+    router.push(`GestionPublicaciones/publicados/${id}`)
+  }
+
   const groupedDocuments = groupByCategory(lisdoc)
+
   const [hoveredCardIndex, setHoveredCardIndex] = useState(null)
+
+  console.log(lisdoc)
 
   return (
     <>
@@ -57,38 +79,46 @@ const Documentos = ({ lisdoc }) => {
           {groupedDocuments[category].map((doc, docIndex) => (
             <Card
               key={docIndex}
-              style={{
-                marginBottom: '16px',
-                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                transform: hoveredCardIndex === docIndex ? 'scale(1.05)' : 'scale(1)',
-                boxShadow:
-                  hoveredCardIndex === docIndex ? '0px 4px 20px rgba(0,0,0,0.2)' : '0px 2px 10px rgba(0,0,0,0.1)'
+              sx={{
+                mb: 3,
+                cursor: 'pointer',
+                borderRadius: '5px'
               }}
               onMouseEnter={() => setHoveredCardIndex(docIndex)}
               onMouseLeave={() => setHoveredCardIndex(null)}
             >
-              <CardContent>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={2}>
-                    <CardMedia
-                      component='img'
-                      image='https://via.placeholder.com/150' // Replace with your image URL
-                      alt='Descripción de la imagen'
-                      style={{ width: '50%', height: 'auto' }}
-                    />
+              <CardActionArea>
+                <CardContent
+                  sx={{
+                    maxHeight: '180px', // Limitar la altura del contenido
+                    overflow: 'hidden' // Ocultar el desbordamiento
+                  }}
+                  onClick={() => handleCardClick(doc.id)}
+                >
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={2}>
+                      <CardMedia
+                        component='img'
+                        sx={{ width: 130, height: 150, cursor: 'pointer' }}
+                        image='https://via.placeholder.com/150'
+                        alt='Live from space album cover'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={10}>
+                      <Typography variant='h5' component='div'>
+                        {doc.title}
+                      </Typography>
+                      <Typography variant='body2' color='text.secondary'>
+                        {doc.description}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sm={8}>
-                    <Typography variant='h5' component='div'>
-                      {doc.title}
-                    </Typography>
-                    <Typography variant='body2' color='text.secondary'>
-                      {doc.description}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </CardContent>
+                </CardContent>
+              </CardActionArea>
+              <Divider />
               <CardActions className='card-actions-dense'>
-                <LikeButton count={123} />
+                <LikeButton count={45} />
+                <DislikeButton count={45} />
               </CardActions>
             </Card>
           ))}

@@ -1,28 +1,28 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'
 
-import dynamic from 'next/dynamic';
+import dynamic from 'next/dynamic'
 
-import { Button, Grid, useTheme, Modal, Box, IconButton, Divider } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Button, Grid, useTheme, Modal, Box, IconButton, Divider } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 
-import UserList from './UserList'; // Ajusta la ruta de importación según sea necesario
-import { obtenerperfil, obtenertiposDoc, obtenerDocumentosid } from '@/Service/axios.services';
+import UserList from './UserList' // Ajusta la ruta de importación según sea necesario
+import { obtenerperfil, obtenertiposDoc, obtenerDocumentosid } from '@/Service/axios.services'
 
-const CustomEditor = dynamic(() => import('./CustomEditor'), { ssr: false });
+const CustomEditor = dynamic(() => import('./CustomEditor'), { ssr: false })
 
 const VistaDocumento = ({ idDoc }) => {
-  const [doc, setDoc] = useState();
-  const [showUserList, setShowUserList] = useState(false);
-  const theme = useTheme();
-  const [tipodoc, settipodoc] = useState([]);
+  const [doc, setDoc] = useState()
+  const [showUserList, setShowUserList] = useState(false)
+  const theme = useTheme()
+  const [tipodoc, settipodoc] = useState([])
 
   const toggleUserList = () => {
-    setShowUserList(!showUserList);
-  };
+    setShowUserList(!showUserList)
+  }
 
   const obtenerTyperfil = async () => {
     try {
@@ -42,10 +42,11 @@ const VistaDocumento = ({ idDoc }) => {
     console.log('docID: ', id)
 
     try {
-      const response = await obtenerDocumentosid(id);
+      const response = await obtenerDocumentosid(id)
 
       if (response.status === 200) {
-        setDoc(response.data);
+        setDoc(response.data)
+        console.log(response.data)
       } else {
         console.error('Error al obtener doc: ', response.status)
         setIsLoading(false)
@@ -55,32 +56,38 @@ const VistaDocumento = ({ idDoc }) => {
     }
   }
 
+  // const state = doc.state
+
+  // typeDoc state
   useEffect(() => {
     obtenerTyperfil()
 
     if (idDoc) {
       obtenerDocPorId(idDoc)
     }
-  }, [idDoc]);
+  }, [idDoc])
 
+  const state = doc?.state.id
 
+  console.log(state)
 
+  const typeDoc = doc?.typeDoc.id
 
-
+  console.log(typeDoc)
 
   return (
     <Grid container sx={{ paddingTop: 1, backgroundColor: theme.palette.background.default }}>
       <Grid sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Button
-          variant="contained"
+          variant='contained'
           onClick={toggleUserList}
           sx={{
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
             marginBottom: '1rem',
             '&:hover': {
-              backgroundColor: theme.palette.primary.dark,
-            },
+              backgroundColor: theme.palette.primary.dark
+            }
           }}
         >
           {showUserList ? 'Ocultar Usuarios' : 'Invitar Usuarios'}
@@ -93,7 +100,7 @@ const VistaDocumento = ({ idDoc }) => {
             flex: '3',
             backgroundColor: theme.palette.background.paper,
             padding: '1rem',
-            borderRadius: '1px',
+            borderRadius: '1px'
           }}
         >
           <CustomEditor idDoc={idDoc} />
@@ -104,8 +111,8 @@ const VistaDocumento = ({ idDoc }) => {
       <Modal
         open={showUserList}
         onClose={toggleUserList}
-        aria-labelledby="user-list-modal"
-        aria-describedby="user-list-modal-description"
+        aria-labelledby='user-list-modal'
+        aria-describedby='user-list-modal-description'
       >
         <Box
           sx={{
@@ -120,7 +127,7 @@ const VistaDocumento = ({ idDoc }) => {
             boxShadow: 24,
             p: 4,
             borderRadius: '8px',
-            position: 'relative', // Añadido para posicionar el ícono de cierre
+            position: 'relative' // Añadido para posicionar el ícono de cierre
           }}
         >
           <IconButton
@@ -128,17 +135,16 @@ const VistaDocumento = ({ idDoc }) => {
             sx={{
               position: 'absolute',
               top: 8,
-              right: 8,
+              right: 8
             }}
           >
             <CloseIcon />
           </IconButton>
-          <UserList perfiles={tipodoc} idDoc ={idDoc}/>
-
+          <UserList perfiles={tipodoc} idDoc={idDoc} typeDoc={typeDoc} state={state} />
         </Box>
       </Modal>
     </Grid>
-  );
-};
+  )
+}
 
-export default VistaDocumento;
+export default VistaDocumento

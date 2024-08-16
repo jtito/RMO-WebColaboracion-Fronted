@@ -1,20 +1,21 @@
+import React, { useState } from 'react'
 
-import React from 'react';
-
-import Button from '@mui/material/Button';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import Badge from '@mui/material/Badge';
+import Button from '@mui/material/Button'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp'
+import Badge from '@mui/material/Badge'
 
 const LikeButton = ({ count }) => {
-  return (
-    <Button variant="text" startIcon={
-      <Badge badgeContent={count} color="primary">
-        <ThumbUpIcon />
-      </Badge>
-    }>
-      
-    </Button>
-  );
-};
+  const [likes, setlikes] = useState(count)
 
-export default LikeButton;
+  const handleDislike = () => {
+    setlikes(likes + 1)
+  }
+
+  return (
+    <Button onClick={handleDislike} color='primary' startIcon={<ThumbUpIcon />}>
+      {likes}
+    </Button>
+  )
+}
+
+export default LikeButton
